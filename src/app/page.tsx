@@ -1,10 +1,10 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js';
 import { motion } from 'framer-motion';
-import { Search, Wallet, Activity, ArrowUpRight } from 'lucide-react';
+import { Search, Terminal, Zap, ShieldCheck } from 'lucide-react';
 
-export default function WagmiProject() {
+export default function WagmiCyberpunk() {
   const [address, setAddress] = useState('');
   const [balance, setBalance] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
@@ -18,85 +18,105 @@ export default function WagmiProject() {
       const bal = await connection.getBalance(key);
       setBalance(bal / 1000000000); 
     } catch (err) {
-      alert("Invalid Solana Address");
+      alert("Invalid Neural Link / Address");
       setBalance(null);
     }
     setLoading(false);
   };
 
   return (
-    <div className="relative min-h-screen bg-black text-white overflow-hidden flex flex-col items-center justify-center p-4">
+    <div className="relative min-h-screen bg-[#050505] text-white overflow-hidden flex flex-col items-center justify-center p-4 font-sans">
       
-      {/* Background Animation (Blockchain Flows) */}
-      <div className="absolute inset-0 z-0">
-        {[...Array(12)].map((_, i) => (
+      {/* Cyberpunk Background - Digital Rain Effect */}
+      <div className="absolute inset-0 z-0 opacity-20">
+        {[...Array(20)].map((_, i) => (
           <motion.div
             key={i}
-            initial={{ opacity: 0.1, y: -100, x: Math.random() * 1200 }}
+            initial={{ y: -500, x: Math.random() * 1500 }}
             animate={{ y: 1000 }}
-            transition={{ duration: Math.random() * 8 + 4, repeat: Infinity, ease: "linear" }}
-            className="absolute text-cyan-500/20"
-          >
-            <ArrowUpRight size={Math.random() * 30 + 20} />
-          </motion.div>
+            transition={{ duration: Math.random() * 5 + 2, repeat: Infinity, ease: "linear" }}
+            className="absolute w-[1px] h-32 bg-gradient-to-b from-transparent via-cyan-500 to-transparent"
+          />
         ))}
       </div>
 
-      {/* Main Content Card */}
+      {/* Main UI Card */}
       <motion.div 
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative z-10 bg-gray-900/40 backdrop-blur-2xl p-10 rounded-[2.5rem] border border-white/10 w-full max-w-md shadow-2xl text-center"
+        className="relative z-10 bg-black/80 backdrop-blur-3xl p-10 rounded-none border-l-4 border-t-4 border-cyan-500 shadow-[20px_20px_0px_0px_rgba(6,182,212,0.1)] w-full max-w-md"
       >
-        {/* The Original Logo & Name */}
-        <div className="flex flex-col items-center mb-10">
-          <div className="bg-gradient-to-br from-cyan-400 to-blue-600 w-16 h-16 rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-cyan-500/20">
-            <span className="text-3xl font-black text-white italic">W</span>
-          </div>
-          <h1 className="text-4xl font-black tracking-tighter bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+        {/* Cyberpunk Logo Section */}
+        <div className="flex flex-col items-center mb-12">
+          <motion.div 
+            animate={{ scale: [1, 1.05, 1] }}
+            transition={{ repeat: Infinity, duration: 2 }}
+            className="w-20 h-20 bg-cyan-500 flex items-center justify-center mb-4 clip-path-polygon"
+            style={{ clipPath: 'polygon(20% 0%, 100% 0%, 80% 100%, 0% 100%)' }}
+          >
+            <span className="text-4xl font-black text-black -skew-x-12 italic">W</span>
+          </motion.div>
+          <h1 className="text-5xl font-black tracking-[0.2em] text-cyan-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]">
             WAGMI
           </h1>
+          <p className="text-[10px] text-purple-500 font-mono tracking-[0.5em] mt-2 uppercase">Neural Network Terminal</p>
         </div>
 
-        <div className="space-y-4 text-left">
-          <div className="relative">
-            <input 
-              type="text"
-              placeholder="Solana Wallet Address"
-              className="w-full bg-black/50 border border-white/10 p-4 rounded-2xl outline-none focus:border-cyan-500 transition-all pl-12 text-sm"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-            />
-            <Search className="absolute left-4 top-4 text-gray-500" size={18} />
+        <div className="space-y-6">
+          <div className="relative group">
+            <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-none blur opacity-20 group-hover:opacity-100 transition duration-1000"></div>
+            <div className="relative">
+              <input 
+                type="text"
+                placeholder="INPUT_WALLET_ADDRESS"
+                className="w-full bg-black border border-cyan-900/50 p-5 rounded-none outline-none focus:border-cyan-400 text-cyan-400 font-mono text-xs transition-all uppercase"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+              />
+              <Terminal className="absolute right-4 top-5 text-cyan-900" size={18} />
+            </div>
           </div>
 
           <button 
             onClick={checkBalance}
             disabled={loading}
-            className="w-full bg-white text-black p-4 rounded-2xl font-bold hover:bg-cyan-400 transition-colors duration-300 flex items-center justify-center gap-2"
+            className="group relative w-full h-14 bg-cyan-500 hover:bg-white text-black font-black uppercase tracking-widest text-sm transition-all duration-300 shadow-[5px_5px_0px_0px_#7c3aed]"
           >
-            {loading ? "Analyzing..." : "Analyze Wallet"}
+            <span className="flex items-center justify-center gap-2">
+              {loading ? "Decrypting..." : "Run Analysis"} <Zap size={16} />
+            </span>
           </button>
 
           {balance !== null && (
             <motion.div 
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="mt-6 p-6 bg-gradient-to-b from-white/5 to-transparent rounded-3xl border border-white/5"
+              initial={{ x: -20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              className="mt-8 p-6 border-l-2 border-purple-500 bg-purple-500/5 relative overflow-hidden"
             >
-              <p className="text-gray-500 text-xs uppercase tracking-widest font-bold mb-1">Balance</p>
-              <h2 className="text-4xl font-black text-white">
-                {balance.toFixed(4)} <span className="text-xs text-cyan-400 font-mono">SOL</span>
+              <div className="absolute top-0 right-0 p-1 bg-purple-500 text-[8px] text-black font-bold">DATA_RETRIEVED</div>
+              <p className="text-gray-500 text-[10px] font-mono mb-2 tracking-tighter">SOLANA_MAINNET_ASSETS:</p>
+              <h2 className="text-5xl font-black text-white italic">
+                {balance.toFixed(3)} <span className="text-sm text-cyan-400">SOL</span>
               </h2>
             </motion.div>
           )}
         </div>
       </motion.div>
 
-      <div className="mt-10 flex items-center gap-2 opacity-30">
-        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-        <p className="text-[10px] uppercase tracking-[0.3em] font-bold">Network Stable</p>
+      {/* Footer Info */}
+      <div className="mt-12 flex flex-col items-center gap-4 opacity-40">
+        <div className="flex gap-8">
+           <ShieldCheck size={16} className="text-cyan-500" />
+           <Activity size={16} className="text-purple-500" />
+        </div>
+        <p className="text-[9px] font-mono tracking-widest text-gray-500 uppercase italic">Established 2025 // Project: WAGMI // System: Secure</p>
       </div>
     </div>
   );
 }
+
+const Activity = ({ size, className }: { size: number, className: string }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+  </svg>
+)
