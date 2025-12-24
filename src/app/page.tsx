@@ -1,4 +1,3 @@
-cat << 'EOF' > src/app/page.tsx
 "use client";
 import React, { useState, useRef, useEffect } from 'react';
 import { Connection, PublicKey } from '@solana/web3.js';
@@ -84,7 +83,7 @@ export default function WagmiFinalBuild() {
         body: JSON.stringify({ message: userMsg, context: context })
       });
       const result = await response.json();
-      setChatHistory(prev => [...prev, { role: 'bot', text: result.text || "I am currently syncing. Try again." }]);
+      setChatHistory(prev => [...prev, { role: 'bot', text: result.text || "AI is syncing, try again." }]);
     } catch (e) {
       setChatHistory(prev => [...prev, { role: 'bot', text: "AI Service connection error." }]);
     } finally {
@@ -94,12 +93,12 @@ export default function WagmiFinalBuild() {
 
   return (
     <div className="relative min-h-screen bg-black text-white flex flex-col font-sans overflow-x-hidden selection:bg-cyan-500/30">
-      <div className="w-full bg-white/[0.03] border-b border-white/5 py-2.5 px-6 flex gap-8 items-center z-50 backdrop-blur-md overflow-x-auto scrollbar-hide">
+      <div className="w-full bg-white/[0.03] border-b border-white/5 py-2.5 px-6 flex gap-8 items-center z-50 backdrop-blur-md overflow-x-auto scrollbar-hide text-[10px] md:text-xs">
         <div className="flex items-center gap-2 shrink-0">
           <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"/>
-          <span className="text-[9px] font-mono font-black text-cyan-400 uppercase">Live_Market</span>
+          <span className="font-mono font-black text-cyan-400 uppercase">Live_Market</span>
         </div>
-        <div className="flex gap-10 text-[9px] font-mono font-bold uppercase whitespace-nowrap">
+        <div className="flex gap-10 font-mono font-bold uppercase whitespace-nowrap">
            <span>SOL <span className="text-white">${Number(prices.SOL).toFixed(2)}</span></span>
            <span>JUP <span className="text-white">${Number(prices.JUP).toFixed(4)}</span></span>
            <span>BTC <span className="text-yellow-500">${Number(prices.BTC).toLocaleString()}</span></span>
@@ -108,7 +107,7 @@ export default function WagmiFinalBuild() {
 
       <div className="flex flex-col items-center py-16 md:py-24 px-5 relative z-10 w-full max-w-2xl mx-auto">
         <motion.div initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-center mb-16">
-          <h1 className="text-7xl md:text-9xl font-black tracking-tighter italic leading-none mb-4">WAGMI</h1>
+          <h1 className="text-7xl md:text-9xl font-black tracking-tighter italic leading-none mb-4 drop-shadow-2xl">WAGMI</h1>
           <div className="flex items-center justify-center gap-3 text-cyan-500">
             <Cpu size={14} />
             <p className="text-[10px] font-mono tracking-[0.6em] font-black uppercase italic">Neural Terminal v22.5</p>
@@ -125,20 +124,20 @@ export default function WagmiFinalBuild() {
         <AnimatePresence>
           {data && (
             <motion.div initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="w-full">
-              <div ref={cardRef} className="p-10 md:p-14 rounded-[3rem] md:rounded-[4rem] bg-[#050505] border border-white/10 text-left relative overflow-hidden mb-8 shadow-2xl">
+              <div ref={cardRef} className="p-8 md:p-14 rounded-[3rem] md:rounded-[4rem] bg-[#050505] border border-white/10 text-left relative overflow-hidden mb-8 shadow-2xl">
                 <motion.div animate={{ y: [0, 600, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "linear" }} className="absolute top-0 left-0 w-full h-[1px] bg-cyan-500 z-20 shadow-[0_0_15px_cyan]"/>
-                <div className="flex justify-between items-center mb-16">
+                <div className="flex justify-between items-center mb-12">
                    <div className="bg-white/5 px-4 py-2 rounded-full border border-white/10 text-[9px] font-mono text-cyan-400 font-bold uppercase italic tracking-tighter">ID: {data.address}</div>
                    <ShieldCheck className="text-cyan-500 shrink-0" size={24} />
                 </div>
-                <div className="space-y-12">
+                <div className="space-y-10">
                   <div>
                     <p className="text-[9px] font-mono text-gray-600 uppercase tracking-widest font-bold mb-2 italic">Identity Class</p>
-                    <h2 className="text-5xl md:text-8xl font-black italic text-white uppercase tracking-tighter leading-none">{data.status}</h2>
+                    <h2 className="text-4xl md:text-8xl font-black italic text-white uppercase tracking-tighter leading-none break-words">{data.status}</h2>
                   </div>
                   <div className="pt-8 border-t border-white/5">
                     <p className="text-[9px] font-mono text-gray-600 uppercase mb-3 font-bold italic tracking-widest">Balance Assessment</p>
-                    <p className="text-6xl md:text-8xl font-black text-white tracking-tighter">
+                    <p className="text-5xl md:text-8xl font-black text-white tracking-tighter">
                         {data.sol.toFixed(2)} <span className="text-2xl md:text-3xl text-cyan-500 font-light italic">SOL</span>
                     </p>
                   </div>
@@ -148,7 +147,7 @@ export default function WagmiFinalBuild() {
           )}
         </AnimatePresence>
 
-        <div className="w-full bg-[#050505] border border-white/10 rounded-[2.5rem] p-10 text-left shadow-2xl mb-24 backdrop-blur-md">
+        <div className="w-full bg-[#050505] border border-white/10 rounded-[2.5rem] p-8 md:p-10 text-left shadow-2xl mb-24 backdrop-blur-md">
            <div className="grid grid-cols-2 gap-4 md:gap-6 font-mono text-sm">
               {[
                 { sym: 'SOL', price: prices.SOL, color: 'text-cyan-400' },
@@ -158,7 +157,7 @@ export default function WagmiFinalBuild() {
               ].map((token) => (
                  <div key={token.sym} className="bg-white/[0.03] p-5 rounded-2xl border border-white/5">
                     <p className="text-gray-600 text-[8px] mb-1 font-black uppercase tracking-widest">{token.sym}</p>
-                    <p className={`text-base md:text-xl font-black ${token.color} italic tracking-tighter`}>
+                    <p className={`text-sm md:text-xl font-black ${token.color} italic tracking-tighter`}>
                       ${token.price > 0 ? Number(token.price).toFixed(token.sym === 'BONK' ? 6 : 2) : "---"}
                     </p>
                  </div>
@@ -174,25 +173,26 @@ export default function WagmiFinalBuild() {
       </div>
 
       <div className="fixed bottom-6 right-6 z-[100]">
-        <button onClick={() => setIsChatOpen(!isChatOpen)} className="w-16 h-16 bg-cyan-500 rounded-full flex items-center justify-center shadow-2xl">
+        <button onClick={() => setIsChatOpen(!isChatOpen)} className="w-14 h-14 md:w-16 md:h-16 bg-cyan-500 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform">
           {isChatOpen ? <X size={28} className="text-black" /> : <MessageSquare size={28} className="text-black" />}
         </button>
         <AnimatePresence>
           {isChatOpen && (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="absolute bottom-20 right-0 w-[320px] md:w-[380px] h-[500px] bg-[#0A0A0A] border border-white/10 rounded-[2.5rem] shadow-2xl flex flex-col overflow-hidden backdrop-blur-3xl">
-              <div className="p-6 border-b border-white/5 bg-white/5 flex items-center gap-3">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="absolute bottom-20 right-0 w-[280px] md:w-[380px] h-[450px] md:h-[550px] bg-[#0A0A0A] border border-white/10 rounded-[2rem] md:rounded-[2.5rem] shadow-2xl flex flex-col overflow-hidden backdrop-blur-3xl">
+              <div className="p-5 md:p-6 border-b border-white/5 bg-white/5 flex items-center gap-3">
                 <Bot size={18} className="text-cyan-500"/>
                 <h5 className="text-[10px] font-black uppercase tracking-widest">Wagmi Intelligence</h5>
               </div>
-              <div className="flex-1 overflow-y-auto p-5 space-y-4 text-[11px] font-mono scrollbar-hide">
+              <div className="flex-1 overflow-y-auto p-4 md:p-5 space-y-4 text-[11px] font-mono scrollbar-hide">
+                {chatHistory.length === 0 && <p className="text-gray-600 text-center mt-10">Ask me anything about Solana...</p>}
                 {chatHistory.map((msg, i) => (
                   <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                    <div className={`max-w-[85%] p-4 rounded-2xl ${msg.role === 'user' ? 'bg-cyan-500 text-black font-bold' : 'bg-white/5 text-gray-300 border border-white/10'}`}>
+                    <div className={`max-w-[85%] p-3 md:p-4 rounded-2xl ${msg.role === 'user' ? 'bg-cyan-500 text-black font-bold' : 'bg-white/5 text-gray-300 border border-white/10'}`}>
                       {msg.text}
                     </div>
                   </div>
                 ))}
-                {isTyping && <div className="text-[9px] text-cyan-500 font-mono animate-pulse">Gemini is thinking...</div>}
+                {isTyping && <div className="text-[9px] text-cyan-500 font-mono animate-pulse">Thinking...</div>}
               </div>
               <div className="p-4 bg-black border-t border-white/5 flex gap-2">
                 <input className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-[11px] outline-none focus:border-cyan-500 text-white" placeholder="Ask Gemini..." value={chatInput} onChange={(e) => setChatInput(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && handleChat()} />
@@ -205,4 +205,3 @@ export default function WagmiFinalBuild() {
     </div>
   );
 }
-EOF
