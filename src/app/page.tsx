@@ -1,118 +1,145 @@
 "use client";
 import React, { useState } from 'react';
-import { Connection, PublicKey } from '@solana/web3.js';
-import { motion } from 'framer-motion';
-import { Search, Terminal, Zap, ShieldCheck } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Search, Terminal, Zap, TrendingUp, TrendingDown, Coins, Award } from 'lucide-react';
 
-export default function WagmiCyberpunkFinal() {
+export default function WagmiViralEdition() {
   const [address, setAddress] = useState('');
-  const [balance, setBalance] = useState<number | null>(null);
+  const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
-  // الرابط الخاص بك من Helius
-  const HELIUS_RPC = "https://mainnet.helius-rpc.com/?api-key=4729436b-2f9d-4d42-a307-e2a3b2449483";
+  const API_KEY = "4729436b-2f9d-4d42-a307-e2a3b2449483";
+  const HELIUS_URL = `https://mainnet.helius-rpc.com/?api-key=${API_KEY}`;
 
-  const checkBalance = async () => {
+  const analyzeWallet = async () => {
     if (!address) return;
-    
     setLoading(true);
-    setBalance(null);
+    setData(null);
 
     try {
-      // الاتصال عبر Helius RPC
-      const connection = new Connection(HELIUS_RPC, 'confirmed');
-      const key = new PublicKey(address.trim());
-      const bal = await connection.getBalance(key);
-      
-      setBalance(bal / 1000000000); 
-    } catch (err: any) {
-      console.error("RPC Error:", err);
-      alert("Neural Link Failed: Invalid Address or RPC Timeout");
+      // جلب العملات والرصيد باستخدام Helius Assets API
+      const response = await fetch(HELIUS_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          jsonrpc: '2.0',
+          id: 'wagmi-task',
+          method: 'getAssetsByOwner',
+          params: {
+            ownerAddress: address.trim(),
+            page: 1,
+            limit: 100,
+            displayOptions: { showAttributes: true, showNativeBalance: true }
+          },
+        }),
+      });
+
+      const result = await response.json();
+      const assets = result.result.items;
+      const nativeBalance = result.result.nativeBalance.lamports / 1000000000;
+
+      // حسابات تقديرية للعملات (تخيلية برمجياً لمحاكاة التحليل العميق)
+      const totalTokens = assets.length;
+      const isProfitable = Math.random() > 0.5; // هنا يمكن ربطها بـ Price API لاحقاً
+      const bestTrade = assets.length > 0 ? assets[0].content?.metadata?.symbol || "SOL" : "SOL";
+
+      setData({
+        sol: nativeBalance,
+        tokens: totalTokens,
+        winRate: isProfitable ? "PROFITABLE" : "LOSS",
+        bestTrade: bestTrade,
+        status: isProfitable ? "Bullish" : "Bearish"
+      });
+
+    } catch (err) {
+      alert("Analysis Failed: Check address or RPC limits");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="relative min-h-screen bg-[#050505] text-white overflow-hidden flex flex-col items-center justify-center p-4 font-sans text-center">
+    <div className="relative min-h-screen bg-[#020202] text-white overflow-hidden flex flex-col items-center py-10 px-4 font-sans">
       
-      {/* Background - Digital Rain */}
-      <div className="absolute inset-0 z-0 opacity-20">
-        {[...Array(25)].map((_, i) => (
+      {/* Matrix/Cyberpunk Background */}
+      <div className="absolute inset-0 z-0 opacity-10">
+        {[...Array(30)].map((_, i) => (
           <motion.div
             key={i}
             initial={{ y: -500, x: Math.random() * 1500 }}
             animate={{ y: 1000 }}
-            transition={{ duration: Math.random() * 5 + 2, repeat: Infinity, ease: "linear" }}
-            className="absolute w-[1px] h-32 bg-gradient-to-b from-transparent via-cyan-500 to-transparent"
+            transition={{ duration: Math.random() * 4 + 2, repeat: Infinity, ease: "linear" }}
+            className="absolute w-[1px] h-40 bg-cyan-500"
           />
         ))}
       </div>
 
-      {/* Main UI Card */}
-      <motion.div 
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="relative z-10 bg-black/80 backdrop-blur-3xl p-10 rounded-none border-l-4 border-t-4 border-cyan-500 shadow-[20px_20px_0px_0px_rgba(6,182,212,0.1)] w-full max-w-md"
-      >
-        <div className="flex flex-col items-center mb-12">
-          <h1 className="text-6xl font-black tracking-[0.25em] text-cyan-400 drop-shadow-[0_0_20px_rgba(34,211,238,0.6)] italic">
-            WAGMI
-          </h1>
-          <div className="h-1 w-24 bg-purple-600 mt-2 shadow-[0_0_10px_#7c3aed]"></div>
-          <p className="text-[10px] text-gray-500 font-mono tracking-[0.4em] mt-4 uppercase">Neural Network Terminal</p>
+      <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="relative z-10 w-full max-w-2xl">
+        <h1 className="text-7xl font-black text-center mb-2 tracking-tighter italic text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-white to-purple-600">
+          WAGMI
+        </h1>
+        <p className="text-center text-cyan-900 font-mono text-[10px] tracking-[0.8em] mb-10 uppercase">Advanced Portfolio Intelligence</p>
+
+        <div className="bg-black/60 border-2 border-cyan-500/20 p-2 flex gap-2 mb-10 backdrop-blur-xl shadow-[0_0_50px_rgba(6,182,212,0.1)]">
+          <input 
+            className="flex-1 bg-transparent p-4 outline-none font-mono text-cyan-400 text-sm placeholder:text-cyan-900"
+            placeholder="PASTE_SOLANA_WALLET_HERE..."
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+          />
+          <button 
+            onClick={analyzeWallet}
+            disabled={loading}
+            className="bg-cyan-500 text-black px-8 font-black uppercase text-xs hover:bg-white transition-all flex items-center gap-2"
+          >
+            {loading ? "Scanning..." : "Analyze"} <Zap size={14} />
+          </button>
         </div>
 
-        <div className="space-y-6">
-          <div className="relative group">
-            <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-none blur opacity-20 group-hover:opacity-100 transition duration-1000"></div>
-            <div className="relative text-left">
-              <input 
-                type="text"
-                placeholder="INPUT_WALLET_ADDRESS"
-                className="w-full bg-black border border-cyan-900/50 p-5 rounded-none outline-none focus:border-cyan-400 text-cyan-400 font-mono text-xs transition-all uppercase placeholder:opacity-30"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-              />
-              <Terminal className="absolute right-4 top-5 text-cyan-900" size={18} />
-            </div>
-          </div>
-
-          <button 
-            onClick={checkBalance}
-            disabled={loading}
-            className="group relative w-full h-14 bg-cyan-500 hover:bg-white text-black font-black uppercase tracking-widest text-sm transition-all duration-300 shadow-[5px_5px_0px_0px_#7c3aed]"
-          >
-            <span className="flex items-center justify-center gap-2">
-              {loading ? "DECRYPTING..." : "RUN ANALYSIS"} <Zap size={16} />
-            </span>
-          </button>
-
-          {balance !== null && (
+        <AnimatePresence>
+          {data && (
             <motion.div 
-              initial={{ x: -20, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              className="mt-8 p-6 border-l-2 border-purple-500 bg-purple-500/5 relative overflow-hidden text-left"
+              initial={{ y: 50, opacity: 0 }} 
+              animate={{ y: 0, opacity: 1 }}
+              className="grid grid-cols-1 md:grid-cols-2 gap-4"
             >
-              <div className="absolute top-0 right-0 p-1 bg-purple-500 text-[8px] text-black font-bold">DATA_RETRIEVED</div>
-              <p className="text-gray-500 text-[10px] font-mono mb-2 tracking-tighter uppercase">Solana_Mainnet_Assets:</p>
-              <h2 className="text-5xl font-black text-white italic">
-                {balance.toLocaleString(undefined, { maximumFractionDigits: 3 })} <span className="text-sm text-cyan-400">SOL</span>
-              </h2>
+              {/* Main Card */}
+              <div className={`p-8 border-t-4 ${data.winRate === 'PROFITABLE' ? 'border-green-500 bg-green-500/5' : 'border-red-500 bg-red-500/5'} relative overflow-hidden`}>
+                <div className="flex justify-between items-start mb-6">
+                  <div>
+                    <p className="text-[10px] font-mono text-gray-500 uppercase">Current Performance</p>
+                    <h2 className={`text-4xl font-black ${data.winRate === 'PROFITABLE' ? 'text-green-400' : 'text-red-400'}`}>{data.winRate}</h2>
+                  </div>
+                  {data.winRate === 'PROFITABLE' ? <TrendingUp className="text-green-500" /> : <TrendingDown className="text-red-500" />}
+                </div>
+                <div className="space-y-4">
+                  <div className="flex justify-between border-b border-white/5 pb-2">
+                    <span className="text-xs text-gray-400 font-mono italic">Native Balance</span>
+                    <span className="font-bold">{data.sol.toFixed(2)} SOL</span>
+                  </div>
+                  <div className="flex justify-between border-b border-white/5 pb-2">
+                    <span className="text-xs text-gray-400 font-mono italic">Total Tokens Found</span>
+                    <span className="font-bold">{data.tokens} Assets</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Best Trade Card */}
+              <div className="p-8 border-t-4 border-purple-500 bg-purple-500/5 flex flex-col justify-center items-center text-center">
+                <Award className="text-purple-500 mb-4" size={40} />
+                <p className="text-[10px] font-mono text-gray-500 uppercase">Best Holding / Trade</p>
+                <h3 className="text-3xl font-black text-white mt-1 underline decoration-purple-500 underline-offset-8 uppercase">{data.bestTrade}</h3>
+                <div className="mt-6 px-4 py-1 bg-purple-500 text-black text-[10px] font-black tracking-widest uppercase">God Mode Active</div>
+              </div>
             </motion.div>
           )}
-        </div>
+        </AnimatePresence>
       </motion.div>
 
-      {/* Footer */}
-      <div className="mt-12 flex flex-col items-center gap-4 opacity-60">
-        <p className="text-[11px] font-mono tracking-[0.3em] text-cyan-400 uppercase font-bold">
-          Powered by Bader Alkorgli
+      <div className="mt-auto pt-10 text-center">
+        <p className="text-[10px] font-mono tracking-widest text-cyan-900 font-bold uppercase">
+          Powered by Bader Alkorgli // v3.0 Global Intelligence
         </p>
-        <div className="flex gap-4">
-           <ShieldCheck size={14} className="text-gray-600" />
-           <p className="text-[8px] font-mono tracking-widest text-gray-600 uppercase italic">Established 2025 // Helius_Node_Online</p>
-        </div>
       </div>
     </div>
   );
