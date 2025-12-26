@@ -2,10 +2,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Connection, PublicKey } from '@solana/web3.js';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Download, Radio, ShieldCheck, Fingerprint, Volume2, VolumeX, Github, Cpu, Box, Zap } from 'lucide-react';
+import { Download, Radio, ShieldCheck, Fingerprint, Volume2, VolumeX, Github, Cpu } from 'lucide-react';
 import { toPng } from 'html-to-image';
 
-export default function WagmiCyberAgent() {
+export default function WagmiDrStoneAgent() {
   const [address, setAddress] = useState('');
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
@@ -71,51 +71,52 @@ export default function WagmiCyberAgent() {
   return (
     <div className="min-h-screen bg-[#000] text-white flex flex-col items-center p-4 md:p-10 font-sans overflow-x-hidden relative selection:bg-cyan-500">
       
-      {/* --- ADVANCED CYBERNETIC AI AGENT --- */}
-      <div className="fixed top-12 left-12 z-50 hidden lg:block">
-        <div className="relative flex flex-col items-center">
-          {/* Outer Ring */}
+      {/* --- DR. STONE ANIME AGENT --- */}
+      <motion.div 
+        initial={{ opacity: 0, x: -50 }}
+        animate={{ opacity: 1, x: 0 }}
+        className="fixed bottom-10 left-10 z-50 hidden lg:block pointer-events-none"
+      >
+        <div className="relative group">
+          {/* Animated Aura */}
           <motion.div 
-            animate={{ rotate: 360 }}
-            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-            className="absolute w-32 h-32 border-t-2 border-b-2 border-cyan-500/30 rounded-full"
+            animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.5, 0.2] }}
+            transition={{ duration: 4, repeat: Infinity }}
+            className="absolute inset-0 bg-cyan-500/20 blur-[80px] rounded-full"
           />
           
-          {/* AI Core Structure */}
-          <motion.div 
-            animate={loading ? { scale: [1, 1.2, 1], rotate: [0, 90, 180, 270, 360] } : { y: [0, -10, 0] }}
-            transition={{ duration: loading ? 1 : 4, repeat: Infinity }}
-            className="w-24 h-24 bg-gradient-to-br from-black to-cyan-900/40 rounded-3xl border border-cyan-400/50 shadow-[0_0_30px_rgba(6,182,212,0.3)] flex items-center justify-center relative backdrop-blur-xl"
+          <motion.div
+            animate={loading ? { y: [0, -15, 0], rotate: [0, 2, -2, 0] } : { y: [0, -10, 0] }}
+            transition={{ duration: loading ? 0.5 : 4, repeat: Infinity, ease: "easeInOut" }}
+            className="relative"
           >
-            <Cpu size={40} className={`transition-colors duration-500 ${loading ? 'text-purple-400' : 'text-cyan-400'}`} />
+            {/* الشخصية الموجهة - Senku Ishigami */}
+            <img 
+              src="https://www.pngarts.com/files/12/Senku-Ishigami-Dr.-Stone-PNG-Photo.png" 
+              alt="Dr Stone Agent"
+              className="w-56 h-auto drop-shadow-[0_0_20px_rgba(6,182,212,0.5)]"
+              onError={(e) => {
+                // في حال فشل الرابط يظهر شعار تقني فخم كبديل
+                e.currentTarget.src = "https://cdn-icons-png.flaticon.com/512/4712/4712139.png";
+              }}
+            />
             
-            {/* Spinning Particles around Core */}
-            {[...Array(4)].map((_, i) => (
-              <motion.div
-                key={i}
-                animate={{ rotate: 360 }}
-                transition={{ duration: 2 + i, repeat: Infinity, ease: "linear" }}
-                className="absolute inset-0"
-              >
-                <div className="w-2 h-2 bg-white rounded-full absolute -top-1 left-1/2 -translate-x-1/2 shadow-[0_0_10px_#fff]" />
-              </motion.div>
-            ))}
+            {/* Status Indicator */}
+            <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-black/80 border border-cyan-500/50 px-3 py-1 rounded-md">
+                <p className="text-[8px] font-mono text-cyan-400 tracking-[0.2em] uppercase animate-pulse">
+                    {loading ? "Analyzing..." : "Senku Active"}
+                </p>
+            </div>
           </motion.div>
-
-          <div className="mt-6 bg-black/60 border border-white/5 px-4 py-1 rounded-full backdrop-blur-md">
-            <p className="text-[10px] font-mono tracking-[0.3em] text-cyan-400 uppercase">
-              {loading ? "Neural Scanning..." : "Agent Standby"}
-            </p>
-          </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Audio Toggle */}
       <button onClick={() => setIsMuted(!isMuted)} className="fixed top-6 right-6 z-50 p-3 bg-white/5 border border-white/10 rounded-full hover:bg-white/10 transition-all backdrop-blur-md">
         {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} className="text-cyan-400" />}
       </button>
 
-      {/* --- FULL SCREEN SNOW SYSTEM --- */}
+      {/* --- SNOW SYSTEM --- */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         {[...Array(60)].map((_, i) => (
           <motion.div
@@ -135,9 +136,9 @@ export default function WagmiCyberAgent() {
           <h1 className="text-8xl md:text-[15rem] font-[1000] italic tracking-tighter leading-none text-white drop-shadow-[0_0_60px_rgba(255,255,255,0.2)]">
             WAGMI
           </h1>
-          <motion.p animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 3, repeat: Infinity }} className="mt-4 text-[10px] md:text-[14px] font-mono tracking-[1.2em] text-cyan-400 uppercase font-black italic">
-               CYBERNETIC INTERFACE v5.5
-          </motion.p>
+          <p className="mt-4 text-[10px] md:text-[14px] font-mono tracking-[1.2em] text-cyan-400 uppercase font-black italic">
+               SCIENCE & LEGACY INTERFACE
+          </p>
         </motion.div>
 
         {/* INPUT SECTION */}
@@ -157,7 +158,7 @@ export default function WagmiCyberAgent() {
             disabled={loading} 
             className="w-full mt-6 py-6 bg-white text-black rounded-full font-black uppercase text-sm md:text-lg tracking-[0.4em] hover:scale-[1.02] transition-all active:scale-95 shadow-[0_0_40px_rgba(255,255,255,0.1)]"
           >
-            {loading ? "AUTHORIZING AGENT..." : "INITIATE SCAN"}
+            {loading ? "CALCULATING PROBABILITIES..." : "AUTHORIZE SCAN"}
           </button>
         </div>
 
@@ -165,45 +166,37 @@ export default function WagmiCyberAgent() {
           {data && (
             <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col items-center gap-12 w-full px-2 relative z-20">
               
-              {/* THE MASTERPIECE NEON CARD (PREVIOUS DESIGN MAINTAINED) */}
-              <div className="relative w-full max-w-[620px] aspect-[1.58/1] rounded-[2.5rem] md:rounded-[3.8rem] p-[3px] overflow-hidden shadow-[0_0_100px_rgba(0,0,0,1)]">
+              <div className="relative w-full max-w-[620px] aspect-[1.58/1] rounded-[2.5rem] md:rounded-[3.8rem] p-[3px] overflow-hidden">
                 <div className="absolute inset-[-500%] animate-[spin_4s_linear_infinity] bg-[conic-gradient(from_0deg,transparent,transparent,#06b6d4,#a855f7,#06b6d4,transparent,transparent)]" />
                 
-                <div ref={cardRef} className="relative w-full h-full bg-[#050505] rounded-[2.4rem] md:rounded-[3.7rem] p-8 md:p-14 overflow-hidden flex flex-col justify-between z-10">
-                  <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")` }} />
-                  
-                  {/* Top Header */}
+                <div ref={cardRef} className="relative w-full h-full bg-[#050505] rounded-[2.4rem] md:rounded-[3.7rem] p-8 md:p-14 flex flex-col justify-between z-10">
                   <div className="flex justify-between items-start relative z-20">
                     <div className="flex items-center gap-6">
                       <div className="w-14 h-14 md:w-20 md:h-20 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10">
                         <Fingerprint size={32} className="md:w-11 md:h-11 text-cyan-400" />
                       </div>
                       <div className="text-left">
-                        <p className="text-xl md:text-3xl font-black italic text-white uppercase tracking-tighter">Wagmi Legacy</p>
-                        <p className="text-[10px] md:text-[12px] font-mono text-white/30 tracking-[0.2em] uppercase italic">System Verified</p>
+                        <p className="text-xl md:text-3xl font-black italic text-white tracking-tighter uppercase">Wagmi Legacy</p>
+                        <p className="text-[10px] md:text-[12px] font-mono text-white/30 tracking-[0.2em] uppercase">Authenticated Node</p>
                       </div>
                     </div>
                     <Radio className="text-cyan-500 animate-pulse w-7 h-7 md:w-10 md:h-10" />
                   </div>
 
-                  {/* Balance Section */}
                   <div className="flex items-center gap-4 text-left relative z-20">
-                    <h2 className="text-6xl md:text-[7rem] font-[1000] tracking-tighter text-white drop-shadow-[0_0_40px_rgba(255,255,255,0.4)] leading-none italic">{data.sol}</h2>
-                    <span className="text-xl md:text-3xl font-black text-cyan-400 italic self-end mb-2 md:mb-4">SOL</span>
+                    <h2 className="text-6xl md:text-[7rem] font-[1000] tracking-tighter text-white drop-shadow-[0_0_40px_rgba(255,255,255,0.4)] italic">{data.sol}</h2>
+                    <span className="text-xl md:text-3xl font-black text-cyan-400 italic mb-2 md:mb-4">SOL</span>
                   </div>
 
-                  {/* Bottom Info */}
                   <div className="flex justify-between items-end border-t border-white/5 pt-8 md:pt-12 relative z-20">
                     <div className="text-left">
                         <div className="flex items-center gap-2 mb-2">
                            <ShieldCheck size={14} className="text-cyan-400" />
-                           <p className="text-[9px] md:text-[11px] font-black text-cyan-400 uppercase tracking-[0.2em] italic">Access: Authorized</p>
+                           <p className="text-[9px] md:text-[11px] font-black text-cyan-400 uppercase tracking-[0.2em] italic">Access: Scientific</p>
                         </div>
-                        <p className="text-sm md:text-2xl font-black italic tracking-tight text-white/90 uppercase">{data.status}</p>
+                        <p className="text-sm md:text-2xl font-black italic text-white/90 uppercase">{data.status}</p>
                     </div>
-                    <div className="text-right">
-                        <p className="text-[10px] font-mono text-white/40">NODE: {data.id}</p>
-                    </div>
+                    <p className="text-[10px] font-mono text-white/40">NODE ID: {data.id}</p>
                   </div>
                 </div>
               </div>
@@ -211,9 +204,9 @@ export default function WagmiCyberAgent() {
               <button 
                 onMouseEnter={() => playSound(hoverSound)}
                 onClick={saveCard} 
-                className="flex items-center gap-6 bg-white/5 border border-white/10 px-24 py-6 rounded-full font-black text-xs uppercase tracking-[0.8em] hover:bg-white hover:text-black transition-all mb-20 group"
+                className="flex items-center gap-6 bg-white/5 border border-white/10 px-24 py-6 rounded-full font-black text-xs uppercase tracking-[0.8em] hover:bg-white hover:text-black transition-all mb-20"
               >
-                SAVE IDENTITY <Download size={20} className="group-hover:translate-y-1 transition-transform" />
+                SAVE ASSET <Download size={20} />
               </button>
             </motion.div>
           )}
