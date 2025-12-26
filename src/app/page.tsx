@@ -1,172 +1,198 @@
 "use client";
 import React, { useState, useRef, useEffect } from 'react';
 import { Connection, PublicKey } from '@solana/web3.js';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-import { Download, ShieldCheck, Zap, Layers, Radio, Cpu, Github, Activity, Globe, Lock, BarChart3, Fingerprint } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Download, Zap, Layers, Radio, Cpu, Sparkles } from 'lucide-react';
 import { toPng } from 'html-to-image';
 
-const ECOSYSTEM_ICONS = [
-  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFW36DP7btR2GrS1W86WH7AfB7rqnCYcV5as67vS5/logo.png",
-  "https://jup.ag/svg/jupiter-logo.svg",
-  "https://raydium.io/logo/logo-only-light.svg",
-  "https://pyth.network/favicon.ico",
-  "https://www.tensor.trade/favicon.ico",
-];
-
-export default function WagmiSuperNovaTerminal() {
+export default function WagmiLaunchEdition() {
   const [address, setAddress] = useState('');
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
-  const resultRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll();
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
 
-  const handleScan = async () => {
-    if (!address || address.length < 32) {
-      alert("Please enter a valid Solana address");
-      return;
-    }
+  // Analyze Function
+  const analyze = async () => {
+    if (!address) return;
     setLoading(true);
-    setData(null); 
     try {
-      const connection = new Connection("https://api.mainnet-beta.solana.com", "confirmed");
+      const connection = new Connection("https://mainnet.helius-rpc.com/?api-key=4729436b-2f9d-4d42-a307-e2a3b2449483");
       const key = new PublicKey(address.trim());
-      const balance = await connection.getBalance(key).catch(() => 0);
+      const balance = await connection.getBalance(key);
       const sol = balance / 1_000_000_000;
-      let currentStatus = sol >= 100 ? "SOLANA WHALE" : sol >= 10 ? "ALPHA TRADER" : "WAGMI SOLDIER";
-      
-      const resData = { sol: sol.toFixed(2), status: currentStatus, asset: "SOL", id: Math.floor(1000 + Math.random() * 9000) };
-      setData(resData);
-      
-      setTimeout(() => {
-        resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 500);
-    } catch (e) { alert("Scan Error. Please check your connection."); } finally { setLoading(false); }
+      setData({
+        sol: sol.toFixed(2),
+        status: sol >= 100 ? "SOLANA WHALE" : sol >= 10 ? "ALPHA TRADER" : "WAGMI SOLDIER",
+        id: Math.floor(1000 + Math.random() * 9000)
+      });
+    } catch (e) { 
+      alert("Invalid Address. Ensure it's a valid Solana Public Key."); 
+    } finally { 
+      setLoading(false); 
+    }
+  };
+
+  const saveCard = async () => {
+    if (!cardRef.current) return;
+    try {
+      const dataUrl = await toPng(cardRef.current, { pixelRatio: 3, backgroundColor: '#000' });
+      const link = document.createElement('a');
+      link.download = `WAGMI-PASS-${data?.id}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) { alert("Error saving card."); }
   };
 
   return (
-    <div className="min-h-screen bg-[#000] text-white font-sans selection:bg-cyan-500 overflow-x-hidden">
+    <div className="min-h-screen bg-[#020202] text-white flex flex-col items-center p-4 md:p-10 font-sans overflow-x-hidden relative selection:bg-cyan-500">
       
-      {/* --- BACKGROUND ENGINE --- */}
-      <motion.div style={{ y: backgroundY }} className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[80vw] h-[80vw] bg-[#9945FF]/10 blur-[180px] rounded-full animate-pulse" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[80vw] h-[80vw] bg-[#14F195]/10 blur-[180px] rounded-full animate-pulse" />
-      </motion.div>
-
-      {/* --- THE CORE ENGINE (WAGMI LOGO) --- */}
-      <div className="fixed right-[5%] top-1/2 -translate-y-1/2 z-0 opacity-80 pointer-events-none hidden lg:block">
-        <motion.div 
-          animate={{ scale: [1, 1.05, 1], rotate: [0, 5, 0] }} 
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-          className="relative w-72 h-72 flex items-center justify-center"
-        >
-          <div className="absolute inset-0 bg-gradient-to-tr from-[#9945FF] to-[#14F195] rounded-full blur-[90px] opacity-20" />
-          
-          <div className="relative w-full h-full bg-black rounded-full border border-white/10 flex items-center justify-center p-14 shadow-[0_0_100px_rgba(20,241,149,0.1)]">
-            <svg viewBox="0 0 100 100" className="w-full h-full">
-              <path d="M20 35L50 85L80 35" stroke="url(#g1)" strokeWidth="6" strokeLinecap="round" />
-              <path d="M20 55L50 15L80 55" stroke="url(#g2)" strokeWidth="6" strokeLinecap="round" />
-              <defs>
-                <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#9945FF"/><stop offset="100%" stopColor="#14F195"/></linearGradient>
-                <linearGradient id="g2" x1="100%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stopColor="#14F195"/><stop offset="100%" stopColor="#00FFA3"/></linearGradient>
-              </defs>
-            </svg>
-          </div>
-
-          {/* Fountain Icons */}
-          {ECOSYSTEM_ICONS.map((icon, i) => (
-            <motion.img
-              key={i} src={icon}
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: [0, 1, 0], scale: [0.4, 0.8, 0.4], x: [0, (i % 2 === 0 ? 1 : -1) * 200], y: [0, -350] }}
-              transition={{ duration: 7, repeat: Infinity, delay: i * 1.4 }}
-              className="absolute w-10 h-10 rounded-full border border-white/10 bg-black/50 p-1"
-            />
-          ))}
-        </motion.div>
+      {/* --- CYBER SNOW / PARTICLES SYSTEM --- */}
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+        {[...Array(30)].map((_, i) => (
+          <motion.div
+            key={i}
+            initial={{ y: -10, x: Math.random() * 100 + "%", opacity: 0 }}
+            animate={{ 
+              y: "110vh", 
+              opacity: [0, 0.8, 0],
+              x: (Math.random() * 100 - 10) + "%" 
+            }}
+            transition={{ 
+              duration: Math.random() * 10 + 5, 
+              repeat: Infinity, 
+              ease: "linear",
+              delay: Math.random() * 10 
+            }}
+            className="absolute w-[2px] h-[2px] bg-cyan-400 rounded-full shadow-[0_0_10px_#06b6d4]"
+          />
+        ))}
       </div>
 
-      {/* --- HERO SECTION --- */}
-      <section className="relative z-10 min-h-screen flex flex-col items-center justify-center p-6 text-center">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-          <h1 className="text-[12vw] md:text-[10rem] font-serif font-black italic tracking-tighter leading-none bg-gradient-to-b from-white to-gray-600 bg-clip-text text-transparent">WAGMI</h1>
-          <p className="text-[10px] md:text-[12px] font-mono tracking-[1.5em] text-cyan-400 uppercase mt-4 mb-16 animate-pulse">NEURAL TERMINAL v4.0</p>
+      {/* --- BACKGROUND AMBIENT GLOW --- */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[70vw] h-[70vw] bg-cyan-500/10 blur-[150px] rounded-full" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[70vw] h-[70vw] bg-purple-600/10 blur-[150px] rounded-full" />
+      </div>
+
+      <div className="relative z-10 w-full max-w-5xl flex flex-col items-center mt-12 md:mt-24">
+        
+        {/* --- SHARP WAGMI LOGO --- */}
+        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center mb-16 md:mb-28">
+          <h1 className="text-8xl md:text-[14rem] font-black italic tracking-tighter leading-none text-white drop-shadow-[0_0_50px_rgba(255,255,255,0.25)]">
+            WAGMI
+          </h1>
+          <p className="text-[10px] md:text-[14px] font-mono tracking-[1.5em] text-cyan-400 uppercase mt-4 font-bold italic opacity-80">
+            Secure Terminal v3.0
+          </p>
         </motion.div>
 
-        <div className="w-full max-w-xl px-4 space-y-6">
-          <div className="relative group">
-            <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-cyan-400 rounded-full blur opacity-25 group-focus-within:opacity-100 transition duration-1000"></div>
-            <input className="relative w-full bg-black/90 backdrop-blur-xl border border-white/10 rounded-full p-6 text-center outline-none font-mono text-white" placeholder="ENTER SOLANA ADDRESS" value={address} onChange={(e) => setAddress(e.target.value)} />
+        {/* --- INPUT AREA --- */}
+        <div className="w-full max-w-lg mb-20 px-4 relative">
+          <div className="relative p-[2px] rounded-full bg-gradient-to-r from-white/10 via-cyan-500/50 to-white/10 shadow-2xl overflow-hidden group">
+            <input 
+              className="w-full bg-black rounded-full p-6 text-center outline-none font-mono text-base md:text-lg text-white placeholder:text-white/20 transition-all focus:bg-[#050505]" 
+              placeholder="ENTER SOLANA ADDRESS"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+            />
           </div>
-          <button onClick={handleScan} disabled={loading} className="w-full py-6 bg-white text-black rounded-full font-[1000] uppercase text-2xl tracking-[0.5em] hover:bg-cyan-400 hover:text-white transition-all active:scale-95 shadow-2xl">
-            {loading ? "SCANNING..." : "SCAN"}
+          <button 
+            onClick={analyze} 
+            disabled={loading} 
+            className="w-full mt-6 py-6 bg-white text-black rounded-full font-black uppercase text-sm md:text-lg tracking-[0.4em] hover:bg-cyan-400 hover:text-white transition-all shadow-[0_0_30px_rgba(255,255,255,0.1)] active:scale-95 disabled:opacity-50"
+          >
+            {loading ? "SCANNING REALITY..." : "AUTHORIZE SCAN"}
           </button>
         </div>
-      </section>
 
-      {/* --- RESULT VIEW --- */}
-      <AnimatePresence>
-        {data && (
-          <section ref={resultRef} className="relative z-10 py-32 flex flex-col items-center px-4">
-            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="w-full max-w-[640px]">
-              <div ref={cardRef} className="relative w-full aspect-[1.58/1] rounded-[3.5rem] p-12 overflow-hidden bg-black/80 border border-white/10 backdrop-blur-3xl shadow-2xl">
-                 <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-purple-500/5" />
-                 <div className="relative z-10 h-full flex flex-col justify-between">
-                    <div className="flex justify-between items-start">
-                      <div className="flex items-center gap-4">
-                        <Fingerprint className="text-cyan-400" size={32} />
-                        <div><p className="text-xl font-black italic uppercase">Identity Pass</p><p className="text-[10px] font-mono text-white/40">ID: WAGMI-{data.id}</p></div>
+        <AnimatePresence>
+          {data && (
+            <motion.div initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="flex flex-col items-center gap-16 w-full px-2">
+              
+              {/* --- THE ENHANCED ANIMATED NEON CARD --- */}
+              <div className="relative w-full max-w-[600px] aspect-[1.58/1] rounded-[2.5rem] md:rounded-[3.5rem] p-[5px] overflow-hidden shadow-[0_0_80px_rgba(6,182,212,0.15)] group">
+                
+                {/* RACING NEON LIGHTS */}
+                <div className="absolute inset-[-500%] animate-[spin_3s_linear_infinity] bg-[conic-gradient(from_0deg,transparent,transparent,#06b6d4,#a855f7,#06b6d4,transparent,transparent)] opacity-100" />
+                
+                <div ref={cardRef} className="relative w-full h-full bg-[#050505] rounded-[2.3rem] md:rounded-[3.3rem] p-8 md:p-14 overflow-hidden flex flex-col justify-between z-10 border border-white/5">
+                  
+                  {/* Internal Glow Fix */}
+                  <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500/5 via-transparent to-purple-500/5 pointer-events-none" />
+                  
+                  {/* Top Section */}
+                  <div className="flex justify-between items-start relative z-20">
+                    <div className="flex items-center gap-4 md:gap-8">
+                      <div className="w-14 h-14 md:w-20 md:h-20 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 backdrop-blur-md shadow-[0_0_20px_rgba(255,255,255,0.05)]">
+                        <Layers size={32} className="md:w-11 md:h-11 text-cyan-400 drop-shadow-[0_0_12px_#06b6d4]" />
                       </div>
-                      <Radio className="text-cyan-500 animate-pulse" />
+                      <div className="text-left">
+                        <p className="text-lg md:text-2xl font-black italic text-white uppercase tracking-tighter">Identity Pass</p>
+                        <p className="text-[10px] md:text-[14px] font-mono text-cyan-400/50 uppercase font-bold">NODE: //SOL-00{data.id}//</p>
+                      </div>
+                    </div>
+                    <Radio className="text-cyan-500 animate-pulse w-8 h-8 md:w-12 md:h-12 drop-shadow-[0_0_15px_#06b6d4]" />
+                  </div>
+
+                  {/* Wealth Content */}
+                  <div className="flex items-center gap-8 md:gap-12 text-left relative z-20">
+                    <div className="w-20 h-14 md:w-28 md:h-20 bg-gradient-to-br from-white/10 to-transparent rounded-2xl border border-white/10 flex items-center justify-center">
+                        <Cpu size={38} className="md:w-14 md:h-14 text-white/20" />
                     </div>
                     <div>
-                      <h2 className="text-7xl md:text-8xl font-[1000] tracking-tighter">{data.sol}</h2>
-                      <p className="text-xs font-mono text-cyan-400/60 mt-2 uppercase tracking-widest font-bold">RESERVE: SOLANA_MAINNET</p>
+                        <h2 className="text-6xl md:text-[6.5rem] font-black tracking-tighter text-white drop-shadow-[0_0_40px_rgba(255,255,255,0.4)] leading-none italic">
+                          {data.sol}
+                        </h2>
+                        <p className="text-[10px] md:text-[14px] font-mono text-white/30 tracking-[0.6em] uppercase mt-3 font-bold italic">SOL_LIQUID_ASSETS</p>
                     </div>
-                    <div className="flex justify-between items-end border-t border-white/10 pt-8">
-                      <div><p className="text-[10px] text-white/40 uppercase mb-1 font-mono">Status Protocol</p><p className="text-2xl font-black italic text-white uppercase">{data.status}</p></div>
-                      <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-black shadow-xl"><Zap fill="currentColor" size={28} /></div>
+                  </div>
+
+                  {/* Bottom Section */}
+                  <div className="flex justify-between items-end border-t border-white/10 pt-8 md:pt-12 relative z-20">
+                    <div className="text-left">
+                        <p className="text-[10px] md:text-[14px] font-black text-cyan-400 uppercase tracking-widest italic mb-1 flex items-center gap-2">
+                           <Sparkles size={14} /> ENCRYPTED_ACCESS
+                        </p>
+                        <p className="text-sm md:text-2xl font-black italic tracking-tight text-white/90">RANK: //{data.status}</p>
                     </div>
-                 </div>
+                    <motion.div 
+                        animate={{ scale: [1, 1.05, 1] }} 
+                        transition={{ duration: 2, repeat: Infinity }}
+                        className="w-14 h-14 md:w-24 md:h-24 bg-cyan-400 rounded-2xl md:rounded-[2.5rem] flex items-center justify-center shadow-[0_0_50px_rgba(6,182,212,0.6)] border-4 border-white/20"
+                    >
+                        <Zap size={32} className="md:w-14 md:h-14 text-black" fill="currentColor" />
+                    </motion.div>
+                  </div>
+                </div>
               </div>
-              <button onClick={() => cardRef.current && toPng(cardRef.current, { pixelRatio: 3, backgroundColor: '#000' }).then(url => { const l=document.createElement('a'); l.download='WAGMI-PASS.png'; l.href=url; l.click(); })} className="mt-8 w-full py-5 bg-white/5 hover:bg-white hover:text-black border border-white/10 rounded-full font-black text-xs uppercase tracking-widest transition-all">Download Identity <Download size={16} className="inline ml-2" /></button>
+
+              {/* Action */}
+              <button 
+                onClick={saveCard} 
+                className="flex items-center gap-6 bg-white/5 border border-white/10 px-20 py-6 rounded-full font-black text-xs md:text-sm uppercase tracking-[0.7em] hover:bg-white hover:text-black transition-all shadow-2xl active:scale-95 mb-24 group"
+              >
+                EXPORT IDENTITY <Download size={20} className="group-hover:translate-y-1 transition-transform" />
+              </button>
             </motion.div>
-          </section>
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>
 
-      {/* --- ADDED BACK: EXTRA FEATURES --- */}
-      <section className="relative z-10 py-40 px-6 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-        {[
-          { icon: <Lock />, title: "Secure Scan", desc: "End-to-end encrypted node verification." },
-          { icon: <Activity />, title: "Live Stats", desc: "Real-time balance & status protocols." },
-          { icon: <BarChart3 />, title: "Whale Alert", desc: "Automated ranking based on wallet depth." }
-        ].map((feat, i) => (
-          <div key={i} className="p-10 bg-white/5 border border-white/10 rounded-[2.5rem] backdrop-blur-xl hover:bg-white/10 transition-all group">
-            <div className="text-cyan-400 mb-6 group-hover:scale-110 transition-transform">{feat.icon}</div>
-            <h3 className="text-2xl font-black italic mb-2 uppercase">{feat.title}</h3>
-            <p className="text-gray-500 font-mono text-sm leading-relaxed">{feat.desc}</p>
-          </div>
-        ))}
-      </section>
-
-      {/* --- FOOTER --- */}
-      <footer className="relative z-10 py-20 border-t border-white/5 px-6">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
-          <div className="text-left">
-            <h2 className="text-4xl font-black italic tracking-tighter">WAGMI PULSE</h2>
-            <p className="text-gray-500 font-mono text-xs mt-2 uppercase tracking-[0.4em]">Designed by <span className="text-cyan-500 font-bold underline">Bader Alkorgli</span></p>
-          </div>
-          <a href="https://github.com/bedro95" target="_blank" className="flex items-center gap-3 bg-white/10 hover:bg-white hover:text-black border border-white/10 px-8 py-4 rounded-2xl transition-all shadow-xl">
-            <Github size={22} /> <span className="font-black text-xs uppercase tracking-widest">Dev Repository</span>
-          </a>
+        {/* --- FOOTER --- */}
+        <div className="pb-16 text-center opacity-30 hover:opacity-100 transition-opacity duration-500">
+           <p className="text-[11px] font-mono tracking-[1.2em] uppercase">
+             Crafted for <span className="text-white font-black">WAGMI</span> by <span className="text-cyan-400 font-black italic border-b-2 border-cyan-500">Bader Alkorgli</span>
+           </p>
         </div>
-      </footer>
+      </div>
 
       <style jsx global>{`
-        html { scroll-behavior: smooth; }
-        ::-webkit-scrollbar { width: 4px; }
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        body { background-color: #020202; overflow-x: hidden; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #000; }
         ::-webkit-scrollbar-thumb { background: #06b6d4; border-radius: 10px; }
       `}</style>
     </div>
