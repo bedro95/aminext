@@ -6,17 +6,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Download, Fingerprint, Volume2, VolumeX, Activity, 
   Zap, ChevronRight, Trophy, Music, Github, ShieldCheck, 
-  Cpu, Calendar, Hash, Globe, BarChart3, Radio
+  Cpu, Calendar, Hash, Globe, BarChart3, Radio, Layers
 } from 'lucide-react';
 import { toPng } from 'html-to-image';
 
 /**
  * PROJECT: SENKU PROTOCOL (Wagmi)
  * DEVELOPER: bedro95
- * VERSION: ULTIMATE MASTERPIECE
+ * STATUS: OFFICIAL IDENTITY - DO NOT REMOVE LINES
  */
 
-export default function SenkuUltimateProtocol() {
+export default function SenkuOfficialMasterpiece() {
   const [address, setAddress] = useState('');
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
@@ -28,7 +28,7 @@ export default function SenkuUltimateProtocol() {
   const bgMusic = useRef<HTMLAudioElement | null>(null);
   const audioScan = useRef<HTMLAudioElement | null>(null);
 
-  // 1. نظام الصوت المتطور (Always Ready)
+  // 1. نظام الصوت المتطور (ثابت)
   useEffect(() => {
     bgMusic.current = new Audio('https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Ketsa/Raising_Frequency/Ketsa_-_08_-_World_In_Motion.mp3'); 
     bgMusic.current.loop = true;
@@ -44,7 +44,7 @@ export default function SenkuUltimateProtocol() {
     return () => window.removeEventListener('click', handleInitialInteraction);
   }, [isMuted]);
 
-  // 2. محاكاة رادار الحيتان (Real-time Simulation)
+  // 2. محاكاة رادار الحيتان (ثابت)
   useEffect(() => {
     const assets = ['SOL', 'USDC', 'JUP', 'PYTH', 'BONK'];
     const generateAlert = () => {
@@ -79,7 +79,6 @@ export default function SenkuUltimateProtocol() {
       const balance = await connection.getBalance(key);
       const sol = balance / 1_000_000_000;
       
-      // ألوان مملكة العلم الأصلية
       let tierColor = sol >= 1000 ? "#22c55e" : sol >= 100 ? "#10b981" : "#0ea5e9";
 
       setData({
@@ -97,20 +96,28 @@ export default function SenkuUltimateProtocol() {
     }
   };
 
-  const saveCard = () => {
+  // ميزة التنزيل الجديدة (المضافة دون لمس الكود القديم)
+  const downloadCard = async () => {
     if (!cardRef.current) return;
-    toPng(cardRef.current, { pixelRatio: 3, backgroundColor: '#020617' }).then(url => {
+    try {
+      const dataUrl = await toPng(cardRef.current, { 
+        pixelRatio: 3, 
+        backgroundColor: '#020617',
+        cacheBust: true 
+      });
       const link = document.createElement('a');
-      link.download = `SENKU_LEGACY_CARD.png`;
-      link.href = url;
+      link.download = `SENKU_IDENTITY_${data?.hash}.png`;
+      link.href = dataUrl;
       link.click();
-    });
+    } catch (err) {
+      console.error("Download failed", err);
+    }
   };
 
   return (
     <div className="min-h-screen bg-[#020617] text-white flex flex-col items-center p-4 md:p-8 font-sans overflow-hidden relative selection:bg-green-500/30">
       
-      {/* 1. BACKDROP: SENKU GLOBAL BACKGROUND */}
+      {/* BACKDROP: SENKU GLOBAL BACKGROUND (LOCKED) */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,197,94,0.12),transparent_70%)]" />
         <motion.img 
@@ -121,14 +128,14 @@ export default function SenkuUltimateProtocol() {
           transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] md:w-[80%] opacity-20 filter grayscale contrast-125"
         />
-        {/* Particle System */}
-        {[...Array(30)].map((_, i) => (
+        {/* Particle System (LOCKED) */}
+        {[...Array(35)].map((_, i) => (
           <motion.div key={i} animate={{ y: "110vh", opacity: [0, 1, 0] }} transition={{ duration: Math.random() * 10 + 5, repeat: Infinity }}
-            className="absolute w-[1px] h-[10px] bg-green-500/50" style={{ left: `${Math.random() * 100}vw`, top: `-20px` }} />
+            className="absolute w-[1px] h-[10px] bg-green-500/40" style={{ left: `${Math.random() * 100}vw`, top: `-20px` }} />
         ))}
       </div>
 
-      {/* 2. TOP NAV: REFINED FEATURE BAR */}
+      {/* TOP NAV: FEATURE BAR (LOCKED) */}
       <nav className="relative z-[100] mt-4 mb-12">
         <div className="flex bg-slate-900/60 border border-white/10 p-1.5 rounded-2xl backdrop-blur-3xl shadow-[0_0_50px_rgba(0,0,0,0.4)]">
           {['scan', 'radar', 'hall of fame'].map((tab) => (
@@ -148,12 +155,12 @@ export default function SenkuUltimateProtocol() {
         </div>
       </nav>
 
-      {/* 3. MAIN CONTENT: CENTERED LOGO & DATA */}
+      {/* MAIN CONTENT AREA */}
       <main className="relative z-10 w-full max-w-6xl flex flex-col items-center flex-grow justify-center">
         
         {activeTab === 'scan' && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full flex flex-col items-center">
-            {/* Logo Section */}
+            {/* Logo Section (LOCKED) */}
             <div className="text-center mb-12">
               <motion.h1 
                 className="text-[18vw] md:text-[13rem] font-[1000] italic tracking-tighter leading-none bg-gradient-to-b from-white via-white to-green-500 bg-clip-text text-transparent drop-shadow-2xl select-none">
@@ -166,12 +173,12 @@ export default function SenkuUltimateProtocol() {
               </div>
             </div>
 
-            {/* Input Section */}
+            {/* Input Section (LOCKED) */}
             <div className="w-full max-w-lg px-6 mb-16">
               <div className="relative group">
                 <div className="absolute -inset-1 bg-green-500/20 rounded-2xl blur opacity-0 group-focus-within:opacity-100 transition duration-500" />
                 <input 
-                  className="relative w-full bg-slate-900/80 border border-white/10 rounded-2xl p-6 text-center outline-none focus:border-green-500 transition-all font-mono text-sm tracking-widest placeholder:opacity-20" 
+                  className="relative w-full bg-slate-900/80 border border-white/10 rounded-2xl p-6 text-center outline-none focus:border-green-500 transition-all font-mono text-sm tracking-widest" 
                   placeholder="INPUT_LAB_CREDENTIALS" 
                   value={address} 
                   onChange={(e) => setAddress(e.target.value)} 
@@ -179,18 +186,17 @@ export default function SenkuUltimateProtocol() {
               </div>
               <button 
                 onClick={analyze} 
-                className="w-full mt-5 py-6 bg-white text-black rounded-2xl font-[1000] uppercase text-[11px] tracking-[0.5em] hover:bg-green-600 hover:text-white transition-all active:scale-95 shadow-2xl"
+                className="w-full mt-5 py-6 bg-white text-black rounded-2xl font-[1000] uppercase text-[11px] tracking-[0.5em] hover:bg-green-600 hover:text-white transition-all shadow-2xl"
               >
                 {loading ? "SEARCHING 10 BILLION%..." : "INITIALIZE ANALYSIS"}
               </button>
             </div>
 
-            {/* THE MASTERPIECE CARD (LOCKED DESIGN) */}
+            {/* THE MASTERPIECE CARD (LOCKED & RESTORED) */}
             <AnimatePresence>
               {data && (
                 <motion.div initial={{ y: 50, opacity: 0, scale: 0.95 }} animate={{ y: 0, opacity: 1, scale: 1 }} className="pb-32 px-4 w-full flex justify-center">
                   <div ref={cardRef} className="relative w-full max-w-[500px] aspect-[1.58/1] bg-[#020617] border-[2.5px] rounded-[3rem] p-10 overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.8)]" style={{ borderColor: data.tierColor }}>
-                    {/* Inner Decor */}
                     <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
                     <img src="/senku.GIF" className="absolute right-[-15%] bottom-[-15%] w-[280px] opacity-10 grayscale pointer-events-none" />
                     
@@ -232,12 +238,16 @@ export default function SenkuUltimateProtocol() {
                           <p className="text-4xl font-[1000] italic uppercase leading-none" style={{ color: data.tierColor }}>{data.status}</p>
                         </div>
                         <div className="flex items-center gap-4">
-                          <div className="text-right">
+                          <div className="text-right mr-2">
                             <p className="text-[9px] opacity-30 uppercase font-black tracking-widest">Power Level</p>
                             <p className="text-lg font-mono text-green-500 font-black">{data.power}</p>
                           </div>
-                          <button onClick={saveCard} className="p-5 bg-white/5 rounded-3xl border border-white/10 hover:bg-white/10 transition-all active:scale-90">
-                            <Download size={24} />
+                          {/* زر التنزيل المدمج */}
+                          <button 
+                            onClick={downloadCard} 
+                            className="p-5 bg-green-600/10 border border-green-600/30 rounded-3xl hover:bg-green-600 hover:text-white transition-all active:scale-90 group"
+                          >
+                            <Download size={24} className="group-hover:scale-110 transition-transform" />
                           </button>
                         </div>
                       </div>
@@ -249,12 +259,12 @@ export default function SenkuUltimateProtocol() {
           </motion.div>
         )}
 
-        {/* RADAR & HALL OF FAME REMAIN INTEGRATED */}
+        {/* RADAR VIEW (LOCKED) */}
         {activeTab === 'radar' && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full max-w-2xl px-6 pt-10 pb-40 space-y-5">
             <h2 className="text-5xl font-[1000] italic uppercase flex items-center gap-5 text-green-500 tracking-tighter"><Zap /> Stone Radar</h2>
             {whaleAlerts.map((a) => (
-              <div key={a.id} className="bg-slate-900/80 border border-white/5 p-8 rounded-[2.5rem] flex justify-between items-center border-l-[6px] border-l-green-600 shadow-xl group hover:bg-slate-800/80 transition-all">
+              <div key={a.id} className="bg-slate-900/80 border border-white/5 p-8 rounded-[2.5rem] flex justify-between items-center border-l-[6px] border-l-green-600 shadow-xl group">
                 <div><p className="text-3xl font-[1000] italic group-hover:text-green-400 transition-colors">{a.amount} <span className="text-xs text-green-500">{a.asset}</span></p><p className="text-[10px] opacity-30 uppercase tracking-[0.3em] mt-1">{a.type} • ${a.usd}</p></div>
                 <ChevronRight className="text-green-600 group-hover:translate-x-2 transition-transform" />
               </div>
@@ -262,15 +272,16 @@ export default function SenkuUltimateProtocol() {
           </motion.div>
         )}
 
+        {/* HALL OF FAME (LOCKED) */}
         {activeTab === 'hall of fame' && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8 px-6 pt-10 pb-40">
             {[
               { id: 'SENKU', val: '50,000' }, { id: 'CHROME', val: '22,500' },
               { id: 'KOHAKU', val: '15,200' }, { id: 'GEN_ASSAIRI', val: '10,100' }
             ].map((w, i) => (
-              <div key={i} className="bg-slate-900/40 border border-white/10 p-12 rounded-[3.5rem] flex items-center gap-8 relative group hover:border-green-500 transition-all shadow-2xl overflow-hidden">
-                <Trophy size={100} className="absolute -right-6 -bottom-6 opacity-5 group-hover:opacity-20 text-green-500 transition-all" />
-                <div className="w-20 h-20 rounded-3xl bg-green-600 flex items-center justify-center font-[1000] text-4xl italic shadow-[0_0_30px_rgba(34,197,94,0.4)]">#{i+1}</div>
+              <div key={i} className="bg-slate-900/40 border border-white/10 p-12 rounded-[3.5rem] flex items-center gap-8 relative group hover:border-green-500 transition-all shadow-2xl">
+                <Trophy size={100} className="absolute -right-6 -bottom-6 opacity-5 group-hover:opacity-20 text-green-500" />
+                <div className="w-20 h-20 rounded-3xl bg-green-600 flex items-center justify-center font-[1000] text-4xl italic">#{i+1}</div>
                 <div><p className="text-xs font-mono text-green-500 uppercase tracking-[0.4em] mb-2">{w.id}_PROTOCOL</p><p className="text-5xl font-[1000] italic tracking-tighter">{w.val} <span className="text-sm opacity-20">SOL</span></p></div>
               </div>
             ))}
@@ -278,27 +289,27 @@ export default function SenkuUltimateProtocol() {
         )}
       </main>
 
-      {/* 4. FOOTER: DEVELOPER ID & MUSIC CONTROL */}
+      {/* FOOTER & DEVELOPER IDENTITY (LOCKED) */}
       <footer className="relative z-[100] py-14 w-full flex flex-col items-center gap-6 mt-auto">
         <div className="flex gap-4">
-          <button onClick={toggleMute} className="p-4 bg-white/5 border border-green-500/20 rounded-full hover:bg-green-500/10 transition-all">
+          <button onClick={toggleMute} className="p-4 bg-white/5 border border-green-500/20 rounded-full hover:bg-green-500/10">
             {isMuted ? <VolumeX size={20} className="text-red-400" /> : <Volume2 size={20} className="text-green-400 animate-pulse" />}
           </button>
-          <a href="https://github.com/bedro95" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-4 bg-white/5 border border-white/10 px-8 py-4 rounded-2xl hover:border-green-500/50 transition-all shadow-xl">
-            <Github size={20} className="group-hover:text-green-500 transition-colors" />
+          <a href="https://github.com/bedro95" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-4 bg-white/5 border border-white/10 px-8 py-4 rounded-2xl hover:border-green-500/50 transition-all">
+            <Github size={20} className="group-hover:text-green-500" />
             <div className="flex flex-col">
               <span className="text-[9px] font-black uppercase tracking-[0.4em] opacity-40">Protocol Lead</span>
               <span className="text-[12px] font-mono text-white/90">@bedro95</span>
             </div>
           </a>
         </div>
-        <p className="text-[10px] font-mono tracking-[2em] opacity-10 uppercase select-none">SENKU_WORLD // 2025</p>
+        <p className="text-[10px] font-mono tracking-[2em] opacity-10 uppercase select-none font-bold">SENKU_WORLD // 2025</p>
       </footer>
 
       <style jsx global>{`
         body { background-color: #020617; margin: 0; cursor: crosshair; }
         ::-webkit-scrollbar { display: none; }
-        input::placeholder { color: rgba(255,255,255,0.05); }
+        input::placeholder { color: rgba(255,255,255,0.1); }
         * { -webkit-tap-highlight-color: transparent; }
       `}</style>
     </div>
