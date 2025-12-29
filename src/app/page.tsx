@@ -10,30 +10,27 @@ import {
 } from 'lucide-react';
 import { toPng } from 'html-to-image';
 
-// محاكاة بيانات حقيقية من حساب WhaleWatchAlert
+// بيانات تحاكي رادار الحيتان من حساب X
 const MOCK_WHALE_DATA = [
-  { id: 1, amount: "850,000", asset: "SOL", type: "Transfer", from: "Unknown", to: "Coinbase", time: "1m ago", usd: "127.5M" },
-  { id: 2, amount: "2,500,000", asset: "USDC", type: "Mint", from: "Circle", to: "Whale_99", time: "4m ago", usd: "2.5M" },
-  { id: 3, amount: "120,000", asset: "SOL", type: "Burn", from: "Raydium", to: "Null Address", time: "10m ago", usd: "18M" },
+  { id: 1, amount: "920,000", asset: "SOL", type: "Transfer", from: "Unknown", to: "Binance", time: "1m ago", usd: "138M" },
+  { id: 2, amount: "5,000,000", asset: "USDC", type: "Mint", from: "Circle", to: "Whale_VIP", time: "3m ago", usd: "5M" },
+  { id: 3, amount: "150,000", asset: "SOL", type: "Burn", from: "Jupiter", to: "Null", time: "8m ago", usd: "22.5M" },
 ];
 
-export default function WagmiWhaleProtocolFull() {
-  // 1. States
+export default function WagmiWhaleProtocol() {
   const [address, setAddress] = useState('');
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
-  const [activeTab, setActiveTab] = useState('scan'); // 'scan' or 'radar'
+  const [activeTab, setActiveTab] = useState('scan'); 
   const cardRef = useRef<HTMLDivElement>(null);
   const scanSound = useRef<HTMLAudioElement | null>(null);
 
-  // 2. Audio Setup
   useEffect(() => {
     scanSound.current = new Audio('https://assets.mixkit.co/active_storage/sfx/2053/2053-preview.mp3');
     if (scanSound.current) scanSound.current.loop = true;
   }, []);
 
-  // 3. Scanner Logic
   const analyze = async () => {
     if (!address) return;
     setLoading(true);
@@ -45,9 +42,9 @@ export default function WagmiWhaleProtocolFull() {
       const balance = await connection.getBalance(key);
       const sol = balance / 1_000_000_000;
 
-      let tierColor = "#22c55e"; // Default Green
-      if (sol >= 1000) tierColor = "#3b82f6"; // White Whale Blue
-      else if (sol >= 100) tierColor = "#8b5cf6"; // Shark Purple
+      let tierColor = "#3b82f6"; // Blue Neon
+      if (sol >= 1000) tierColor = "#22c55e"; // Green Neon
+      else if (sol >= 100) tierColor = "#a855f7"; // Purple
 
       setData({
         sol: sol.toLocaleString(undefined, { minimumFractionDigits: 2 }),
@@ -56,7 +53,7 @@ export default function WagmiWhaleProtocolFull() {
         id: Math.floor(100000 + Math.random() * 900000),
       });
     } catch (e) {
-      alert("Invalid Wallet Address!");
+      alert("Invalid Address! Senku says: Check the data strings!");
     } finally {
       setLoading(false);
       if (scanSound.current) scanSound.current.pause();
@@ -67,209 +64,201 @@ export default function WagmiWhaleProtocolFull() {
     if (!cardRef.current) return;
     const dataUrl = await toPng(cardRef.current, { pixelRatio: 3, backgroundColor: '#000' });
     const link = document.createElement('a');
-    link.download = `WAGMI-PROTOCOL-${data?.id}.png`;
+    link.download = `WAGMI-CARD-${data?.id}.png`;
     link.href = dataUrl;
     link.click();
   };
 
+  // فقاعات تفكير Senku بناءً على الحالة
+  const getSenkuTalk = () => {
+    if (loading) return "Analyzing the deep ocean logic... 10 billion percent success rate!";
+    if (data?.status === "WHITE WHALE") return "Incredible! A White Whale has emerged!";
+    if (activeTab === 'radar') return "The radar is detecting massive energy shifts!";
+    return "Science is the only way to the top. Let's scan!";
+  };
+
   return (
-    <div className="min-h-screen bg-[#020202] text-white flex flex-col items-center p-4 md:p-10 font-sans overflow-x-hidden relative selection:bg-blue-600">
+    <div className="min-h-screen bg-[#010101] text-white flex flex-col items-center p-4 md:p-10 font-sans overflow-x-hidden relative selection:bg-green-500">
       
-      {/* --- BACKGROUND: SNOW SYSTEM --- */}
+      {/* --- SNOW SYSTEM --- */}
       <div className="fixed inset-0 z-0 pointer-events-none opacity-40">
-        {[...Array(40)].map((_, i) => (
+        {[...Array(35)].map((_, i) => (
           <motion.div
             key={i}
             initial={{ y: -20, x: Math.random() * 100 + "vw", opacity: 0 }}
             animate={{ y: "110vh", opacity: [0, 1, 0] }}
-            transition={{ duration: Math.random() * 10 + 5, repeat: Infinity, ease: "linear", delay: Math.random() * 5 }}
+            transition={{ duration: Math.random() * 12 + 6, repeat: Infinity, ease: "linear", delay: Math.random() * 5 }}
             className="absolute w-[1.5px] h-[1.5px] bg-blue-400 rounded-full shadow-[0_0_8px_#3b82f6]"
           />
         ))}
       </div>
 
-      {/* --- SENKU AGENT (Mobile Optimized Size) --- */}
+      {/* --- INTERACTIVE SWIMMING SENKU --- */}
       <motion.div 
-        className="fixed bottom-0 left-[-10%] md:left-4 z-50 pointer-events-none"
-        animate={{ y: [0, -8, 0] }}
-        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        className="fixed bottom-0 left-[-5%] md:left-4 z-50 pointer-events-none"
+        animate={{ 
+          y: [0, -15, 0],
+          x: ["-5%", "2%", "-5%"],
+          rotate: [-1, 1, -1]
+        }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
       >
-        <div className="relative group">
+        <div className="relative">
           <img 
             src="/senku.png" 
             alt="Senku"
-            className="w-[180px] md:w-[350px] lg:w-[450px] h-auto drop-shadow-[0_0_20px_rgba(59,130,246,0.3)] filter contrast-125"
+            className="w-[170px] md:w-[380px] h-auto drop-shadow-[0_0_30px_rgba(34,197,94,0.3)] contrast-110"
           />
+          <motion.div 
+            initial={{ scale: 0 }} animate={{ scale: 1 }}
+            className="absolute -top-10 left-[60%] bg-black/80 border border-green-500/40 p-2 md:p-3 rounded-2xl rounded-bl-none text-[8px] md:text-[11px] font-mono text-green-400 max-w-[120px] md:max-w-[200px] backdrop-blur-md"
+          >
+            {getSenkuTalk()}
+          </motion.div>
         </div>
       </motion.div>
 
-      {/* --- MUTE BUTTON --- */}
+      {/* --- CONTROLS --- */}
       <button 
         onClick={() => setIsMuted(!isMuted)} 
-        className="fixed top-4 right-4 z-[60] p-3 bg-white/5 border border-white/10 rounded-full backdrop-blur-md"
+        className="fixed top-5 right-5 z-[60] p-3 bg-white/5 border border-white/10 rounded-full backdrop-blur-lg"
       >
-        {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} className="text-blue-500" />}
+        {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} className="text-green-400" />}
       </button>
 
-      {/* --- NAVIGATION --- */}
-      <div className="relative z-[70] flex bg-white/5 border border-white/10 p-1 rounded-2xl mb-12 backdrop-blur-2xl">
-        <button 
-          onClick={() => setActiveTab('scan')} 
-          className={`px-6 py-3 rounded-xl text-[10px] font-black transition-all tracking-widest ${activeTab === 'scan' ? 'bg-blue-600 text-white' : 'text-white/40 hover:text-white'}`}
-        >
-          IDENTITY SCAN
-        </button>
-        <button 
-          onClick={() => setActiveTab('radar')} 
-          className={`px-6 py-3 rounded-xl text-[10px] font-black transition-all tracking-widest ${activeTab === 'radar' ? 'bg-blue-600 text-white' : 'text-white/40 hover:text-white'}`}
-        >
-          WHALE RADAR
-        </button>
+      {/* --- NAV TABS --- */}
+      <div className="relative z-[70] flex bg-white/5 border border-white/10 p-1 rounded-2xl mb-12 backdrop-blur-xl">
+        {['scan', 'radar'].map((tab) => (
+          <button 
+            key={tab}
+            onClick={() => setActiveTab(tab)} 
+            className={`px-6 py-3 rounded-xl text-[10px] font-black transition-all tracking-[0.2em] uppercase ${activeTab === tab ? 'bg-green-600 text-white' : 'text-white/30 hover:text-white'}`}
+          >
+            {tab === 'scan' ? 'Identity Scan' : 'Whale Radar'}
+          </button>
+        ))}
       </div>
 
-      {/* --- MAIN CONTENT --- */}
+      {/* --- MAIN UI --- */}
       <div className="relative z-10 w-full max-w-5xl flex flex-col items-center">
         
         {activeTab === 'scan' ? (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="w-full flex flex-col items-center">
-            {/* LOGO */}
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full flex flex-col items-center">
             <div className="text-center mb-10">
-              <h1 className="text-6xl md:text-[11rem] font-[1000] italic tracking-tighter leading-none text-white drop-shadow-2xl">
+              <h1 className="text-7xl md:text-[12rem] font-[1000] italic tracking-tighter leading-none text-white drop-shadow-2xl">
                 WAGMI
               </h1>
-              <p className="mt-2 text-[10px] md:text-sm font-mono tracking-[0.8em] text-blue-500 uppercase font-black italic">
+              <p className="mt-2 text-[10px] md:text-sm font-mono tracking-[1em] text-green-500 uppercase font-black italic">
                    WAGMI WHALE PROTOCOL
               </p>
             </div>
 
-            {/* INPUT */}
             <div className="w-full max-w-md px-4 mb-12">
-              <div className="relative p-[1px] rounded-2xl bg-white/10 focus-within:bg-blue-600 transition-all duration-500 shadow-2xl">
+              <div className="relative p-[1px] rounded-2xl bg-white/10 focus-within:bg-green-600 transition-all duration-500 shadow-2xl">
                 <input 
-                  className="w-full bg-black/90 rounded-2xl p-5 md:p-6 text-center outline-none font-mono text-sm md:text-lg text-white placeholder:text-white/20" 
-                  placeholder="PASTE WALLET ADDRESS"
+                  className="w-full bg-black/90 rounded-2xl p-5 md:p-6 text-center outline-none font-mono text-sm text-white placeholder:text-white/10" 
+                  placeholder="SOLANA_WALLET_ADDRESS"
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
                 />
               </div>
               <button 
                 onClick={analyze} 
-                className="w-full mt-4 py-5 md:py-6 bg-white text-black rounded-2xl font-black uppercase text-[10px] md:text-xs tracking-[0.5em] hover:bg-blue-600 hover:text-white transition-all active:scale-95 flex items-center justify-center gap-3"
+                className="w-full mt-4 py-5 bg-white text-black rounded-2xl font-black uppercase text-[10px] tracking-[0.5em] hover:bg-green-600 hover:text-white transition-all active:scale-95 flex items-center justify-center gap-3"
               >
-                {loading ? <Cpu className="animate-spin" size={16} /> : <Zap size={16} />} INITIATE SCAN
+                {loading ? <Cpu className="animate-spin" size={16} /> : <Zap size={16} />} INITIATE_ANALYSIS
               </button>
             </div>
 
-            {/* RESULT CARD */}
             <AnimatePresence>
               {data && (
-                <motion.div 
-                  initial={{ scale: 0.9, opacity: 0 }} 
-                  animate={{ scale: 1, opacity: 1 }} 
-                  className="w-full flex flex-col items-center pb-32 px-4"
-                >
-                  <div ref={cardRef} className="relative w-full max-w-[480px] aspect-[1.6/1] bg-[#050505] border border-white/10 rounded-[2.5rem] p-8 md:p-10 flex flex-col justify-between overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+                <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="w-full flex flex-col items-center pb-32 px-4">
+                  <div ref={cardRef} className="relative w-full max-w-[460px] aspect-[1.6/1] bg-[#050505] border border-white/10 rounded-[2.5rem] p-8 md:p-10 flex flex-col justify-between overflow-hidden shadow-2xl">
                     <div className="absolute top-0 right-0 w-40 h-40 blur-[80px] opacity-20" style={{ backgroundColor: data.tierColor }} />
                     <div className="flex justify-between items-start z-10">
                       <div className="flex items-center gap-4">
-                        <div className="p-3 bg-white/5 rounded-xl border border-white/10">
-                          <Fingerprint size={24} style={{ color: data.tierColor }} />
-                        </div>
-                        <p className="text-xl font-black italic leading-none tracking-tighter">WAGMI LEGACY</p>
+                        <Fingerprint size={28} style={{ color: data.tierColor }} />
+                        <p className="text-xl font-black italic tracking-tighter">PROTOCOL_ASSET</p>
                       </div>
-                      <Radio size={20} className="text-red-500 animate-pulse" />
+                      <Radio size={20} className="text-green-500 animate-pulse" />
                     </div>
                     <div>
-                      <h2 className="text-6xl md:text-7xl font-[1000] tracking-tighter italic">{data.sol} <span className="text-xl font-black italic" style={{ color: data.tierColor }}>SOL</span></h2>
-                      <p className="text-[10px] font-mono text-white/30 mt-2 tracking-widest uppercase">Global Node Verified</p>
+                      <h2 className="text-6xl md:text-7xl font-[1000] tracking-tighter italic">{data.sol} <span className="text-xl font-black" style={{ color: data.tierColor }}>SOL</span></h2>
                     </div>
                     <div className="flex justify-between items-end border-t border-white/5 pt-6 z-10">
                       <div>
-                        <p className="text-[9px] font-black uppercase tracking-[0.2em] mb-1 opacity-40 italic">Holder Rank</p>
+                        <p className="text-[9px] font-black uppercase tracking-widest mb-1 opacity-30 italic">Security Level</p>
                         <p className="text-3xl font-[1000] italic uppercase tracking-tighter" style={{ color: data.tierColor }}>{data.status}</p>
                       </div>
-                      <p className="text-[9px] font-mono text-white/20 tracking-tighter italic">ID_00{data.id}</p>
+                      <p className="text-[9px] font-mono text-white/20">NODE_ID_{data.id}</p>
                     </div>
                   </div>
-                  <button onClick={saveCard} className="mt-8 flex items-center gap-4 bg-white/5 border border-white/10 px-8 py-4 rounded-full font-black text-[10px] uppercase tracking-widest hover:bg-white hover:text-black transition-all">
-                    SAVE ASSET <Download size={14} />
+                  <button onClick={saveCard} className="mt-8 flex items-center gap-4 bg-white/5 border border-white/10 px-8 py-4 rounded-full font-black text-[9px] uppercase tracking-widest hover:bg-white hover:text-black transition-all">
+                    SAVE DIGITAL ASSET <Download size={14} />
                   </button>
                 </motion.div>
               )}
             </AnimatePresence>
           </motion.div>
         ) : (
-          /* --- LEADERBOARD / RADAR VIEW --- */
           <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="w-full px-4 pb-40">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
+            <div className="flex items-center justify-between mb-10">
               <div className="flex items-center gap-4">
-                <Globe className="text-blue-500 animate-spin-slow" size={32} />
-                <h2 className="text-4xl md:text-5xl font-[1000] italic tracking-tighter">WHALE RADAR</h2>
+                <Globe className="text-green-500 animate-spin-slow" size={30} />
+                <h2 className="text-3xl md:text-5xl font-[1000] italic tracking-tighter uppercase">Whale Radar</h2>
               </div>
-              <div className="bg-blue-500/10 border border-blue-500/20 px-4 py-2 rounded-full inline-flex items-center gap-2 self-start">
-                <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
-                <span className="text-[10px] font-mono text-blue-500 uppercase font-black tracking-widest">Live Signals Active</span>
-              </div>
+              <span className="text-[10px] font-mono text-green-500 bg-green-500/10 px-3 py-1 rounded-full border border-green-500/20 font-black animate-pulse">LIVE FEED</span>
             </div>
 
             <div className="grid gap-4">
               {MOCK_WHALE_DATA.map((whale) => (
                 <motion.div 
                   key={whale.id} 
-                  whileHover={{ x: 5 }}
-                  className="group relative bg-[#080808] border border-white/10 p-6 md:p-8 rounded-[2rem] flex flex-col md:flex-row justify-between items-center gap-6 backdrop-blur-md"
+                  whileHover={{ x: 8 }}
+                  className="group bg-[#080808] border border-white/10 p-6 rounded-[2rem] flex flex-col md:flex-row justify-between items-center gap-6 backdrop-blur-md"
                 >
                   <div className="flex items-center gap-6 w-full md:w-auto">
-                    <div className="w-16 h-16 bg-white/5 rounded-2xl border border-white/10 flex items-center justify-center text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-all">
-                      {whale.asset === 'SOL' ? <Activity size={28} /> : <BarChart3 size={28} />}
+                    <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center text-green-400 border border-white/5 group-hover:bg-green-600 group-hover:text-white transition-all">
+                      {whale.asset === 'SOL' ? <Activity size={26} /> : <BarChart3 size={26} />}
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
                         <span className="text-3xl md:text-4xl font-[1000] italic tracking-tighter">{whale.amount}</span>
-                        <span className="text-sm font-black text-blue-500 italic mt-2">{whale.asset}</span>
+                        <span className="text-sm font-black text-green-500 italic mt-2">{whale.asset}</span>
                       </div>
-                      <div className="flex items-center gap-2 mt-1">
-                         <span className="px-2 py-[2px] bg-blue-500/10 text-blue-500 text-[8px] font-black rounded uppercase">{whale.type}</span>
-                         <span className="text-[10px] font-mono text-white/30 uppercase italic">${whale.usd} VALUE</span>
-                      </div>
+                      <p className="text-[10px] font-mono text-white/30 uppercase italic">${whale.usd} NET VALUE</p>
                     </div>
                   </div>
-
                   <div className="w-full md:w-auto flex flex-col items-end border-t md:border-t-0 border-white/5 pt-4 md:pt-0">
-                    <div className="flex items-center gap-3 text-[10px] font-mono text-white/40 mb-2">
+                    <div className="flex items-center gap-2 text-[10px] font-mono text-white/40 mb-2">
                       <span className="bg-white/5 px-2 py-1 rounded">FROM: {whale.from}</span>
-                      <ChevronRight size={12} />
+                      <ChevronRight size={10} />
                       <span className="bg-white/5 px-2 py-1 rounded">TO: {whale.to}</span>
                     </div>
-                    <span className="text-[10px] font-black text-blue-500 italic tracking-widest uppercase">{whale.time}</span>
+                    <span className="text-[10px] font-black text-green-400 italic tracking-widest">{whale.time}</span>
                   </div>
                 </motion.div>
               ))}
             </div>
 
-            {/* DEEP ANALYSIS BANNER */}
-            <div className="mt-12 p-10 border border-white/5 rounded-[3rem] bg-gradient-to-br from-blue-600/5 to-transparent text-center">
-              <Eye className="mx-auto mb-4 text-blue-500 opacity-50" size={32} />
-              <p className="text-[10px] font-mono text-white/30 uppercase tracking-[1em] mb-4">Deep Sea Analytics</p>
-              <h3 className="text-2xl font-black italic tracking-tighter text-white/80">MARKET SENTIMENT: BULLISH ACCUMULATION</h3>
-              <div className="mt-6 flex justify-center gap-2 h-1 w-full max-w-xs mx-auto">
-                 {[...Array(10)].map((_, i) => <div key={i} className={`flex-1 rounded-full ${i < 8 ? 'bg-blue-600' : 'bg-white/10'}`} />)}
-              </div>
+            <div className="mt-12 p-10 border border-white/5 rounded-[3.5rem] bg-gradient-to-br from-green-600/5 to-transparent text-center">
+              <Eye className="mx-auto mb-4 text-green-500/50" size={32} />
+              <h3 className="text-2xl font-black italic tracking-tighter text-white/80 uppercase">Sentiment: Massive Accumulation</h3>
+              <p className="text-[9px] font-mono text-white/20 mt-2 uppercase tracking-[0.5em]">The ocean is cold, but the science is hot</p>
             </div>
           </motion.div>
         )}
       </div>
 
       <footer className="mt-auto py-12 opacity-20 text-[8px] md:text-[10px] font-mono tracking-[1.5em] uppercase text-center w-full select-none">
-        WAGMI // BADER ALKORGLI // GLOBAL SOVEREIGN
+        WAGMI // BADER ALKORGLI // KINGDOM OF SCIENCE
       </footer>
 
       <style jsx global>{`
         @keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .animate-spin-slow { animation: spin-slow 12s linear infinity; }
-        body { background-color: #020202; margin: 0; padding: 0; }
+        .animate-spin-slow { animation: spin-slow 15s linear infinity; }
+        body { background-color: #010101; margin: 0; padding: 0; }
         ::-webkit-scrollbar { display: none; }
-        * { -webkit-tap-highlight-color: transparent; }
       `}</style>
     </div>
   );
