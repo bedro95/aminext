@@ -13,8 +13,8 @@ import { toPng } from 'html-to-image';
 /**
  * PROJECT: SENKU PROTOCOL (Wagmi)
  * DEVELOPER: bedro95
- * VERSION: ULTIMATE MASTERPIECE + SMART USD ANALYZER
- * STATUS: LOCKED IDENTITY - NO LINES REMOVED
+ * VERSION: ULTIMATE MASTERPIECE + SMART USD ANALYZER + IPFS READY
+ * STATUS: LOCKED IDENTITY - NO LINES REMOVED - FULL ENGLISH
  */
 
 export default function SenkuUltimateProtocol() {
@@ -76,7 +76,7 @@ export default function SenkuUltimateProtocol() {
     if (!isMuted) audioScan.current?.play();
     
     try {
-      // استخدام Helius لعمل مسح شامل للأصول وقيمتها الدولارية
+      // Fetching assets and USD value via Helius API
       const response = await fetch("https://mainnet.helius-rpc.com/?api-key=4729436b-2f9d-4d42-a307-e2a3b2449483", {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -96,7 +96,7 @@ export default function SenkuUltimateProtocol() {
       let topAsset = { symbol: 'SOL', amount: 0, usdValue: 0 };
       let maxUsdValue = -1;
 
-      // 1. فحص رصيد SOL الأساسي وقيمته
+      // 1. Check Native SOL balance and value
       if (result.nativeBalance) {
         const solPrice = result.nativeBalance.price_per_token || 0;
         const solAmt = result.nativeBalance.lamports / 1_000_000_000;
@@ -105,7 +105,7 @@ export default function SenkuUltimateProtocol() {
         maxUsdValue = solUsd;
       }
 
-      // 2. فحص جميع الـ Tokens لاكتشاف "الأثمن" دولارياً
+      // 2. Scan all tokens for the "Highest USD Value"
       result.items?.forEach((item: any) => {
         const usdValue = item.token_info?.price_info?.total_price || 0;
         if (usdValue > maxUsdValue) {
@@ -118,7 +118,7 @@ export default function SenkuUltimateProtocol() {
         }
       });
 
-      // تحديد الألوان بناءً على قيمة المحفظة (الرتبة العلمية)
+      // Scientific Tier Color mapping
       let tierColor = maxUsdValue >= 1000 ? "#22c55e" : maxUsdValue >= 100 ? "#10b981" : "#0ea5e9";
 
       setData({
@@ -192,7 +192,7 @@ export default function SenkuUltimateProtocol() {
         
         {activeTab === 'scan' && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full flex flex-col items-center">
-            {/* Logo Section (FIXED LOGO CLIPPING) */}
+            {/* Logo Section */}
             <div className="text-center mb-12 relative">
               <motion.h1 
                 className="text-[18vw] md:text-[13rem] font-[1000] italic tracking-tighter leading-none bg-gradient-to-b from-white via-white to-green-500 bg-clip-text text-transparent drop-shadow-2xl select-none px-4">
@@ -364,17 +364,25 @@ export default function SenkuUltimateProtocol() {
       </main>
 
       <footer className="relative z-[100] py-14 w-full flex flex-col items-center gap-6 mt-auto">
-        <div className="flex gap-4">
-          <button onClick={toggleMute} className="p-4 bg-white/5 border border-green-500/20 rounded-full hover:bg-green-500/10 transition-all">
-            {isMuted ? <VolumeX size={20} className="text-red-400" /> : <Volume2 size={20} className="text-green-400 animate-pulse" />}
-          </button>
-          <a href="https://github.com/bedro95" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-4 bg-white/5 border border-white/10 px-8 py-4 rounded-2xl hover:border-green-500/50 transition-all shadow-xl">
-            <Github size={20} className="group-hover:text-green-500 transition-colors" />
-            <div className="flex flex-col">
-              <span className="text-[9px] font-black uppercase tracking-[0.4em] opacity-40">Protocol Lead</span>
-              <span className="text-[12px] font-mono text-white/90">@bedro95</span>
-            </div>
-          </a>
+        <div className="flex flex-col items-center gap-4">
+          <div className="flex gap-4">
+            <button onClick={toggleMute} className="p-4 bg-white/5 border border-green-500/20 rounded-full hover:bg-green-500/10 transition-all">
+              {isMuted ? <VolumeX size={20} className="text-red-400" /> : <Volume2 size={20} className="text-green-400 animate-pulse" />}
+            </button>
+            <a href="https://github.com/bedro95" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-4 bg-white/5 border border-white/10 px-8 py-4 rounded-2xl hover:border-green-500/50 transition-all shadow-xl">
+              <Github size={20} className="group-hover:text-green-500 transition-colors" />
+              <div className="flex flex-col">
+                <span className="text-[9px] font-black uppercase tracking-[0.4em] opacity-40">Protocol Lead</span>
+                <span className="text-[12px] font-mono text-white/90">@bedro95</span>
+              </div>
+            </a>
+          </div>
+
+          {/* IPFS NODE INDICATOR FOR WEB3 DEPLOYMENT */}
+          <div className="flex items-center gap-2 opacity-30 hover:opacity-100 transition-opacity">
+            <Globe size={12} className="text-green-500" />
+            <span className="text-[8px] font-mono uppercase tracking-[0.3em]">IPFS Node Active // Decentralized Hosting</span>
+          </div>
         </div>
         <p className="text-[10px] font-mono tracking-[2em] opacity-10 uppercase select-none">SENKU_WORLD // 2025</p>
       </footer>
