@@ -6,14 +6,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Download, Fingerprint, Volume2, VolumeX, Activity, 
   Zap, ChevronRight, Trophy, Music, Github, ShieldCheck, 
-  Cpu, Calendar, Hash, Globe, BarChart3, Radio, X
+  Cpu, Calendar, Hash, Globe, BarChart3, Radio, X, Maximize2
 } from 'lucide-react';
 import { toPng } from 'html-to-image';
 
 /**
  * PROJECT: SENKU PROTOCOL (Wagmi)
  * DEVELOPER: bedro95
- * VERSION: ULTIMATE MASTERPIECE + MODAL VIEW
+ * VERSION: ULTIMATE MASTERPIECE + INTERACTIVE MODAL
+ * STATUS: LOCKED IDENTITY - NO LINES REMOVED
  */
 
 export default function SenkuUltimateProtocol() {
@@ -23,14 +24,15 @@ export default function SenkuUltimateProtocol() {
   const [isMuted, setIsMuted] = useState(false); 
   const [activeTab, setActiveTab] = useState('scan'); 
   const [whaleAlerts, setWhaleAlerts] = useState<any[]>([]);
-  const [showModal, setShowModal] = useState(false); // ميزة التكبير الجديدة
+  const [isModalOpen, setIsModalOpen] = useState(false); // الحالة الجديدة للمودال
+  
   const cardRef = useRef<HTMLDivElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
 
   const bgMusic = useRef<HTMLAudioElement | null>(null);
   const audioScan = useRef<HTMLAudioElement | null>(null);
 
-  // 1. نظام الصوت المتطور (ثابت كما هو)
+  // 1. نظام الصوت المتطور (ثابت)
   useEffect(() => {
     bgMusic.current = new Audio('https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Ketsa/Raising_Frequency/Ketsa_-_08_-_World_In_Motion.mp3'); 
     bgMusic.current.loop = true;
@@ -46,7 +48,7 @@ export default function SenkuUltimateProtocol() {
     return () => window.removeEventListener('click', handleInitialInteraction);
   }, [isMuted]);
 
-  // 2. محاكاة رادار الحيتان (ثابت كما هو)
+  // 2. محاكاة رادار الحيتان (ثابت)
   useEffect(() => {
     const assets = ['SOL', 'USDC', 'JUP', 'PYTH', 'BONK'];
     const generateAlert = () => {
@@ -98,11 +100,13 @@ export default function SenkuUltimateProtocol() {
     }
   };
 
-  const saveCard = (targetRef: React.RefObject<HTMLDivElement>) => {
-    if (!targetRef.current) return;
-    toPng(targetRef.current, { pixelRatio: 3, backgroundColor: '#020617' }).then(url => {
+  // دالة التنزيل المطورة
+  const saveCard = () => {
+    const target = modalRef.current || cardRef.current;
+    if (!target) return;
+    toPng(target, { pixelRatio: 3, backgroundColor: '#020617' }).then(url => {
       const link = document.createElement('a');
-      link.download = `SENKU_LEGACY_CARD.png`;
+      link.download = `SENKU_ID_${data?.hash}.png`;
       link.href = url;
       link.click();
     });
@@ -171,7 +175,7 @@ export default function SenkuUltimateProtocol() {
               <div className="relative group">
                 <div className="absolute -inset-1 bg-green-500/20 rounded-2xl blur opacity-0 group-focus-within:opacity-100 transition duration-500" />
                 <input 
-                  className="relative w-full bg-slate-900/80 border border-white/10 rounded-2xl p-6 text-center outline-none focus:border-green-500 transition-all font-mono text-sm tracking-widest" 
+                  className="relative w-full bg-slate-900/80 border border-white/10 rounded-2xl p-6 text-center outline-none focus:border-green-500 transition-all font-mono text-sm tracking-widest placeholder:opacity-20" 
                   placeholder="INPUT_LAB_CREDENTIALS" 
                   value={address} 
                   onChange={(e) => setAddress(e.target.value)} 
@@ -185,51 +189,63 @@ export default function SenkuUltimateProtocol() {
               </button>
             </div>
 
-            {/* PREVIEW CARD: تظهر بعد البحث، وعند النقر تفتح المودال */}
+            {/* PREVIEW CARD: يظهر أولاً كصورة تفاعلية صغيرة */}
             <AnimatePresence>
               {data && (
                 <motion.div 
-                  initial={{ scale: 0.8, opacity: 0 }} 
-                  animate={{ scale: 1, opacity: 1 }} 
-                  className="cursor-zoom-in group relative"
-                  onClick={() => setShowModal(true)}
+                  initial={{ y: 20, opacity: 0 }} 
+                  animate={{ y: 0, opacity: 1 }}
+                  className="pb-32 px-4 w-full flex flex-col items-center"
                 >
-                  <div className="absolute -inset-4 bg-green-500/20 blur-xl opacity-0 group-hover:opacity-100 transition-all rounded-full" />
-                  <div className="p-2 border border-white/10 rounded-[2rem] bg-white/5 backdrop-blur-md">
-                     {/* نسخة مصغرة من الكرت للعرض فقط */}
-                     <div className="w-64 aspect-[1.58/1] bg-slate-950 rounded-[1.8rem] overflow-hidden flex items-center justify-center border border-white/20">
-                        <img src="/senku.GIF" className="absolute opacity-10 w-full" />
-                        <div className="text-center z-10">
-                           <p className="text-[8px] font-black uppercase tracking-widest text-green-500">Click to Preview Card</p>
-                           <p className="text-lg font-black italic">{data.sol} SOL</p>
-                        </div>
-                     </div>
-                  </div>
-                  <p className="text-center mt-4 text-[9px] font-mono opacity-40 animate-bounce">TAP TO OPEN SCIENTIFIC ID</p>
+                  <p className="text-[10px] font-mono text-green-500/60 uppercase tracking-[0.5em] mb-6 animate-pulse">Scientific ID Generated</p>
+                  
+                  <motion.div 
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setIsModalOpen(true)}
+                    className="relative cursor-pointer group"
+                  >
+                    <div className="absolute -inset-1 bg-green-500/30 blur-2xl opacity-0 group-hover:opacity-100 transition-all rounded-full" />
+                    {/* نسخة مصغرة "Preview" */}
+                    <div className="relative w-72 aspect-[1.58/1] bg-slate-900 border border-white/20 rounded-2xl overflow-hidden flex items-center justify-center backdrop-blur-xl">
+                      <img src="/senku.GIF" className="absolute opacity-10 grayscale w-full" />
+                      <div className="z-10 text-center">
+                        <Maximize2 size={32} className="text-green-500 mx-auto mb-2 opacity-50 group-hover:opacity-100 transition-all" />
+                        <p className="text-[9px] font-black uppercase tracking-widest">Click to view identity</p>
+                      </div>
+                    </div>
+                  </motion.div>
                 </motion.div>
               )}
             </AnimatePresence>
           </motion.div>
         )}
 
-        {/* MODAL VIEW: الميزة الجديدة التي طلبتها */}
+        {/* MODAL SYSTEM: العرض السينمائي للكرت (الميزة الجديدة) */}
         <AnimatePresence>
-          {showModal && data && (
+          {isModalOpen && data && (
             <motion.div 
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-black/90 backdrop-blur-2xl"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[1000] flex items-center justify-center p-4 md:p-8 bg-black/95 backdrop-blur-2xl"
             >
               <motion.div 
-                initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 20 }}
-                className="relative w-full max-w-[600px] flex flex-col items-center"
+                initial={{ scale: 0.8, y: 50 }}
+                animate={{ scale: 1, y: 0 }}
+                exit={{ scale: 0.8, y: 50 }}
+                className="relative w-full max-w-[550px] flex flex-col items-center"
               >
-                {/* زر الإغلاق */}
-                <button onClick={() => setShowModal(false)} className="absolute -top-16 right-0 p-3 bg-white/10 rounded-full hover:bg-red-500 transition-all text-white">
-                  <X size={24} />
+                {/* Close Button */}
+                <button 
+                  onClick={() => setIsModalOpen(false)}
+                  className="absolute -top-12 right-0 md:-right-12 p-3 text-white/50 hover:text-red-500 transition-colors"
+                >
+                  <X size={32} />
                 </button>
 
-                {/* THE MASTERPIECE CARD (LOCKED DESIGN) */}
-                <div ref={cardRef} className="relative w-full aspect-[1.58/1] bg-[#020617] border-[2.5px] rounded-[3rem] p-10 overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.8)]" style={{ borderColor: data.tierColor }}>
+                {/* THE MASTERPIECE CARD (LOCKED & PRESERVED) */}
+                <div ref={modalRef} className="relative w-full aspect-[1.58/1] bg-[#020617] border-[2.5px] rounded-[3rem] p-10 overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.8)]" style={{ borderColor: data.tierColor }}>
                   <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
                   <img src="/senku.GIF" className="absolute right-[-15%] bottom-[-15%] w-[280px] opacity-10 grayscale pointer-events-none" />
                   
@@ -270,29 +286,27 @@ export default function SenkuUltimateProtocol() {
                         <p className="text-[10px] font-black uppercase tracking-[0.4em] mb-2 opacity-40">Classification</p>
                         <p className="text-4xl font-[1000] italic uppercase leading-none" style={{ color: data.tierColor }}>{data.status}</p>
                       </div>
-                      <div className="flex items-center gap-4 text-right">
-                         <div>
-                            <p className="text-[9px] opacity-30 uppercase font-black tracking-widest">Power Level</p>
-                            <p className="text-lg font-mono text-green-500 font-black">{data.power}</p>
-                         </div>
+                      <div className="text-right">
+                        <p className="text-[9px] opacity-30 uppercase font-black tracking-widest">Power Level</p>
+                        <p className="text-lg font-mono text-green-500 font-black">{data.power}</p>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* زر التنزيل داخل المودال */}
+                {/* Download Button inside Modal */}
                 <button 
-                  onClick={() => saveCard(cardRef)} 
-                  className="mt-8 flex items-center gap-3 px-12 py-5 bg-green-600 text-white rounded-2xl font-black uppercase text-xs tracking-[0.3em] hover:bg-green-500 shadow-2xl transition-all"
+                  onClick={saveCard}
+                  className="mt-8 flex items-center gap-4 bg-white text-black px-12 py-5 rounded-2xl font-black uppercase text-[10px] tracking-[0.4em] hover:bg-green-600 hover:text-white transition-all shadow-2xl active:scale-95"
                 >
-                  <Download size={20} /> Download Scientific ID
+                  <Download size={20} /> Download Scientific Card
                 </button>
               </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* RADAR & HALL OF FAME (ثابت كما هو) */}
+        {/* RADAR & HALL OF FAME (ثابت) */}
         {activeTab === 'radar' && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full max-w-2xl px-6 pt-10 pb-40 space-y-5">
             <h2 className="text-5xl font-[1000] italic uppercase flex items-center gap-5 text-green-500 tracking-tighter"><Zap /> Stone Radar</h2>
