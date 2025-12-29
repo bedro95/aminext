@@ -24,7 +24,7 @@ export default function SenkuUltimateProtocol() {
   const [isMuted, setIsMuted] = useState(false); 
   const [activeTab, setActiveTab] = useState('scan'); 
   const [whaleAlerts, setWhaleAlerts] = useState<any[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false); // الحالة الجديدة للمودال
+  const [isModalOpen, setIsModalOpen] = useState(false); 
   
   const cardRef = useRef<HTMLDivElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
@@ -32,7 +32,6 @@ export default function SenkuUltimateProtocol() {
   const bgMusic = useRef<HTMLAudioElement | null>(null);
   const audioScan = useRef<HTMLAudioElement | null>(null);
 
-  // 1. نظام الصوت المتطور (ثابت)
   useEffect(() => {
     bgMusic.current = new Audio('https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Ketsa/Raising_Frequency/Ketsa_-_08_-_World_In_Motion.mp3'); 
     bgMusic.current.loop = true;
@@ -48,7 +47,6 @@ export default function SenkuUltimateProtocol() {
     return () => window.removeEventListener('click', handleInitialInteraction);
   }, [isMuted]);
 
-  // 2. محاكاة رادار الحيتان (ثابت)
   useEffect(() => {
     const assets = ['SOL', 'USDC', 'JUP', 'PYTH', 'BONK'];
     const generateAlert = () => {
@@ -100,7 +98,6 @@ export default function SenkuUltimateProtocol() {
     }
   };
 
-  // دالة التنزيل المطورة
   const saveCard = () => {
     const target = modalRef.current || cardRef.current;
     if (!target) return;
@@ -115,24 +112,23 @@ export default function SenkuUltimateProtocol() {
   return (
     <div className="min-h-screen bg-[#020617] text-white flex flex-col items-center p-4 md:p-8 font-sans overflow-hidden relative selection:bg-green-500/30">
       
-      {/* 1. BACKDROP (ثابت) */}
+      {/* 1. BACKDROP (FIXED BACKGROUND) */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,197,94,0.12),transparent_70%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,197,94,0.12),transparent_70%)] z-10" />
         <motion.img 
           src="/senku.GIF" 
           alt="Senku Background" 
           initial={{ opacity: 0 }}
-          animate={{ opacity: 0.25, x: [-20, 20, -20], y: [-10, 10, -10] }}
+          animate={{ opacity: 0.25, x: [-10, 10, -10], y: [-5, 5, -5] }}
           transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] md:w-[80%] opacity-20 filter grayscale contrast-125"
+          className="absolute inset-0 w-full h-full object-cover opacity-20 filter grayscale contrast-125"
         />
         {[...Array(30)].map((_, i) => (
           <motion.div key={i} animate={{ y: "110vh", opacity: [0, 1, 0] }} transition={{ duration: Math.random() * 10 + 5, repeat: Infinity }}
-            className="absolute w-[1px] h-[10px] bg-green-500/50" style={{ left: `${Math.random() * 100}vw`, top: `-20px` }} />
+            className="absolute w-[1px] h-[10px] bg-green-500/50 z-20" style={{ left: `${Math.random() * 100}vw`, top: `-20px` }} />
         ))}
       </div>
 
-      {/* 2. TOP NAV (ثابت) */}
       <nav className="relative z-[100] mt-4 mb-12">
         <div className="flex bg-slate-900/60 border border-white/10 p-1.5 rounded-2xl backdrop-blur-3xl shadow-[0_0_50px_rgba(0,0,0,0.4)]">
           {['scan', 'radar', 'hall of fame'].map((tab) => (
@@ -152,15 +148,14 @@ export default function SenkuUltimateProtocol() {
         </div>
       </nav>
 
-      {/* 3. MAIN CONTENT */}
       <main className="relative z-10 w-full max-w-6xl flex flex-col items-center flex-grow justify-center">
         
         {activeTab === 'scan' && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full flex flex-col items-center">
-            {/* Logo Section (ثابت) */}
-            <div className="text-center mb-12">
+            {/* Logo Section (FIXED LOGO CLIPPING) */}
+            <div className="text-center mb-12 relative">
               <motion.h1 
-                className="text-[18vw] md:text-[13rem] font-[1000] italic tracking-tighter leading-none bg-gradient-to-b from-white via-white to-green-500 bg-clip-text text-transparent drop-shadow-2xl select-none">
+                className="text-[18vw] md:text-[13rem] font-[1000] italic tracking-tighter leading-none bg-gradient-to-b from-white via-white to-green-500 bg-clip-text text-transparent drop-shadow-2xl select-none px-4">
                 SENKU
               </motion.h1>
               <div className="flex items-center justify-center gap-4 mt-2">
@@ -170,7 +165,6 @@ export default function SenkuUltimateProtocol() {
               </div>
             </div>
 
-            {/* Input Section (ثابت) */}
             <div className="w-full max-w-lg px-6 mb-16">
               <div className="relative group">
                 <div className="absolute -inset-1 bg-green-500/20 rounded-2xl blur opacity-0 group-focus-within:opacity-100 transition duration-500" />
@@ -189,7 +183,6 @@ export default function SenkuUltimateProtocol() {
               </button>
             </div>
 
-            {/* PREVIEW CARD: يظهر أولاً كصورة تفاعلية صغيرة */}
             <AnimatePresence>
               {data && (
                 <motion.div 
@@ -206,9 +199,8 @@ export default function SenkuUltimateProtocol() {
                     className="relative cursor-pointer group"
                   >
                     <div className="absolute -inset-1 bg-green-500/30 blur-2xl opacity-0 group-hover:opacity-100 transition-all rounded-full" />
-                    {/* نسخة مصغرة "Preview" */}
                     <div className="relative w-72 aspect-[1.58/1] bg-slate-900 border border-white/20 rounded-2xl overflow-hidden flex items-center justify-center backdrop-blur-xl">
-                      <img src="/senku.GIF" className="absolute opacity-10 grayscale w-full" />
+                      <img src="/senku.GIF" className="absolute opacity-10 grayscale w-full h-full object-cover" />
                       <div className="z-10 text-center">
                         <Maximize2 size={32} className="text-green-500 mx-auto mb-2 opacity-50 group-hover:opacity-100 transition-all" />
                         <p className="text-[9px] font-black uppercase tracking-widest">Click to view identity</p>
@@ -221,7 +213,6 @@ export default function SenkuUltimateProtocol() {
           </motion.div>
         )}
 
-        {/* MODAL SYSTEM: العرض السينمائي للكرت (الميزة الجديدة) */}
         <AnimatePresence>
           {isModalOpen && data && (
             <motion.div 
@@ -236,7 +227,6 @@ export default function SenkuUltimateProtocol() {
                 exit={{ scale: 0.8, y: 50 }}
                 className="relative w-full max-w-[550px] flex flex-col items-center"
               >
-                {/* Close Button */}
                 <button 
                   onClick={() => setIsModalOpen(false)}
                   className="absolute -top-12 right-0 md:-right-12 p-3 text-white/50 hover:text-red-500 transition-colors"
@@ -244,7 +234,6 @@ export default function SenkuUltimateProtocol() {
                   <X size={32} />
                 </button>
 
-                {/* THE MASTERPIECE CARD (LOCKED & PRESERVED) */}
                 <div ref={modalRef} className="relative w-full aspect-[1.58/1] bg-[#020617] border-[2.5px] rounded-[3rem] p-10 overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.8)]" style={{ borderColor: data.tierColor }}>
                   <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
                   <img src="/senku.GIF" className="absolute right-[-15%] bottom-[-15%] w-[280px] opacity-10 grayscale pointer-events-none" />
@@ -294,7 +283,6 @@ export default function SenkuUltimateProtocol() {
                   </div>
                 </div>
 
-                {/* Download Button inside Modal */}
                 <button 
                   onClick={saveCard}
                   className="mt-8 flex items-center gap-4 bg-white text-black px-12 py-5 rounded-2xl font-black uppercase text-[10px] tracking-[0.4em] hover:bg-green-600 hover:text-white transition-all shadow-2xl active:scale-95"
@@ -306,7 +294,6 @@ export default function SenkuUltimateProtocol() {
           )}
         </AnimatePresence>
 
-        {/* RADAR & HALL OF FAME (ثابت) */}
         {activeTab === 'radar' && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full max-w-2xl px-6 pt-10 pb-40 space-y-5">
             <h2 className="text-5xl font-[1000] italic uppercase flex items-center gap-5 text-green-500 tracking-tighter"><Zap /> Stone Radar</h2>
@@ -335,7 +322,6 @@ export default function SenkuUltimateProtocol() {
         )}
       </main>
 
-      {/* 4. FOOTER (ثابت) */}
       <footer className="relative z-[100] py-14 w-full flex flex-col items-center gap-6 mt-auto">
         <div className="flex gap-4">
           <button onClick={toggleMute} className="p-4 bg-white/5 border border-green-500/20 rounded-full hover:bg-green-500/10 transition-all">
