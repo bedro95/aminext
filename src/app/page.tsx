@@ -13,7 +13,7 @@ import { toPng } from 'html-to-image';
 /**
  * PROJECT: SENKU PROTOCOL
  * DEVELOPER: bedro95
- * VERSION: ULTIMATE V4 - DYNAMIC ON-CHAIN PROOF
+ * VERSION: ULTIMATE V4.1 - REAL-TIME RADAR INTEGRATION
  * STATUS: LOCKED IDENTITY - NO LINES REMOVED - FULL ENGLISH
  */
 
@@ -66,21 +66,49 @@ export default function SenkuUltimateProtocol() {
     return () => window.removeEventListener('click', handleInitialInteraction);
   }, [isMuted]);
 
+  // --- UPDATED: REAL-TIME ON-CHAIN RADAR ---
   useEffect(() => {
-    const assets = ['SOL', 'USDC', 'JUP', 'PYTH', 'BONK'];
-    const generateAlert = () => {
-      const newAlert = {
-        id: Date.now(),
-        amount: (Math.random() * 850000 + 1000).toLocaleString(),
-        asset: assets[Math.floor(Math.random() * assets.length)],
-        usd: (Math.random() * 150 + 1).toFixed(1) + "M",
-        type: "PROTOCOL_MOVE"
+    if (activeTab !== 'radar') return;
+
+    const socket = new WebSocket('wss://mainnet.helius-rpc.com/?api-key=4729436b-2f9d-4d42-a307-e2a3b2449483');
+
+    socket.onopen = () => {
+      const subscribeMessage = {
+        jsonrpc: "2.0",
+        id: 1,
+        method: "transactionSubscribe",
+        params: [
+          { vote: false, failed: false },
+          { commitment: "confirmed", encoding: "jsonParsed", transactionDetails: "full", showRewards: false }
+        ]
       };
-      setWhaleAlerts(prev => [newAlert, ...prev].slice(0, 6));
+      socket.send(JSON.stringify(subscribeMessage));
     };
-    const interval = setInterval(generateAlert, 4500);
-    return () => clearInterval(interval);
-  }, []);
+
+    socket.onmessage = (event) => {
+      const response = JSON.parse(event.data);
+      if (response.params?.result?.transaction) {
+        const meta = response.params.result.meta;
+        const solChange = (meta.postBalances[0] - meta.preBalances[0]) / 1_000_000_000;
+        
+        // Threshold: Only show transactions > 50 SOL
+        if (Math.abs(solChange) > 50) {
+          const newAlert = {
+            id: Date.now(),
+            amount: Math.abs(solChange).toLocaleString(undefined, { maximumFractionDigits: 2 }),
+            asset: "SOL",
+            usd: "ON-CHAIN LIVE",
+            type: solChange > 0 ? "WHALE_INFLOW" : "WHALE_OUTFLOW"
+          };
+          setWhaleAlerts(prev => [newAlert, ...prev].slice(0, 8));
+        }
+      }
+    };
+
+    return () => {
+      if (socket.readyState === WebSocket.OPEN) socket.close();
+    };
+  }, [activeTab]);
 
   const toggleMute = () => {
     setIsMuted(!isMuted);
@@ -135,7 +163,6 @@ export default function SenkuUltimateProtocol() {
 
       let tierColor = maxUsdValue >= 1000 ? "#22c55e" : maxUsdValue >= 100 ? "#10b981" : "#0ea5e9";
       
-      // Calculate Intelligence Score for the New Feature
       const score = Math.floor(Math.random() * 40) + (maxUsdValue > 1000 ? 60 : 30);
       setIntelligenceScore(score);
 
@@ -246,7 +273,6 @@ export default function SenkuUltimateProtocol() {
                   animate={{ y: 0, opacity: 1 }}
                   className="pb-32 px-4 w-full flex flex-col items-center gap-6"
                 >
-                  {/* --- NEW GLOBAL FEATURE: ON-CHAIN PROOF OF INTELLIGENCE --- */}
                   <div className="w-full max-w-md bg-white/5 border border-white/10 rounded-[2rem] p-1 overflow-hidden relative group">
                      <div className="absolute inset-0 bg-gradient-to-r from-green-500/10 via-transparent to-green-500/10 animate-pulse" />
                      <div className="relative bg-[#020617] rounded-[1.9rem] p-6">
@@ -255,7 +281,7 @@ export default function SenkuUltimateProtocol() {
                               <Terminal size={14} className="text-green-500" />
                               <span className="text-[10px] font-black uppercase tracking-widest text-green-500/70">Neural Intelligence Proof</span>
                            </div>
-                           <span className="text-[10px] font-mono text-white/20">V.4.0.1</span>
+                           <span className="text-[10px] font-mono text-white/20">V.4.1.0</span>
                         </div>
                         
                         <div className="flex items-end gap-4 mb-4">
@@ -411,11 +437,13 @@ export default function SenkuUltimateProtocol() {
         {activeTab === 'radar' && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full max-w-2xl px-6 pt-10 pb-40 space-y-5">
             <h2 className="text-5xl font-[1000] italic uppercase flex items-center gap-5 text-green-500 tracking-tighter"><Zap /> Stone Radar</h2>
+            <p className="text-[10px] font-mono text-white/40 uppercase tracking-widest mb-4">Monitoring Live Mainnet Whale Activity (&gt;50 SOL)</p>
+            {whaleAlerts.length === 0 && <div className="py-20 text-center opacity-20 font-mono text-xs animate-pulse">Scanning Neural Waves...</div>}
             {whaleAlerts.map((a) => (
-              <div key={a.id} className="bg-slate-900/80 border border-white/5 p-8 rounded-[2.5rem] flex justify-between items-center border-l-[6px] border-l-green-600 shadow-xl group hover:bg-slate-800/80 transition-all">
-                <div><p className="text-3xl font-[1000] italic group-hover:text-green-400 transition-colors">{a.amount} <span className="text-xs text-green-500">{a.asset}</span></p><p className="text-[10px] opacity-30 uppercase tracking-[0.3em] mt-1">{a.type} • ${a.usd}</p></div>
+              <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} key={a.id} className="bg-slate-900/80 border border-white/5 p-8 rounded-[2.5rem] flex justify-between items-center border-l-[6px] border-l-green-600 shadow-xl group hover:bg-slate-800/80 transition-all">
+                <div><p className="text-3xl font-[1000] italic group-hover:text-green-400 transition-colors">{a.amount} <span className="text-xs text-green-500">{a.asset}</span></p><p className="text-[10px] opacity-30 uppercase tracking-[0.3em] mt-1">{a.type} • {a.usd}</p></div>
                 <ChevronRight className="text-green-600 group-hover:translate-x-2 transition-transform" />
-              </div>
+              </motion.div>
             ))}
           </motion.div>
         )}
