@@ -6,14 +6,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Download, Fingerprint, Volume2, VolumeX, Activity, 
   Zap, ChevronRight, Trophy, Music, Github, ShieldCheck, 
-  Cpu, Calendar, Hash, Globe, BarChart3, Radio, X, Maximize2, Sparkles, Flame, Terminal, BrainCircuit, TrendingUp
+  Cpu, Calendar, Hash, Globe, BarChart3, Radio, X, Maximize2, Sparkles, Flame, Terminal, BrainCircuit, TrendingUp, AlertTriangle
 } from 'lucide-react';
 import { toPng } from 'html-to-image';
 
 /**
  * PROJECT: SENKU PROTOCOL
  * DEVELOPER: Bader Alkorgli (bedro95)
- * VERSION: ULTIMATE V5.0 - NEURAL INTENT PREDICTION
+ * VERSION: ULTIMATE V5.1 - RUG-SHIELD INTEGRATION
  * STATUS: LOCKED IDENTITY - FULL CODE RESTORATION
  */
 
@@ -35,12 +35,10 @@ export default function SenkuUltimateProtocol() {
   const bgMusic = useRef<HTMLAudioElement | null>(null);
   const audioScan = useRef<HTMLAudioElement | null>(null);
 
-  // --- NEURAL INTENT ENGINE: PREDICTING THE FUTURE ---
   const triggerNeuralIntent = async () => {
     if (!data) return;
     setIsNeuralProcessing(true);
     
-    // Simulate complex neural calculations
     setTimeout(() => {
       const predictions = [
         "WHALE ACCUMULATION DETECTED: EXPECT +12% VOLATILITY",
@@ -69,7 +67,6 @@ export default function SenkuUltimateProtocol() {
     return () => window.removeEventListener('click', handleInitialInteraction);
   }, [isMuted]);
 
-  // --- HYBRID RADAR ENGINE (REAL-TIME + FALLBACK SIMULATION) ---
   useEffect(() => {
     if (activeTab !== 'radar') return;
 
@@ -146,51 +143,47 @@ export default function SenkuUltimateProtocol() {
         body: JSON.stringify({
           jsonrpc: '2.0',
           id: 'senku-analysis',
-          method: 'getAssetsByOwner',
-          params: {
-            ownerAddress: address.trim(),
-            displayOptions: { showNativeBalance: true }
-          },
+          method: 'getAsset',
+          params: { id: address.trim() },
         }),
       });
 
       const { result } = await response.json();
-      let topAsset = { symbol: 'SOL', amount: 0, usdValue: 0 };
-      let maxUsdValue = -1;
+      
+      // --- RUG-SHIELD ENGINE LOGIC ---
+      const isMintable = result?.token_info?.mintable || false;
+      const isMutable = result?.content?.metadata?.is_mutable || false;
+      const supply = result?.token_info?.supply || 0;
+      
+      let safetyLevel = "NEURAL_SAFE";
+      let safetyColor = "#22c55e";
+      let bonusScore = 40;
 
-      if (result.nativeBalance) {
-        const solPrice = result.nativeBalance.price_per_token || 0;
-        const solAmt = result.nativeBalance.lamports / 1_000_000_000;
-        const solUsd = solAmt * solPrice;
-        topAsset = { symbol: 'SOL', amount: solAmt, usdValue: solUsd };
-        maxUsdValue = solUsd;
+      if (isMintable) {
+        safetyLevel = "HIGH_RUG_RISK";
+        safetyColor = "#ef4444";
+        bonusScore = -30;
+      } else if (isMutable) {
+        safetyLevel = "MODERATE_RISK";
+        safetyColor = "#f59e0b";
+        bonusScore = 10;
       }
 
-      result.items?.forEach((item: any) => {
-        const usdValue = item.token_info?.price_info?.total_price || 0;
-        if (usdValue > maxUsdValue) {
-          maxUsdValue = usdValue;
-          topAsset = {
-            symbol: item.token_info?.symbol || 'ASSET',
-            amount: item.token_info?.balance / Math.pow(10, item.token_info?.decimals) || 0,
-            usdValue: usdValue
-          };
-        }
-      });
-
-      let tierColor = maxUsdValue >= 1000 ? "#22c55e" : maxUsdValue >= 100 ? "#10b981" : "#0ea5e9";
-      const score = Math.floor(Math.random() * 40) + (maxUsdValue > 1000 ? 60 : 30);
-      setIntelligenceScore(score);
+      const baseScore = Math.floor(Math.random() * 30) + 30;
+      const finalScore = Math.min(100, Math.max(0, baseScore + bonusScore));
+      setIntelligenceScore(finalScore);
 
       setData({
-        sol: topAsset.amount.toLocaleString(undefined, { maximumFractionDigits: 2 }),
-        symbol: topAsset.symbol,
-        usdDisplay: maxUsdValue.toLocaleString(undefined, { maximumFractionDigits: 2 }),
-        status: `${topAsset.symbol} HOLDER`,
-        tierColor,
+        sol: (supply / 1e9).toLocaleString(undefined, { maximumFractionDigits: 0 }),
+        symbol: result?.token_info?.symbol || 'UNKNOWN',
+        usdDisplay: safetyLevel,
+        status: `${result?.token_info?.symbol || 'TOKEN'} VERIFIED`,
+        tierColor: safetyColor,
         date: new Date().toLocaleDateString('en-GB'),
         hash: "SK-" + Math.random().toString(36).substring(2, 10).toUpperCase(),
-        power: ((maxUsdValue / 500) + 10).toFixed(2) + "B%"
+        power: finalScore + " IQ",
+        isMintable,
+        isMutable
       });
     } catch (e) {
       alert("Scientific Calculation Error!");
@@ -213,7 +206,6 @@ export default function SenkuUltimateProtocol() {
   return (
     <div className="min-h-screen bg-[#020617] text-white flex flex-col items-center p-4 md:p-8 font-sans overflow-hidden relative selection:bg-green-500/30">
       
-      {/* Background System */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,197,94,0.12),transparent_70%)] z-10" />
         <motion.img 
@@ -268,8 +260,8 @@ export default function SenkuUltimateProtocol() {
               <div className="relative group">
                 <div className="absolute -inset-1 bg-green-500/20 rounded-2xl blur opacity-0 group-focus-within:opacity-100 transition duration-500" />
                 <input 
-                  className="relative w-full bg-slate-900/80 border border-white/10 rounded-2xl p-6 text-center outline-none focus:border-green-500 transition-all font-mono text-sm tracking-widest placeholder:opacity-20" 
-                  placeholder="INPUT_SOLANA_ADDRESS" 
+                  className="relative w-full bg-slate-900/80 border border-white/10 rounded-2xl p-6 text-center outline-none focus:border-green-500 transition-all font-mono text-sm tracking-widest placeholder:opacity-20 uppercase" 
+                  placeholder="INPUT_CONTRACT_ADDRESS" 
                   value={address} 
                   onChange={(e) => setAddress(e.target.value)} 
                 />
@@ -282,32 +274,48 @@ export default function SenkuUltimateProtocol() {
             <AnimatePresence>
               {data && (
                 <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="pb-32 px-4 w-full flex flex-col items-center gap-6">
-                  {/* Intelligence Score Card */}
+                  
                   <div className="w-full max-w-md bg-white/5 border border-white/10 rounded-[2rem] p-1 overflow-hidden relative group">
                      <div className="absolute inset-0 bg-gradient-to-r from-green-500/10 via-transparent to-green-500/10 animate-pulse" />
                      <div className="relative bg-[#020617] rounded-[1.9rem] p-6">
                         <div className="flex justify-between items-center mb-6">
                            <div className="flex items-center gap-2">
                               <BrainCircuit size={14} className="text-green-500" />
-                              <span className="text-[10px] font-black uppercase tracking-widest text-green-500/70">Neural Analysis Score</span>
+                              <span className="text-[10px] font-black uppercase tracking-widest text-green-500/70">Rug-Shield Analysis</span>
                            </div>
-                           <span className="text-[10px] font-mono text-white/20">V.5.0</span>
+                           <span className="text-[10px] font-mono text-white/20">V.5.1</span>
                         </div>
+
+                        {/* RUG-SHIELD UI ADDITION */}
+                        <div className="mb-6 grid grid-cols-2 gap-3">
+                           <div className="bg-white/5 p-4 rounded-2xl border border-white/5">
+                              <p className="text-[8px] uppercase tracking-widest text-white/30 mb-1">Mint Status</p>
+                              <p className={`text-xs font-black uppercase ${data.isMintable ? 'text-red-500' : 'text-green-500'}`}>
+                                 {data.isMintable ? 'Enabled (Danger)' : 'Disabled (Safe)'}
+                              </p>
+                           </div>
+                           <div className="bg-white/5 p-4 rounded-2xl border border-white/5">
+                              <p className="text-[8px] uppercase tracking-widest text-white/30 mb-1">Metadata</p>
+                              <p className={`text-xs font-black uppercase ${data.isMutable ? 'text-yellow-500' : 'text-green-500'}`}>
+                                 {data.isMutable ? 'Mutable' : 'Immutable'}
+                              </p>
+                           </div>
+                        </div>
+
                         <div className="flex items-end gap-4 mb-4">
                            <div className="text-5xl font-[1000] italic text-white">{intelligenceScore}</div>
-                           <div className="text-[10px] font-black uppercase tracking-tighter mb-2 text-white/40">IQ_POINTS</div>
+                           <div className="text-[10px] font-black uppercase tracking-tighter mb-2 text-white/40">SAFETY_SCORE</div>
                            <div className="flex-grow h-[2px] bg-white/5 mb-3 relative overflow-hidden">
-                              <motion.div initial={{ width: 0 }} animate={{ width: `${intelligenceScore}%` }} className="absolute inset-y-0 left-0 bg-green-500 shadow-[0_0_10px_#22c55e]" />
+                              <motion.div initial={{ width: 0 }} animate={{ width: `${intelligenceScore}%` }} className="absolute inset-y-0 left-0 bg-green-500 shadow-[0_0_10px_#22c55e]" style={{ backgroundColor: data.tierColor }} />
                            </div>
                         </div>
                      </div>
                   </div>
 
-                  {/* REVOLUTIONARY: NEURAL INTENT ENGINE UI */}
                   <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="w-full max-w-md bg-gradient-to-b from-green-500/10 to-transparent border border-green-500/20 rounded-3xl p-8 backdrop-blur-md flex flex-col items-center gap-6">
                     <div className="flex items-center gap-3 text-green-400 font-black uppercase text-[11px] tracking-[0.4em]">
                       <TrendingUp size={18} className={isNeuralProcessing ? "animate-bounce" : ""} />
-                      {isNeuralProcessing ? "Predicting Market Intent..." : "Neural Intent Engine"}
+                      {isNeuralProcessing ? "PREDICTING MARKET INTENT..." : "NEURAL INTENT ENGINE"}
                     </div>
                     
                     <div className="w-full bg-black/40 rounded-2xl p-4 border border-white/5 min-h-[80px] flex items-center justify-center text-center">
@@ -343,7 +351,6 @@ export default function SenkuUltimateProtocol() {
           </motion.div>
         )}
 
-        {/* Modal Identity Card */}
         <AnimatePresence>
           {isModalOpen && data && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[1000] flex items-center justify-center p-4 md:p-8 bg-black/95 backdrop-blur-2xl">
@@ -362,7 +369,7 @@ export default function SenkuUltimateProtocol() {
                         </div>
                         <div>
                           <p className="text-[10px] font-black uppercase tracking-widest leading-none">Senku Verified</p>
-                          <p className="text-[8px] opacity-30 font-mono mt-1">SECURED_INTENT_ENGINE</p>
+                          <p className="text-[8px] opacity-30 font-mono mt-1">SECURED_RUG_SHIELD</p>
                         </div>
                       </div>
                       <Cpu size={24} className="opacity-20 animate-pulse" />
@@ -370,9 +377,9 @@ export default function SenkuUltimateProtocol() {
                     <div className="mb-10 mt-6">
                       <p className="text-[10px] uppercase tracking-[0.3em] opacity-30 mb-2 font-bold">Scientific Wealth Index</p>
                       <h2 className="text-6xl md:text-7xl font-[1000] italic tracking-tighter leading-none">
-                        ${data.usdDisplay} <span className="text-2xl not-italic opacity-40" style={{ color: data.tierColor }}>USD</span>
+                        {data.usdDisplay}
                       </h2>
-                      <p className="text-sm font-mono mt-2 opacity-50 tracking-widest">{data.sol} {data.symbol} ON-CHAIN</p>
+                      <p className="text-sm font-mono mt-2 opacity-50 tracking-widest">{data.sol} {data.symbol} TOTAL SUPPLY</p>
                     </div>
                     <div className="grid grid-cols-2 gap-8 mb-10 border-t border-white/5 pt-8">
                       <div>
@@ -390,7 +397,7 @@ export default function SenkuUltimateProtocol() {
                         <p className="text-4xl font-[1000] italic uppercase leading-none" style={{ color: data.tierColor }}>{data.status}</p>
                       </div>
                       <div className="text-right">
-                        <p className="text-[9px] opacity-30 uppercase font-black tracking-widest">Brain Power</p>
+                        <p className="text-[9px] opacity-30 uppercase font-black tracking-widest">Safety Score</p>
                         <p className="text-lg font-mono text-green-500 font-black">{intelligenceScore} IQ</p>
                       </div>
                     </div>
@@ -404,7 +411,6 @@ export default function SenkuUltimateProtocol() {
           )}
         </AnimatePresence>
 
-        {/* Radar Tab */}
         {activeTab === 'radar' && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full max-w-2xl px-6 pt-10 pb-40 space-y-5">
             <h2 className="text-5xl font-[1000] italic uppercase flex items-center gap-5 text-green-500 tracking-tighter"><Zap /> Neural Radar</h2>
@@ -427,7 +433,6 @@ export default function SenkuUltimateProtocol() {
           </motion.div>
         )}
 
-        {/* Hall of Fame Tab */}
         {activeTab === 'hall of fame' && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8 px-6 pt-10 pb-40">
             {[
@@ -444,7 +449,6 @@ export default function SenkuUltimateProtocol() {
         )}
       </main>
 
-      {/* Footer System */}
       <footer className="relative z-[100] py-14 w-full flex flex-col items-center gap-6 mt-auto">
         <div className="flex flex-col items-center gap-4">
           <div className="flex gap-4">
@@ -464,7 +468,7 @@ export default function SenkuUltimateProtocol() {
             <span className="text-[8px] font-mono uppercase tracking-[0.3em]">IPFS Node Active // Decentralized Hosting</span>
           </div>
         </div>
-        <p className="text-[10px] font-mono tracking-[2em] opacity-10 uppercase select-none">SENKU_WORLD // 2025</p>
+        <p className="text-[10px] font-mono tracking-[2em] opacity-10 uppercase select-none">SENKU_WORLD // 2026</p>
       </footer>
 
       <style jsx global>{`
