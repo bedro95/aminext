@@ -2,20 +2,19 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Connection, PublicKey, Transaction, SystemProgram } from '@solana/web3.js';
-import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Download, Fingerprint, Volume2, VolumeX, Activity, 
   Zap, ChevronRight, Trophy, Music, Github, ShieldCheck, 
-  Cpu, Calendar, Hash, Globe, BarChart3, Radio, X, Maximize2, 
-  Sparkles, Flame, Terminal, BrainCircuit, TrendingUp, 
-  ShieldAlert, CheckCircle2, Search, AlertTriangle
+  Cpu, Calendar, Hash, Globe, BarChart3, Radio, X, Maximize2, Sparkles, Flame, Terminal, BrainCircuit, TrendingUp
 } from 'lucide-react';
 import { toPng } from 'html-to-image';
 
 /**
- * PROJECT: SENKU PROTOCOL (WAGMI)
+ * PROJECT: SENKU PROTOCOL
  * DEVELOPER: Bader Alkorgli (bedro95)
- * VERSION: ULTIMATE V7.0 - FULL PRESERVED LOGIC + LUXURY UI
+ * VERSION: ULTIMATE V5.0 - NEURAL INTENT PREDICTION
+ * STATUS: LOCKED IDENTITY - FULL CODE RESTORATION
  */
 
 export default function SenkuUltimateProtocol() {
@@ -31,31 +30,17 @@ export default function SenkuUltimateProtocol() {
   const [intentSignal, setIntentSignal] = useState<string | null>(null);
   const [intelligenceScore, setIntelligenceScore] = useState(0);
 
-  const [rugAddress, setRugAddress] = useState('');
-  const [rugData, setRugData] = useState<any>(null);
-  const [rugLoading, setRugLoading] = useState(false);
-
   const cardRef = useRef<HTMLDivElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
   const bgMusic = useRef<HTMLAudioElement | null>(null);
   const audioScan = useRef<HTMLAudioElement | null>(null);
 
-  // --- تأثير الماوس الفخم للـ IQ CARD ---
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const rotateX = useSpring(useTransform(mouseY, [-300, 300], [10, -10]), { stiffness: 100, damping: 30 });
-  const rotateY = useSpring(useTransform(mouseX, [-300, 300], [-10, 10]), { stiffness: 100, damping: 30 });
-
-  function handleMouseMove(e: React.MouseEvent) {
-    const rect = e.currentTarget.getBoundingClientRect();
-    mouseX.set(e.clientX - (rect.left + rect.width / 2));
-    mouseY.set(e.clientY - (rect.top + rect.height / 2));
-  }
-
-  // --- LOGIC: NEURAL INTENT ---
+  // --- NEURAL INTENT ENGINE: PREDICTING THE FUTURE ---
   const triggerNeuralIntent = async () => {
     if (!data) return;
     setIsNeuralProcessing(true);
+    
+    // Simulate complex neural calculations
     setTimeout(() => {
       const predictions = [
         "WHALE ACCUMULATION DETECTED: EXPECT +12% VOLATILITY",
@@ -69,98 +54,110 @@ export default function SenkuUltimateProtocol() {
     }, 2500);
   };
 
-  // --- LOGIC: RUG CHECK (ORIGINAL) ---
-  const analyzeRug = async () => {
-    if (!rugAddress || rugAddress.length < 32) return;
-    setRugLoading(true);
-    try {
-      const response = await fetch(`https://mainnet.helius-rpc.com/?api-key=4729436b-2f9d-4d42-a307-e2a3b2449483`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          jsonrpc: '2.0', id: 'rug-check',
-          method: 'getAsset',
-          params: { id: rugAddress.trim() },
-        }),
-      });
-      const { result } = await response.json();
-      const mintAuth = result.authorities?.find((a: any) => a.scopes?.includes('mint'));
-      const freezeAuth = result.authorities?.find((a: any) => a.scopes?.includes('freeze'));
-      const isMutable = result.content?.metadata?.is_mutable;
-      let score = 100;
-      if (mintAuth) score -= 50;
-      if (freezeAuth) score -= 30;
-      if (isMutable) score -= 10;
-
-      setRugData({
-        name: result.content?.metadata?.name || 'Unknown Token',
-        symbol: result.content?.metadata?.symbol || '???',
-        score: score,
-        mintDisabled: !mintAuth,
-        freezeDisabled: !freezeAuth,
-        immutable: !isMutable,
-        riskLevel: score >= 80 ? 'LOW RISK' : score >= 50 ? 'MEDIUM RISK' : 'CRITICAL DANGER'
-      });
-    } catch (e) { alert("Neural Shield Error"); } finally { setRugLoading(false); }
-  };
-
-  // --- AUDIO & MUSIC (ORIGINAL) ---
   useEffect(() => {
     bgMusic.current = new Audio('https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Ketsa/Raising_Frequency/Ketsa_-_08_-_World_In_Motion.mp3'); 
     bgMusic.current.loop = true;
     bgMusic.current.volume = 0.5;
     audioScan.current = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
-    const handleInitialInteraction = () => { if (!isMuted && bgMusic.current?.paused) bgMusic.current.play().catch(() => {}); };
+
+    const handleInitialInteraction = () => {
+      if (!isMuted && bgMusic.current?.paused) {
+        bgMusic.current.play().catch(() => {});
+      }
+    };
     window.addEventListener('click', handleInitialInteraction);
     return () => window.removeEventListener('click', handleInitialInteraction);
   }, [isMuted]);
 
-  // --- RADAR LOGIC (ORIGINAL) ---
+  // --- HYBRID RADAR ENGINE (REAL-TIME + FALLBACK SIMULATION) ---
   useEffect(() => {
     if (activeTab !== 'radar') return;
+
     let socket: WebSocket;
     let fallbackInterval: NodeJS.Timeout;
+
     const addAlert = (amount: number, type: string, source: string) => {
-      const newAlert = { id: Date.now() + Math.random(), amount: amount.toLocaleString(undefined, { maximumFractionDigits: 2 }), asset: "SOL", usd: source, type: type };
+      const newAlert = {
+        id: Date.now() + Math.random(),
+        amount: amount.toLocaleString(undefined, { maximumFractionDigits: 2 }),
+        asset: "SOL",
+        usd: source,
+        type: type
+      };
       setWhaleAlerts(prev => [newAlert, ...prev].slice(0, 8));
     };
+
     const startWebSocket = () => {
       socket = new WebSocket('wss://mainnet.helius-rpc.com/?api-key=4729436b-2f9d-4d42-a307-e2a3b2449483');
-      socket.onopen = () => { socket.send(JSON.stringify({ jsonrpc: "2.0", id: 1, method: "transactionSubscribe", params: [{ vote: false, failed: false }, { commitment: "confirmed", encoding: "jsonParsed", transactionDetails: "full", maxSupportedTransactionVersion: 0 }] })); };
+      socket.onopen = () => {
+        socket.send(JSON.stringify({
+          jsonrpc: "2.0", id: 1, method: "transactionSubscribe",
+          params: [{ vote: false, failed: false }, { commitment: "confirmed", encoding: "jsonParsed", transactionDetails: "full", maxSupportedTransactionVersion: 0 }]
+        }));
+      };
       socket.onmessage = (event) => {
         const response = JSON.parse(event.data);
         if (response.params?.result?.transaction) {
           const meta = response.params.result.meta;
           if (meta?.postBalances && meta?.preBalances) {
             const solChange = (meta.postBalances[0] - meta.preBalances[0]) / 1_000_000_000;
-            if (Math.abs(solChange) > 5) addAlert(Math.abs(solChange), solChange > 0 ? "WHALE_INFLOW" : "WHALE_OUTFLOW", "LIVE_MAINNET");
+            if (Math.abs(solChange) > 5) {
+              addAlert(Math.abs(solChange), solChange > 0 ? "WHALE_INFLOW" : "WHALE_OUTFLOW", "LIVE_MAINNET");
+            }
           }
         }
       };
     };
-    const startFallback = () => { fallbackInterval = setInterval(() => { if (Math.random() > 0.6) { const fakeAmount = Math.random() * 800 + 50; addAlert(fakeAmount, Math.random() > 0.5 ? "WHALE_INFLOW" : "WHALE_OUTFLOW", "NEURAL_PRED"); } }, 4500); };
-    startWebSocket(); startFallback();
-    return () => { if (socket) socket.close(); if (fallbackInterval) clearInterval(fallbackInterval); };
+
+    const startFallback = () => {
+      fallbackInterval = setInterval(() => {
+        if (Math.random() > 0.6) { 
+          const fakeAmount = Math.random() * 800 + 50;
+          addAlert(fakeAmount, Math.random() > 0.5 ? "WHALE_INFLOW" : "WHALE_OUTFLOW", "NEURAL_PRED");
+        }
+      }, 4500);
+    };
+
+    startWebSocket();
+    startFallback();
+
+    return () => {
+      if (socket) socket.close();
+      if (fallbackInterval) clearInterval(fallbackInterval);
+    };
   }, [activeTab]);
 
   const toggleMute = () => {
     setIsMuted(!isMuted);
-    if (bgMusic.current) isMuted ? bgMusic.current.play() : bgMusic.current.pause();
+    if (bgMusic.current) {
+      isMuted ? bgMusic.current.play() : bgMusic.current.pause();
+    }
   };
 
-  // --- SCAN LOGIC (ORIGINAL) ---
   const analyze = async () => {
     if (!address) return;
     setLoading(true);
     if (!isMuted) audioScan.current?.play();
+    
     try {
       const response = await fetch("https://mainnet.helius-rpc.com/?api-key=4729436b-2f9d-4d42-a307-e2a3b2449483", {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ jsonrpc: '2.0', id: 'senku-analysis', method: 'getAssetsByOwner', params: { ownerAddress: address.trim(), displayOptions: { showNativeBalance: true } }, }),
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          jsonrpc: '2.0',
+          id: 'senku-analysis',
+          method: 'getAssetsByOwner',
+          params: {
+            ownerAddress: address.trim(),
+            displayOptions: { showNativeBalance: true }
+          },
+        }),
       });
+
       const { result } = await response.json();
       let topAsset = { symbol: 'SOL', amount: 0, usdValue: 0 };
       let maxUsdValue = -1;
+
       if (result.nativeBalance) {
         const solPrice = result.nativeBalance.price_per_token || 0;
         const solAmt = result.nativeBalance.lamports / 1_000_000_000;
@@ -168,18 +165,38 @@ export default function SenkuUltimateProtocol() {
         topAsset = { symbol: 'SOL', amount: solAmt, usdValue: solUsd };
         maxUsdValue = solUsd;
       }
+
       result.items?.forEach((item: any) => {
         const usdValue = item.token_info?.price_info?.total_price || 0;
         if (usdValue > maxUsdValue) {
           maxUsdValue = usdValue;
-          topAsset = { symbol: item.token_info?.symbol || 'ASSET', amount: item.token_info?.balance / Math.pow(10, item.token_info?.decimals) || 0, usdValue: usdValue };
+          topAsset = {
+            symbol: item.token_info?.symbol || 'ASSET',
+            amount: item.token_info?.balance / Math.pow(10, item.token_info?.decimals) || 0,
+            usdValue: usdValue
+          };
         }
       });
+
       let tierColor = maxUsdValue >= 1000 ? "#22c55e" : maxUsdValue >= 100 ? "#10b981" : "#0ea5e9";
       const score = Math.floor(Math.random() * 40) + (maxUsdValue > 1000 ? 60 : 30);
       setIntelligenceScore(score);
-      setData({ sol: topAsset.amount.toLocaleString(undefined, { maximumFractionDigits: 2 }), symbol: topAsset.symbol, usdDisplay: maxUsdValue.toLocaleString(undefined, { maximumFractionDigits: 2 }), status: `${topAsset.symbol} HOLDER`, tierColor, date: new Date().toLocaleDateString('en-GB'), hash: "SK-" + Math.random().toString(36).substring(2, 10).toUpperCase(), power: ((maxUsdValue / 500) + 10).toFixed(2) + "B%" });
-    } catch (e) { alert("Scientific Calculation Error!"); } finally { setLoading(false); }
+
+      setData({
+        sol: topAsset.amount.toLocaleString(undefined, { maximumFractionDigits: 2 }),
+        symbol: topAsset.symbol,
+        usdDisplay: maxUsdValue.toLocaleString(undefined, { maximumFractionDigits: 2 }),
+        status: `${topAsset.symbol} HOLDER`,
+        tierColor,
+        date: new Date().toLocaleDateString('en-GB'),
+        hash: "SK-" + Math.random().toString(36).substring(2, 10).toUpperCase(),
+        power: ((maxUsdValue / 500) + 10).toFixed(2) + "B%"
+      });
+    } catch (e) {
+      alert("Scientific Calculation Error!");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const saveCard = () => {
@@ -196,11 +213,13 @@ export default function SenkuUltimateProtocol() {
   return (
     <div className="min-h-screen bg-[#020617] text-white flex flex-col items-center p-4 md:p-8 font-sans overflow-hidden relative selection:bg-green-500/30">
       
-      {/* Background System (Snow + GIF) */}
+      {/* Background System */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,197,94,0.12),transparent_70%)] z-10" />
         <motion.img 
-          src="/senku.GIF" alt="Senku Background" initial={{ opacity: 0 }}
+          src="/senku.GIF" 
+          alt="Senku Background" 
+          initial={{ opacity: 0 }}
           animate={{ opacity: 0.25, x: [-10, 10, -10], y: [-5, 5, -5] }}
           transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
           className="absolute inset-0 w-full h-full object-cover opacity-20 filter grayscale contrast-125"
@@ -211,18 +230,16 @@ export default function SenkuUltimateProtocol() {
         ))}
       </div>
 
-      {/* Navigation (Original Tabs) */}
       <nav className="relative z-[100] mt-4 mb-12">
-        <div className="flex bg-slate-900/60 border border-white/10 p-1.5 rounded-2xl backdrop-blur-3xl shadow-2xl">
-          {['scan', 'rug-shield', 'radar', 'hall of fame'].map((tab) => (
+        <div className="flex bg-slate-900/60 border border-white/10 p-1.5 rounded-2xl backdrop-blur-3xl shadow-[0_0_50px_rgba(0,0,0,0.4)]">
+          {['scan', 'radar', 'hall of fame'].map((tab) => (
             <button key={tab} onClick={() => setActiveTab(tab)} 
-              className={`relative px-6 md:px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-500 ${activeTab === tab ? 'text-white' : 'text-white/30 hover:text-white'}`}>
+              className={`relative px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-500 ${activeTab === tab ? 'text-white' : 'text-white/30 hover:text-white'}`}>
               {activeTab === tab && (
                 <motion.div layoutId="tab-pill" className="absolute inset-0 bg-green-600 shadow-[0_0_25px_rgba(34,197,94,0.5)] rounded-xl" transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }} />
               )}
               <span className="relative z-10 flex items-center gap-2">
                 {tab === 'scan' && <Fingerprint size={14} />}
-                {tab === 'rug-shield' && <ShieldCheck size={14} />}
                 {tab === 'radar' && <Radio size={14} />}
                 {tab === 'hall of fame' && <Trophy size={14} />}
                 {tab}
@@ -234,7 +251,6 @@ export default function SenkuUltimateProtocol() {
 
       <main className="relative z-10 w-full max-w-6xl flex flex-col items-center flex-grow justify-center">
         
-        {/* --- SCAN TAB (LUXURY UPGRADE) --- */}
         {activeTab === 'scan' && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full flex flex-col items-center">
             <div className="text-center mb-12 relative">
@@ -249,66 +265,74 @@ export default function SenkuUltimateProtocol() {
             </div>
 
             <div className="w-full max-w-lg px-6 mb-16">
-              <div className="relative group bg-slate-900/80 border border-white/10 rounded-2xl p-2 shadow-2xl">
+              <div className="relative group">
+                <div className="absolute -inset-1 bg-green-500/20 rounded-2xl blur opacity-0 group-focus-within:opacity-100 transition duration-500" />
                 <input 
-                  className="w-full bg-transparent p-5 outline-none font-mono text-sm tracking-widest text-center placeholder:opacity-20" 
+                  className="relative w-full bg-slate-900/80 border border-white/10 rounded-2xl p-6 text-center outline-none focus:border-green-500 transition-all font-mono text-sm tracking-widest placeholder:opacity-20" 
                   placeholder="INPUT_SOLANA_ADDRESS" 
-                  value={address} onChange={(e) => setAddress(e.target.value)} 
+                  value={address} 
+                  onChange={(e) => setAddress(e.target.value)} 
                 />
-                <button onClick={analyze} className="w-full mt-2 py-5 bg-white text-black rounded-xl font-[1000] uppercase text-[10px] tracking-[0.4em] hover:bg-green-600 hover:text-white transition-all shadow-xl">
-                  {loading ? "SEARCHING 10 BILLION%..." : "INITIALIZE NEURAL SCAN"}
-                </button>
               </div>
+              <button onClick={analyze} className="w-full mt-5 py-6 bg-white text-black rounded-2xl font-[1000] uppercase text-[11px] tracking-[0.5em] hover:bg-green-600 hover:text-white transition-all active:scale-95 shadow-2xl">
+                {loading ? "SEARCHING 10 BILLION%..." : "INITIALIZE NEURAL SCAN"}
+              </button>
             </div>
 
             <AnimatePresence>
               {data && (
-                <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="pb-32 px-4 w-full flex flex-col items-center gap-8">
-                  <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8">
-                    
-                    {/* IQ Card (3D Luxury) */}
-                    <motion.div 
-                      onMouseMove={handleMouseMove}
-                      style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-                      className="bg-white/5 border border-white/10 rounded-[2.5rem] p-10 backdrop-blur-2xl relative overflow-hidden group"
-                    >
-                      <div className="absolute top-0 right-0 p-10 opacity-5 group-hover:opacity-10 transition-opacity">
-                         <BrainCircuit size={120} />
-                      </div>
-                      <div className="relative z-10">
-                         <p className="text-[10px] font-black uppercase tracking-[0.4em] text-green-500 mb-8">Neural IQ Index</p>
-                         <h2 className="text-8xl font-[1000] italic leading-none mb-6">{intelligenceScore}</h2>
-                         <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                            <motion.div initial={{ width: 0 }} animate={{ width: `${intelligenceScore}%` }} className="h-full bg-green-500 shadow-[0_0_20px_#00ffa3]" />
-                         </div>
-                         <p className="text-[9px] font-mono text-white/30 mt-4 uppercase tracking-widest">Scientific IQ Data Verified</p>
-                      </div>
-                    </motion.div>
-
-                    {/* Intent Engine (Luxury) */}
-                    <div className="bg-slate-900/50 border border-white/5 rounded-[2.5rem] p-10 backdrop-blur-2xl flex flex-col justify-between">
-                       <div className="flex items-center gap-4 mb-10 border-b border-white/5 pb-6">
-                          <Activity className="text-green-500 animate-pulse" />
-                          <span className="text-[10px] font-black uppercase tracking-widest">Market Intent Pred</span>
-                       </div>
-                       <div className="bg-black/40 p-6 rounded-2xl border border-white/5 mb-8 italic text-[11px] font-mono text-white/60 min-h-[100px] flex items-center justify-center text-center">
-                          {intentSignal ? (
-                            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }}><span className="text-green-500">[SIGNAL]</span> {intentSignal}</motion.p>
-                          ) : "READY TO PREDICT FUTURE NODES..."}
-                       </div>
-                       <button onClick={triggerNeuralIntent} disabled={isNeuralProcessing} className="w-full py-5 bg-white text-black rounded-2xl font-black text-[10px] uppercase tracking-[0.3em] hover:bg-green-500 hover:text-white transition-all shadow-2xl">
-                          {isNeuralProcessing ? "DECODING..." : "TRIGGER PREDICTION"}
-                       </button>
-                    </div>
+                <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="pb-32 px-4 w-full flex flex-col items-center gap-6">
+                  {/* Intelligence Score Card */}
+                  <div className="w-full max-w-md bg-white/5 border border-white/10 rounded-[2rem] p-1 overflow-hidden relative group">
+                     <div className="absolute inset-0 bg-gradient-to-r from-green-500/10 via-transparent to-green-500/10 animate-pulse" />
+                     <div className="relative bg-[#020617] rounded-[1.9rem] p-6">
+                        <div className="flex justify-between items-center mb-6">
+                           <div className="flex items-center gap-2">
+                              <BrainCircuit size={14} className="text-green-500" />
+                              <span className="text-[10px] font-black uppercase tracking-widest text-green-500/70">Neural Analysis Score</span>
+                           </div>
+                           <span className="text-[10px] font-mono text-white/20">V.5.0</span>
+                        </div>
+                        <div className="flex items-end gap-4 mb-4">
+                           <div className="text-5xl font-[1000] italic text-white">{intelligenceScore}</div>
+                           <div className="text-[10px] font-black uppercase tracking-tighter mb-2 text-white/40">IQ_POINTS</div>
+                           <div className="flex-grow h-[2px] bg-white/5 mb-3 relative overflow-hidden">
+                              <motion.div initial={{ width: 0 }} animate={{ width: `${intelligenceScore}%` }} className="absolute inset-y-0 left-0 bg-green-500 shadow-[0_0_10px_#22c55e]" />
+                           </div>
+                        </div>
+                     </div>
                   </div>
 
-                  {/* ID Card Entry */}
-                  <motion.div whileHover={{ scale: 1.05 }} onClick={() => setIsModalOpen(true)} className="relative cursor-pointer group mt-4">
+                  {/* REVOLUTIONARY: NEURAL INTENT ENGINE UI */}
+                  <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="w-full max-w-md bg-gradient-to-b from-green-500/10 to-transparent border border-green-500/20 rounded-3xl p-8 backdrop-blur-md flex flex-col items-center gap-6">
+                    <div className="flex items-center gap-3 text-green-400 font-black uppercase text-[11px] tracking-[0.4em]">
+                      <TrendingUp size={18} className={isNeuralProcessing ? "animate-bounce" : ""} />
+                      {isNeuralProcessing ? "Predicting Market Intent..." : "Neural Intent Engine"}
+                    </div>
+                    
+                    <div className="w-full bg-black/40 rounded-2xl p-4 border border-white/5 min-h-[80px] flex items-center justify-center text-center">
+                      {intentSignal ? (
+                        <motion.p initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="text-white font-mono text-[11px] leading-relaxed uppercase tracking-wider">
+                          <span className="text-green-500 font-black">[SIGNAL]</span> {intentSignal}
+                        </motion.p>
+                      ) : (
+                        <p className="text-white/20 font-mono text-[9px] uppercase tracking-widest italic">Awaiting sync with Mainnet intent...</p>
+                      )}
+                    </div>
+
+                    <button onClick={triggerNeuralIntent} disabled={isNeuralProcessing} className="w-full group relative flex items-center justify-center gap-3 bg-green-600 text-white py-4 rounded-xl font-black text-[10px] uppercase tracking-[0.3em] hover:bg-green-500 transition-all shadow-[0_0_30px_rgba(34,197,94,0.4)] disabled:opacity-50">
+                      <Sparkles size={16} /> {isNeuralProcessing ? "Processing..." : "Predict Future Intent"}
+                    </button>
+                  </motion.div>
+
+                  <p className="text-[10px] font-mono text-green-500/60 uppercase tracking-[0.5em] mb-6 animate-pulse">Identity Ready for Extraction</p>
+                  
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setIsModalOpen(true)} className="relative cursor-pointer group">
                     <div className="absolute -inset-1 bg-green-500/30 blur-2xl opacity-0 group-hover:opacity-100 transition-all rounded-full" />
                     <div className="relative w-72 aspect-[1.58/1] bg-slate-900 border border-white/20 rounded-2xl overflow-hidden flex items-center justify-center backdrop-blur-xl">
                       <img src="/senku.GIF" className="absolute opacity-10 grayscale w-full h-full object-cover" />
                       <div className="z-10 text-center">
-                        <Maximize2 size={32} className="text-green-500 mx-auto mb-2 opacity-50 group-hover:opacity-10 transition-all" />
+                        <Maximize2 size={32} className="text-green-500 mx-auto mb-2 opacity-50 group-hover:opacity-100 transition-all" />
                         <p className="text-[9px] font-black uppercase tracking-widest">Open Scientific Identity</p>
                       </div>
                     </div>
@@ -319,68 +343,80 @@ export default function SenkuUltimateProtocol() {
           </motion.div>
         )}
 
-        {/* --- RUG SHIELD TAB (LUXURY REVOLUTION) --- */}
-        {activeTab === 'rug-shield' && (
-          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="w-full max-w-4xl px-6 pt-10 pb-40">
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-              
-              <div className="md:col-span-12 bg-gradient-to-br from-green-500/10 to-transparent border border-green-500/20 rounded-[3rem] p-12 backdrop-blur-2xl">
-                <div className="flex flex-col items-center text-center mb-10">
-                   <div className="inline-flex p-4 rounded-full bg-green-500/10 border border-green-500/20 mb-4">
-                      <ShieldCheck size={40} className="text-green-500 animate-pulse" />
-                   </div>
-                   <h2 className="text-4xl font-[1000] italic uppercase tracking-tighter">NEURAL SHIELD</h2>
-                   <p className="text-[10px] font-mono text-green-500/50 uppercase tracking-[0.5em] mt-2">Advanced Smart-Contract Audit</p>
+        {/* Modal Identity Card */}
+        <AnimatePresence>
+          {isModalOpen && data && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[1000] flex items-center justify-center p-4 md:p-8 bg-black/95 backdrop-blur-2xl">
+              <motion.div initial={{ scale: 0.8, y: 50 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.8, y: 50 }} className="relative w-full max-w-[550px] flex flex-col items-center">
+                <button onClick={() => setIsModalOpen(false)} className="absolute -top-12 right-0 md:-right-12 p-3 text-white/50 hover:text-red-500 transition-colors">
+                  <X size={32} />
+                </button>
+                <div ref={modalRef} className="relative w-full aspect-[1.58/1] bg-[#020617] border-[2.5px] rounded-[3rem] p-10 overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.8)]" style={{ borderColor: data.tierColor }}>
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
+                  <img src="/senku.GIF" className="absolute right-[-15%] bottom-[-15%] w-[280px] opacity-10 grayscale pointer-events-none" />
+                  <div className="relative z-10 h-full flex flex-col">
+                    <div className="flex justify-between items-start mb-auto">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 rounded-lg bg-white/5 border border-white/10">
+                          <ShieldCheck size={24} style={{ color: data.tierColor }} />
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-black uppercase tracking-widest leading-none">Senku Verified</p>
+                          <p className="text-[8px] opacity-30 font-mono mt-1">SECURED_INTENT_ENGINE</p>
+                        </div>
+                      </div>
+                      <Cpu size={24} className="opacity-20 animate-pulse" />
+                    </div>
+                    <div className="mb-10 mt-6">
+                      <p className="text-[10px] uppercase tracking-[0.3em] opacity-30 mb-2 font-bold">Scientific Wealth Index</p>
+                      <h2 className="text-6xl md:text-7xl font-[1000] italic tracking-tighter leading-none">
+                        ${data.usdDisplay} <span className="text-2xl not-italic opacity-40" style={{ color: data.tierColor }}>USD</span>
+                      </h2>
+                      <p className="text-sm font-mono mt-2 opacity-50 tracking-widest">{data.sol} {data.symbol} ON-CHAIN</p>
+                    </div>
+                    <div className="grid grid-cols-2 gap-8 mb-10 border-t border-white/5 pt-8">
+                      <div>
+                        <p className="text-[9px] uppercase opacity-30 flex items-center gap-2 mb-1"><Calendar size={12} /> Generation</p>
+                        <p className="text-sm font-mono font-bold tracking-widest">{data.date}</p>
+                      </div>
+                      <div>
+                        <p className="text-[9px] uppercase opacity-30 flex items-center gap-2 mb-1"><Hash size={12} /> LAB_ID</p>
+                        <p className="text-sm font-mono font-bold tracking-widest text-white/80">{data.hash}</p>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-end border-t border-white/5 pt-8 mt-auto">
+                      <div>
+                        <p className="text-[10px] font-black uppercase tracking-[0.4em] mb-2 opacity-40">Class</p>
+                        <p className="text-4xl font-[1000] italic uppercase leading-none" style={{ color: data.tierColor }}>{data.status}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-[9px] opacity-30 uppercase font-black tracking-widest">Brain Power</p>
+                        <p className="text-lg font-mono text-green-500 font-black">{intelligenceScore} IQ</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex flex-col md:flex-row gap-4 max-w-2xl mx-auto">
-                  <input 
-                    className="flex-1 bg-black/50 border border-white/10 rounded-2xl p-5 font-mono text-xs tracking-widest text-green-400 focus:border-green-500 outline-none transition-all"
-                    placeholder="ENTER_CONTRACT_ADDRESS"
-                    value={rugAddress} onChange={(e) => setRugAddress(e.target.value)}
-                  />
-                  <button onClick={analyzeRug} className="px-10 py-5 bg-green-600 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-2xl hover:bg-green-500 transition-all">
-                    {rugLoading ? "DECODING..." : "START SCAN"}
-                  </button>
-                </div>
-              </div>
+                <button onClick={saveCard} className="mt-8 flex items-center gap-4 bg-white text-black px-12 py-5 rounded-2xl font-black uppercase text-[10px] tracking-[0.4em] hover:bg-green-600 hover:text-white transition-all shadow-2xl active:scale-95">
+                  <Download size={20} /> Extract Lab Credentials
+                </button>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-              <AnimatePresence>
-                {rugData && (
-                  <>
-                    <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="md:col-span-7 bg-white/5 border border-white/10 rounded-[2.5rem] p-8">
-                       <p className="text-[10px] font-black opacity-30 uppercase tracking-widest mb-6">Security Breakdown</p>
-                       <div className="space-y-4">
-                          {[
-                            { label: "Mint Authority", status: rugData.mintDisabled },
-                            { label: "Freeze Authority", status: rugData.freezeDisabled },
-                            { label: "Contract Metadata", status: rugData.immutable }
-                          ].map((item, i) => (
-                            <div key={i} className="flex justify-between items-center p-4 bg-black/20 rounded-xl border border-white/5">
-                               <span className="text-[11px] font-bold uppercase">{item.label}</span>
-                               {item.status ? <CheckCircle2 className="text-green-500" size={18} /> : <ShieldAlert className="text-red-500" size={18} />}
-                            </div>
-                          ))}
-                       </div>
-                    </motion.div>
-                    <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="md:col-span-5 bg-green-600 rounded-[2.5rem] p-8 flex flex-col items-center justify-center text-black text-center relative overflow-hidden group">
-                       <p className="text-[10px] font-black uppercase tracking-widest mb-2 z-10">Safety Score</p>
-                       <h3 className="text-7xl font-[1000] italic leading-none mb-2 z-10">{rugData.score}%</h3>
-                       <p className="text-[10px] font-black uppercase bg-black/10 px-4 py-1 rounded-full z-10">{rugData.riskLevel}</p>
-                    </motion.div>
-                  </>
-                )}
-              </AnimatePresence>
-            </div>
-          </motion.div>
-        )}
-
-        {/* --- RADAR TAB (ORIGINAL) --- */}
+        {/* Radar Tab */}
         {activeTab === 'radar' && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full max-w-2xl px-6 pt-10 pb-40 space-y-5">
             <h2 className="text-5xl font-[1000] italic uppercase flex items-center gap-5 text-green-500 tracking-tighter"><Zap /> Neural Radar</h2>
-            <p className="text-[10px] font-mono text-white/40 uppercase tracking-widest mb-4">Real-time Whale Activity Analysis</p>
+            <p className="text-[10px] font-mono text-white/40 uppercase tracking-widest mb-4">Real-time Whale Activity Analysis & Prediction</p>
+            {whaleAlerts.length === 0 && (
+              <div className="py-20 text-center flex flex-col items-center gap-4 opacity-20">
+                <div className="w-10 h-10 border-2 border-green-500 border-t-transparent rounded-full animate-spin" />
+                <p className="font-mono text-[9px] tracking-widest">SCANNING NEURAL WAVES...</p>
+              </div>
+            )}
             {whaleAlerts.map((a) => (
-              <motion.div key={a.id} className="bg-slate-900/80 border border-white/5 p-8 rounded-[2.5rem] flex justify-between items-center border-l-[6px] border-l-green-600 shadow-xl group hover:bg-slate-800/80 transition-all">
+              <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} key={a.id} className="bg-slate-900/80 border border-white/5 p-8 rounded-[2.5rem] flex justify-between items-center border-l-[6px] border-l-green-600 shadow-xl group hover:bg-slate-800/80 transition-all">
                 <div>
                   <p className="text-3xl font-[1000] italic group-hover:text-green-400 transition-colors">{a.amount} <span className="text-xs text-green-500">{a.asset}</span></p>
                   <p className="text-[10px] opacity-30 uppercase tracking-[0.3em] mt-1">{a.type} • {a.usd}</p>
@@ -391,7 +427,7 @@ export default function SenkuUltimateProtocol() {
           </motion.div>
         )}
 
-        {/* --- HALL OF FAME TAB (ORIGINAL) --- */}
+        {/* Hall of Fame Tab */}
         {activeTab === 'hall of fame' && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8 px-6 pt-10 pb-40">
             {[
@@ -408,68 +444,7 @@ export default function SenkuUltimateProtocol() {
         )}
       </main>
 
-      {/* --- MODAL IDENTITY CARD (PRESERVED FULL) --- */}
-      <AnimatePresence>
-        {isModalOpen && data && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[1000] flex items-center justify-center p-4 md:p-8 bg-black/95 backdrop-blur-2xl">
-            <motion.div initial={{ scale: 0.8, y: 50 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.8, y: 50 }} className="relative w-full max-w-[550px] flex flex-col items-center">
-              <button onClick={() => setIsModalOpen(false)} className="absolute -top-12 right-0 md:-right-12 p-3 text-white/50 hover:text-red-500 transition-colors">
-                <X size={32} />
-              </button>
-              <div ref={modalRef} className="relative w-full aspect-[1.58/1] bg-[#020617] border-[2.5px] rounded-[3rem] p-10 overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.8)]" style={{ borderColor: data.tierColor }}>
-                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
-                <img src="/senku.GIF" className="absolute right-[-15%] bottom-[-15%] w-[280px] opacity-10 grayscale pointer-events-none" />
-                <div className="relative z-10 h-full flex flex-col">
-                  <div className="flex justify-between items-start mb-auto">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 rounded-lg bg-white/5 border border-white/10">
-                        <ShieldCheck size={24} style={{ color: data.tierColor }} />
-                      </div>
-                      <div>
-                        <p className="text-[10px] font-black uppercase tracking-widest leading-none">Senku Verified</p>
-                        <p className="text-[8px] opacity-30 font-mono mt-1">SECURED_INTENT_ENGINE</p>
-                      </div>
-                    </div>
-                    <Cpu size={24} className="opacity-20 animate-pulse" />
-                  </div>
-                  <div className="mb-10 mt-6">
-                    <p className="text-[10px] uppercase tracking-[0.3em] opacity-30 mb-2 font-bold">Scientific Wealth Index</p>
-                    <h2 className="text-6xl md:text-7xl font-[1000] italic tracking-tighter leading-none">
-                      ${data.usdDisplay} <span className="text-2xl not-italic opacity-40" style={{ color: data.tierColor }}>USD</span>
-                    </h2>
-                    <p className="text-sm font-mono mt-2 opacity-50 tracking-widest">{data.sol} {data.symbol} ON-CHAIN</p>
-                  </div>
-                  <div className="grid grid-cols-2 gap-8 mb-10 border-t border-white/5 pt-8">
-                    <div>
-                      <p className="text-[9px] uppercase opacity-30 flex items-center gap-2 mb-1"><Calendar size={12} /> Generation</p>
-                      <p className="text-sm font-mono font-bold tracking-widest">{data.date}</p>
-                    </div>
-                    <div>
-                      <p className="text-[9px] uppercase opacity-30 flex items-center gap-2 mb-1"><Hash size={12} /> LAB_ID</p>
-                      <p className="text-sm font-mono font-bold tracking-widest text-white/80">{data.hash}</p>
-                    </div>
-                  </div>
-                  <div className="flex justify-between items-end border-t border-white/5 pt-8 mt-auto">
-                    <div>
-                      <p className="text-[10px] font-black uppercase tracking-[0.4em] mb-2 opacity-40">Class</p>
-                      <p className="text-4xl font-[1000] italic uppercase leading-none" style={{ color: data.tierColor }}>{data.status}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-[9px] opacity-30 uppercase font-black tracking-widest">Brain Power</p>
-                      <p className="text-lg font-mono text-green-500 font-black">{intelligenceScore} IQ</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <button onClick={saveCard} className="mt-8 flex items-center gap-4 bg-white text-black px-12 py-5 rounded-2xl font-black uppercase text-[10px] tracking-[0.4em] hover:bg-green-600 hover:text-white transition-all shadow-2xl active:scale-95">
-                <Download size={20} /> Extract Lab Credentials
-              </button>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* --- FOOTER (ORIGINAL) --- */}
+      {/* Footer System */}
       <footer className="relative z-[100] py-14 w-full flex flex-col items-center gap-6 mt-auto">
         <div className="flex flex-col items-center gap-4">
           <div className="flex gap-4">
@@ -484,14 +459,19 @@ export default function SenkuUltimateProtocol() {
               </div>
             </a>
           </div>
+          <div className="flex items-center gap-2 opacity-30 hover:opacity-100 transition-opacity">
+            <Globe size={12} className="text-green-500" />
+            <span className="text-[8px] font-mono uppercase tracking-[0.3em]">IPFS Node Active // Decentralized Hosting</span>
+          </div>
         </div>
-        <p className="text-[10px] font-mono tracking-[2em] opacity-10 uppercase select-none">SENKU_WORLD // 2026</p>
+        <p className="text-[10px] font-mono tracking-[2em] opacity-10 uppercase select-none">SENKU_WORLD // 2025</p>
       </footer>
 
       <style jsx global>{`
         body { background-color: #020617; margin: 0; cursor: crosshair; }
         ::-webkit-scrollbar { display: none; }
-        input::placeholder { color: rgba(255,255,255,0.1); }
+        input::placeholder { color: rgba(255,255,255,0.05); }
+        * { -webkit-tap-highlight-color: transparent; }
       `}</style>
     </div>
   );
