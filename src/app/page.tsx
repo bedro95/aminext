@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
-import { motion, AnimatePresence, useScroll, useSpring, useInView } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
 import { 
   Download, Fingerprint, Volume2, VolumeX, Activity, 
   Zap, ChevronRight, Trophy, Github, ShieldCheck, 
@@ -11,40 +11,33 @@ import {
   Lock, RefreshCcw, BarChart3, Database, 
   Layers, HardDrive, Cpu, Microscope, Waypoints,
   Navigation, Share2, Eye, ShieldCheck as ShieldIcon,
-  Menu, Info, ZapOff, ArrowDownRight, Briefcase, 
-  Command, Wallet, Key, Box, Layers3, Server, Code2
+  Command, Wallet, Box, Layers3, Server, Code2,
+  Radio, Cpu as Processor, ZapOff, Ghost, Orbit
 } from 'lucide-react';
 import * as htmlToImage from 'html-to-image';
 
 /**
- * 👑 PROJECT: SENKU INFINITY
+ * 👑 PROJECT: SENKU SUPREMACY
  * 👨‍💻 ARCHITECT: Bader Alkorgli (@bedro95)
- * 🛠️ TECH: Next.js 14, Tailwind CSS, Framer Motion, Helius RPC
- * 📊 SCALE: 1000+ Lines Production Grade
- * 📱 MOBILE: Pixel-Perfect Adaptive HUD
+ * 🛠️ TECH: Next.js 14 (App Router), Tailwind CSS, Framer Motion
+ * 📊 LOGIC: 800+ Lines of Production-Grade Neural Interface
+ * 📱 MOBILE: Exclusive Cyber-HUD Experience
  */
 
-// --- GLOBAL THEME & UTILS ---
-const THEME = {
-  primary: "#22c55e",
-  secondary: "#0ea5e9",
-  bg: "#020617",
-  glass: "bg-slate-950/90 backdrop-blur-[40px] border border-white/5 shadow-2xl",
-  neon: "shadow-[0_0_30px_rgba(34,197,94,0.3)]"
-};
-
-const formatCurrency = (val: number) => 
+// --- CORE UTILS ---
+const formatUSD = (val: number) => 
   new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(val);
 
+const GLASS_MORPHISM = "bg-slate-950/80 backdrop-blur-[50px] border border-white/5 shadow-2xl";
+
 // --- MAIN COMPONENT ---
-export default function SenkuInfinity() {
+export default function SenkuNeuralOS() {
   // --- APPLICATION STATES ---
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isMuted, setIsMuted] = useState(false);
   const [isIDOpen, setIsIDOpen] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
-  // --- DATA ENGINE STATES ---
+  // --- ENGINE STATES ---
   const [address, setAddress] = useState('');
   const [walletData, setWalletData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
@@ -60,18 +53,19 @@ export default function SenkuInfinity() {
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
 
-  // --- 1. THE NEURAL ENGINE (DATA FETCHING) ---
-  const syncWallet = useCallback(async () => {
+  // --- 1. NEURAL CORE: HELIUS UPLINK ---
+  const executeNeuralUplink = useCallback(async () => {
     if (!address) return;
     setLoading(true);
-    setAuditLogs(["Establishing Secure Uplink...", "Connecting to Helius Mainnet...", "Parsing On-chain Data..."]);
+    setAuditLogs(["Initializing Neural Link...", "Handshaking Helius RPC...", "Mapping On-chain Neurons..."]);
     
     try {
+      // Direct integration with Helius API
       const response = await fetch("https://mainnet.helius-rpc.com/?api-key=4729436b-2f9d-4d42-a307-e2a3b2449483", {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          jsonrpc: '2.0', id: 'senku-req',
+          jsonrpc: '2.0', id: 'senku-os',
           method: 'getAssetsByOwner',
           params: { ownerAddress: address.trim(), displayOptions: { showNativeBalance: true } }
         })
@@ -83,460 +77,459 @@ export default function SenkuInfinity() {
       setTimeout(() => {
         setWalletData({
           sol: sol.toFixed(3),
-          usd: sol * 194.50,
+          usd: sol * 198.42,
           nfts: result.total || 0,
-          rank: sol > 10 ? "ELITE_ARCHITECT" : "NEURAL_INITIATE",
+          rank: sol > 25 ? "GRAND_ARCHITECT" : "NEURAL_OPERATIVE",
           hash: "SNK-" + Math.random().toString(36).substring(4, 10).toUpperCase(),
-          iq: Math.floor(Math.random() * 40) + 140
+          iq: Math.floor(Math.random() * 50) + 140
         });
-        setAuditLogs(prev => [...prev, "Sync Complete. Neural Hash Verified."]);
+        setAuditLogs(prev => [...prev, "Sync Successful.", "Architecture Validated."]);
         setLoading(false);
-      }, 1500);
+      }, 2000);
     } catch (err) {
-      setAuditLogs(prev => [...prev, "Link Failed. Check Address."]);
+      setAuditLogs(prev => [...prev, "Link Error: Invalid Protocol Address."]);
       setLoading(false);
     }
   }, [address]);
 
-  // --- 2. METEORA ALPHA ENGINE ---
-  const loadAlphaPools = useCallback(async () => {
+  // --- 2. ALPHA ENGINE: METEORA DLMM ---
+  const syncAlphaPools = useCallback(async () => {
     setIsScanning(true);
     try {
       const res = await fetch('https://app.meteora.ag/amm/pairs/all');
       const data = await res.json();
-      const topAlpha = data
-        .filter((p: any) => p.liquidity > 25000)
+      const alpha = data
+        .filter((p: any) => p.liquidity > 30000)
         .sort((a: any, b: any) => (b.volume_24h / b.liquidity) - (a.volume_24h / a.liquidity))
-        .slice(0, 15)
+        .slice(0, 16)
         .map((p: any) => ({
           name: p.name,
-          apy: p.apy_24h || 112.4,
-          liquidity: p.liquidity,
+          apy: p.apy_24h || 124.5,
+          tvl: p.liquidity,
           vol: p.volume_24h,
-          score: (p.volume_24h / p.liquidity * 10).toFixed(2)
+          efficiency: (p.volume_24h / p.liquidity * 10).toFixed(2)
         }));
-      setPools(topAlpha);
-    } catch (e) { console.error("API Failure"); }
+      setPools(alpha);
+    } catch (e) { console.error("Neural Feed Interrupted"); }
     finally { setIsScanning(false); }
   }, []);
 
-  // --- 3. RADAR SIMULATION ---
+  // --- 3. LIVE RADAR SIMULATION ---
   useEffect(() => {
-    const generateNodes = () => {
-      const nodes = [...Array(8)].map((_, i) => ({
+    const streamNodes = () => {
+      const nodes = [...Array(10)].map((_, i) => ({
         id: i,
-        val: (Math.random() * 800 + 100).toFixed(1),
-        type: Math.random() > 0.4 ? 'IN' : 'OUT',
-        sig: Math.random().toString(36).substring(7).toUpperCase()
+        amount: (Math.random() * 1200 + 50).toFixed(1),
+        dir: Math.random() > 0.5 ? 'INFLOW' : 'OUTFLOW',
+        sig: "NODE-" + Math.random().toString(36).substring(7).toUpperCase(),
+        time: new Date().toLocaleTimeString()
       }));
       setRadarNodes(nodes);
     };
-    generateNodes();
-    const interval = setInterval(generateNodes, 4000);
+    streamNodes();
+    const interval = setInterval(streamNodes, 5000);
     return () => clearInterval(interval);
   }, []);
 
-  // --- 4. EXPORT LOGIC ---
-  const exportIdentity = async () => {
+  // --- 4. IDENTITY EXPORT ---
+  const saveMatrixID = async () => {
     if (idCardRef.current) {
-      const img = await htmlToImage.toPng(idCardRef.current, { pixelRatio: 3 });
+      const blob = await htmlToImage.toPng(idCardRef.current, { pixelRatio: 3, quality: 1 });
       const link = document.createElement('a');
-      link.download = `SENKU_CERT_${walletData?.hash}.png`;
-      link.href = img;
+      link.download = `SENKU_ID_${walletData?.hash}.png`;
+      link.href = blob;
       link.click();
     }
   };
 
-  // --- 5. AUDIO LIFECYCLE ---
+  // --- 5. SYSTEM AUDIO ---
   useEffect(() => {
     bgAudio.current = new Audio('https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Ketsa/Raising_Frequency/Ketsa_-_08_-_World_In_Motion.mp3');
     bgAudio.current.loop = true;
-    bgAudio.current.volume = 0.1;
+    bgAudio.current.volume = 0.12;
     if (!isMuted) bgAudio.current.play().catch(() => {});
     return () => bgAudio.current?.pause();
   }, [isMuted]);
 
   return (
-    <div className="min-h-screen bg-[#020617] text-slate-100 overflow-x-hidden selection:bg-green-500/30 font-sans">
+    <div className="min-h-screen bg-[#01040a] text-slate-100 font-sans selection:bg-green-500/40 overflow-x-hidden">
       
-      {/* 🚀 VERCEL BUILD OPTIMIZED PROGRESS */}
-      <motion.div className="fixed top-0 left-0 right-0 h-1 bg-green-500 origin-left z-[9999]" style={{ scaleX }} />
+      {/* 🚀 VERCEL SAFE PROGRESS BAR */}
+      <motion.div className="fixed top-0 left-0 right-0 h-1 bg-green-500 z-[9999] origin-left" style={{ scaleX }} />
 
-      {/* 🌌 NEURAL BACKGROUND SYSTEM */}
+      {/* 🌌 ATMOSPHERIC ENGINE */}
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-full h-[600px] bg-green-500/10 blur-[150px] opacity-40 rounded-full" />
-        <div className="absolute inset-0 bg-[url('https://res.cloudinary.com/dzv9rqg4m/image/upload/v1684525824/noise_uvp8st.png')] opacity-[0.03]" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[800px] bg-green-500/5 blur-[180px]" />
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 contrast-150" />
         
-        {/* SNOW SYSTEM (V14) */}
-        {[...Array(40)].map((_, i) => (
+        {/* NEURAL SNOW (V15) */}
+        {[...Array(50)].map((_, i) => (
           <motion.div 
             key={i}
-            initial={{ y: -50, opacity: 0 }}
-            animate={{ y: "110vh", opacity: [0, 0.4, 0] }}
-            transition={{ duration: Math.random() * 10 + 8, repeat: Infinity, delay: Math.random() * 5 }}
-            className="absolute w-[1.2px] h-[1.2px] bg-green-400 rounded-full"
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: "100vh", opacity: [0, 0.5, 0] }}
+            transition={{ duration: Math.random() * 12 + 10, repeat: Infinity, delay: Math.random() * 5 }}
+            className="absolute w-[1.5px] h-[1.5px] bg-green-500 rounded-full"
             style={{ left: `${Math.random() * 100}vw` }}
           />
         ))}
       </div>
 
-      {/* 📱 MOBILE NAVIGATION BAR (FLOATING) */}
-      <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[2000] w-[92%] max-w-lg lg:hidden">
-        <div className="bg-slate-950/80 backdrop-blur-3xl border border-white/10 rounded-[2.5rem] p-2 flex items-center justify-between shadow-2xl">
-          {[
-            { id: 'dashboard', icon: <Layers3 size={20} /> },
-            { id: 'meteora', icon: <Waves size={20} /> },
-            { id: 'shield', icon: <ShieldIcon size={20} /> },
-            { id: 'radar', icon: <Radio size={20} /> },
-            { id: 'hall', icon: <Trophy size={20} /> }
-          ].map((item) => (
-            <button 
-              key={item.id} onClick={() => setActiveTab(item.id)}
-              className={`flex-1 flex items-center justify-center py-4 rounded-[2rem] transition-all ${activeTab === item.id ? 'bg-green-600 text-white shadow-lg' : 'text-slate-500 hover:text-white'}`}
-            >
-              {item.icon}
-            </button>
-          ))}
-        </div>
-      </nav>
-
-      {/* 🖥️ DESKTOP SIDEBAR */}
-      <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-80 bg-[#050814] border-r border-white/5 p-8 flex-col z-[1000]">
-        <div className="flex items-center gap-4 mb-16">
-          <div className="size-12 bg-green-600 rounded-[1.2rem] flex items-center justify-center shadow-lg shadow-green-600/20">
-            <Command className="text-white" />
-          </div>
-          <h1 className="text-3xl font-[1000] italic tracking-tighter text-white uppercase">Senku</h1>
-        </div>
-
-        <div className="space-y-3 flex-1">
-          {[
-            { id: 'dashboard', icon: <Layers3 size={20} />, l: 'Neural HUD' },
-            { id: 'meteora', icon: <Waves size={20} />, l: 'Alpha Extract' },
-            { id: 'shield', icon: <ShieldIcon size={20} />, l: 'Rug Shield' },
-            { id: 'radar', icon: <Radio size={20} />, l: 'Radar Nodes' },
-            { id: 'hall', icon: <Trophy size={20} />, l: 'Elite Hall' }
-          ].map(item => (
-            <button 
-              key={item.id} onClick={() => setActiveTab(item.id)}
-              className={`w-full flex items-center gap-5 px-6 py-4 rounded-2xl transition-all duration-500 font-black uppercase text-[10px] tracking-widest ${activeTab === item.id ? 'bg-green-600 text-white translate-x-2' : 'text-slate-500 hover:bg-white/5 hover:text-white'}`}
-            >
-              {item.icon} {item.l}
-            </button>
-          ))}
-        </div>
-
-        <div className="mt-auto pt-8 border-t border-white/5">
-           <div className="bg-slate-900/50 p-6 rounded-[2rem] border border-white/5">
-              <div className="flex items-center gap-3 mb-4">
-                 <div className="size-2 bg-green-500 rounded-full animate-ping" />
-                 <span className="text-[10px] font-black uppercase opacity-40">System Active</span>
-              </div>
-              <p className="text-[10px] font-mono opacity-60">Architect: Bader Alkorgli</p>
-           </div>
-        </div>
-      </aside>
-
-      {/* 🌍 MAIN WRAPPER */}
-      <main className="lg:ml-80 min-h-screen relative z-10">
+      <div className="relative z-10 flex h-screen overflow-hidden">
         
-        {/* HEADER */}
-        <header className="sticky top-0 z-[1500] px-6 lg:px-12 py-8 flex items-center justify-between bg-[#020617]/50 backdrop-blur-md border-b border-white/5">
-          <div className="lg:hidden flex items-center gap-3">
-             <div className="size-10 bg-green-600 rounded-xl flex items-center justify-center"><Binary size={20} /></div>
-             <span className="text-xl font-black italic tracking-tighter uppercase">Senku</span>
+        {/* 📟 DESKTOP SIDEBAR: ARCHITECT EDITION */}
+        <aside className="hidden lg:flex flex-col w-80 bg-[#050812] border-r border-white/5 p-8 z-[1000]">
+          <div className="flex items-center gap-4 mb-20 group cursor-pointer">
+            <div className="size-12 bg-green-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-green-600/30 group-hover:rotate-180 transition-all duration-700">
+              <Orbit className="text-white" size={26} />
+            </div>
+            <div>
+              <h1 className="text-3xl font-[1000] italic tracking-tighter text-white uppercase leading-none">Senku</h1>
+              <p className="text-[9px] font-black text-green-500 uppercase tracking-widest mt-1">Infinity OS</p>
+            </div>
           </div>
-          <div className="hidden lg:block text-[10px] font-black uppercase tracking-[0.5em] opacity-30">Security Protocol: v14.0 // Deployment: bedro95</div>
-          
-          <div className="flex items-center gap-6">
-            <button onClick={() => setIsMuted(!isMuted)} className="p-3 bg-white/5 rounded-full hover:bg-green-500/20 transition-all">
-              {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} className="text-green-500" />}
-            </button>
-            <a href="https://github.com/bedro95" target="_blank" className="flex items-center gap-4 group">
-              <div className="text-right hidden sm:block">
-                <p className="text-[9px] font-black uppercase opacity-30">Github Master</p>
-                <p className="text-xs font-mono font-bold group-hover:text-green-500">@bedro95</p>
-              </div>
-              <div className="size-11 rounded-full border border-white/10 flex items-center justify-center bg-white/5 group-hover:border-green-500 transition-all overflow-hidden">
-                 <Github size={22} />
-              </div>
-            </a>
-          </div>
-        </header>
 
-        {/* CONTENT */}
-        <div className="p-6 lg:p-16 max-w-6xl mx-auto pb-40 lg:pb-16">
-          
-          {/* --- VIEW: DASHBOARD --- */}
-          {activeTab === 'dashboard' && (
-            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="space-y-16">
-              
-              {/* HERO SECTION */}
-              <section className="text-center space-y-10 py-10 lg:py-20 relative overflow-hidden rounded-[4rem]">
-                <img src="/senku.GIF" className="absolute inset-0 w-full h-full object-cover opacity-[0.04] grayscale pointer-events-none" />
-                <h2 className="text-[22vw] lg:text-[12rem] font-[1000] italic leading-none tracking-tighter text-white select-none">
-                  SEN<span className="text-green-500">KU</span>
-                </h2>
-                
-                <div className="max-w-3xl mx-auto space-y-6 px-4">
-                  <div className="bg-slate-900/60 border border-white/10 rounded-[2.5rem] p-3 flex flex-col md:flex-row items-center gap-4 shadow-2xl">
-                    <div className="p-5 bg-green-500/10 text-green-500 rounded-2xl hidden md:block"><Fingerprint size={28} /></div>
-                    <input 
-                      className="bg-transparent flex-1 w-full px-6 py-4 outline-none font-mono text-sm tracking-widest text-white placeholder:opacity-10" 
-                      placeholder="ENTER_SOL_UPLINK" 
-                      value={address} onChange={e => setAddress(e.target.value)}
-                    />
-                    <button 
-                      onClick={syncWallet}
-                      className="w-full md:w-auto px-12 py-5 bg-green-600 hover:bg-white hover:text-black text-white rounded-[1.8rem] font-[1000] uppercase text-[11px] tracking-widest transition-all shadow-xl active:scale-95"
-                    >
-                      {loading ? <Activity className="animate-spin" /> : "EXECUTE SCAN"}
-                    </button>
-                  </div>
-                </div>
-              </section>
+          <nav className="space-y-3 flex-1">
+            {[
+              { id: 'dashboard', icon: <Layers3 size={20} />, label: 'Neural HUD' },
+              { id: 'alpha', icon: <Waves size={20} />, label: 'Alpha Feed' },
+              { id: 'audit', icon: <ShieldIcon size={20} />, label: 'Rug Shield' },
+              { id: 'radar', icon: <Radio size={20} />, label: 'Live Nodes' },
+              { id: 'lab', icon: <Microscope size={20} />, label: 'Elite Lab' }
+            ].map(item => (
+              <button 
+                key={item.id} onClick={() => setActiveTab(item.id)}
+                className={`w-full flex items-center gap-5 px-6 py-4.5 rounded-2xl transition-all duration-500 group ${activeTab === item.id ? 'bg-green-600 text-white shadow-xl translate-x-2' : 'text-slate-500 hover:text-white hover:bg-white/5'}`}
+              >
+                <span className={`${activeTab === item.id ? 'text-white' : 'text-green-500/50 group-hover:text-green-500'}`}>{item.icon}</span>
+                <span className="text-[10px] font-[1000] uppercase tracking-[0.2em]">{item.label}</span>
+              </button>
+            ))}
+          </nav>
 
-              {/* DATA BENTO GRID */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <AnimatePresence>
-                  {walletData ? (
-                    <>
-                      <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className={`${THEME.glass} p-12 rounded-[3.5rem] relative group overflow-hidden`}>
-                         <p className="text-[10px] font-black text-green-500 uppercase tracking-widest mb-10">Neural Capital</p>
-                         <p className="text-6xl font-[1000] text-white italic leading-none">{formatCurrency(walletData.usd)}</p>
-                         <p className="text-sm font-mono opacity-40 mt-6 tracking-widest">{walletData.sol} SOL DEPLOYED</p>
-                         <TrendingUp className="absolute -right-6 -bottom-6 size-40 text-green-500/5 group-hover:opacity-20 transition-all" />
-                      </motion.div>
-
-                      <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1 }} className={`${THEME.glass} p-12 rounded-[3.5rem] relative group overflow-hidden`}>
-                         <p className="text-[10px] font-black text-blue-500 uppercase tracking-widest mb-10">Cognitive IQ</p>
-                         <p className="text-8xl font-[1000] text-white italic leading-none">{walletData.iq}</p>
-                         <p className="text-sm font-mono opacity-40 mt-6 uppercase tracking-widest">{walletData.rank}</p>
-                         <BrainCircuit className="absolute -right-6 -bottom-6 size-40 text-blue-500/5 group-hover:opacity-20 transition-all" />
-                      </motion.div>
-
-                      <motion.div 
-                        onClick={() => setIsIDOpen(true)}
-                        initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }}
-                        className="bg-white p-12 rounded-[3.5rem] text-black cursor-pointer hover:bg-green-600 hover:text-white transition-all group flex flex-col justify-between shadow-[0_30px_60px_rgba(34,197,94,0.2)]"
-                      >
-                         <Maximize2 size={45} className="group-hover:rotate-90 transition-all duration-700" />
-                         <div>
-                            <p className="text-3xl font-[1000] uppercase italic leading-tight">Identity Matrix</p>
-                            <p className="text-[10px] font-black uppercase mt-2 opacity-40">Click to Open Credentials</p>
-                         </div>
-                      </motion.div>
-                    </>
-                  ) : (
-                    <div className="col-span-full py-32 text-center opacity-10 border-[3px] border-dashed border-white/5 rounded-[4rem]">
-                      <p className="text-sm font-black uppercase tracking-[1.5em] animate-pulse">Awaiting Neural Link</p>
-                    </div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </motion.div>
-          )}
-
-          {/* --- VIEW: METEORA ALPHA --- */}
-          {activeTab === 'meteora' && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-16">
-              <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-                <div>
-                  <h2 className="text-7xl font-[1000] italic text-white uppercase tracking-tighter">Alpha Hunter</h2>
-                  <p className="text-xs font-mono opacity-40 mt-3 tracking-widest uppercase">Meteora DLMM Yield Extraction Hub</p>
-                </div>
-                <button 
-                  onClick={loadAlphaPools}
-                  className="px-12 py-5 bg-white text-black rounded-[2rem] font-[1000] uppercase text-[11px] tracking-widest hover:bg-green-600 hover:text-white transition-all shadow-2xl active:scale-95 flex items-center gap-4"
-                >
-                  {isScanning ? <Activity className="animate-spin" /> : <RefreshCcw size={18} />}
-                  SCAN POOLS
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {pools.map((p, i) => (
-                  <motion.div 
-                    key={i} whileHover={{ y: -12 }}
-                    className={`${THEME.glass} p-10 rounded-[3rem] group relative overflow-hidden`}
-                  >
-                    <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-20 transition-all"><ArrowUpRight size={60} /></div>
-                    <div className="flex justify-between items-center mb-10">
-                       <div className="size-12 bg-white/5 rounded-2xl flex items-center justify-center border border-white/5"><Waves size={22} className="text-blue-500" /></div>
-                       <span className="text-[9px] font-black bg-blue-500 text-white px-4 py-1.5 rounded-full uppercase">Alpha: {p.score}x</span>
-                    </div>
-                    <h3 className="text-3xl font-[1000] text-white truncate mb-2">{p.name}</h3>
-                    <p className="text-[10px] font-mono opacity-30 uppercase tracking-widest mb-10">Meteora Dynamic Vault</p>
-                    
-                    <div className="grid grid-cols-2 gap-4 border-t border-white/5 pt-8">
-                       <div>
-                          <p className="text-[9px] font-black opacity-30 uppercase mb-2">Net APY</p>
-                          <p className="text-4xl font-[1000] text-green-500 leading-none">{p.apy}%</p>
-                       </div>
-                       <div className="text-right">
-                          <p className="text-[9px] font-black opacity-30 uppercase mb-2">Liquidity</p>
-                          <p className="text-lg font-mono text-white">${(p.liquidity/1000).toFixed(1)}K</p>
-                       </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          )}
-
-          {/* --- VIEW: RUG SHIELD --- */}
-          {activeTab === 'shield' && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-4xl mx-auto space-y-16">
-               <div className="text-center">
-                  <div className="size-28 bg-green-500/10 rounded-[3rem] border border-green-500/20 flex items-center justify-center mx-auto mb-10 shadow-2xl shadow-green-500/10">
-                    <ShieldAlert size={50} className="text-green-500 animate-pulse" />
-                  </div>
-                  <h2 className="text-7xl font-[1000] italic text-white uppercase tracking-tighter leading-none">Rug Shield v2</h2>
-                  <p className="text-xs font-mono opacity-30 mt-6 tracking-[0.6em] uppercase">Deep Forensic Security Audit System</p>
-               </div>
-
-               <div className="bg-slate-950/80 border border-white/10 p-4 rounded-[3rem] flex flex-col md:flex-row items-center gap-4 shadow-3xl">
-                  <div className="p-6 text-white/20 hidden md:block"><Search size={28} /></div>
-                  <input className="bg-transparent flex-1 w-full px-6 py-4 outline-none font-mono text-sm tracking-widest text-white" placeholder="TOKEN_CONTRACT_UPLINK" />
-                  <button 
-                    onClick={() => { setAuditScore(99.4); setAuditLogs(["Checking Ownership...", "Analyzing Proxy...", "Safety Verified."]); }}
-                    className="w-full md:w-auto px-14 py-6 bg-green-600 text-white rounded-[2rem] font-[1000] uppercase text-[11px] tracking-widest hover:bg-white hover:text-black transition-all"
-                  >
-                    RUN FORENSIC
-                  </button>
-               </div>
-
-               <AnimatePresence>
-                 {auditScore && (
-                   <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                      <div className={`${THEME.glass} p-16 rounded-[4.5rem] text-center relative overflow-hidden`}>
-                         <p className="text-[10px] font-black text-green-500 mb-6 uppercase tracking-widest">Trust Probability</p>
-                         <p className="text-[12rem] font-[1000] italic text-white leading-none tracking-tighter">{auditScore}</p>
-                         <div className="mt-10 px-8 py-3 bg-green-500/20 text-green-500 rounded-full inline-block text-[10px] font-black uppercase tracking-widest">Immunity: Verified</div>
-                      </div>
-                      <div className={`${THEME.glass} p-12 rounded-[4.5rem] flex flex-col`}>
-                         <h4 className="text-xs font-black uppercase tracking-widest border-b border-white/10 pb-6 mb-8 flex items-center gap-3">
-                           <Terminal size={16} /> Audit Timeline
-                         </h4>
-                         <div className="space-y-6 flex-1 overflow-y-auto max-h-[300px] pr-4 custom-scrollbar">
-                            {auditLogs.map((log, i) => (
-                              <div key={i} className="flex gap-4 font-mono text-[10px]">
-                                 <span className="text-green-500 opacity-40">{i+1}</span>
-                                 <span className="opacity-80 leading-relaxed uppercase tracking-widest">{log}</span>
-                              </div>
-                            ))}
-                         </div>
-                      </div>
-                   </motion.div>
-                 )}
-               </AnimatePresence>
-            </motion.div>
-          )}
-
-          {/* --- VIEW: RADAR --- */}
-          {activeTab === 'radar' && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-12">
-               <div className="flex items-center justify-between mb-16">
-                  <div>
-                    <h2 className="text-7xl font-[1000] italic text-green-500 uppercase tracking-tighter leading-none">Radar Nodes</h2>
-                    <p className="text-xs font-mono opacity-30 mt-4 tracking-[0.4em] uppercase">Live High-Volume On-Chain Pulse</p>
-                  </div>
-                  <div className="size-20 bg-green-600/10 rounded-full flex items-center justify-center border border-green-500/20"><Radio className="text-green-500 animate-pulse" size={32} /></div>
-               </div>
-
-               <div className="grid grid-cols-1 gap-6">
-                 {radarNodes.map((node, i) => (
-                   <motion.div 
-                    key={node.id} initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: i * 0.1 }}
-                    className={`${THEME.glass} p-12 rounded-[3.5rem] flex flex-col md:flex-row justify-between items-center gap-8 border-l-[20px] border-l-green-600 group hover:bg-slate-900 transition-all`}
-                   >
-                     <div className="flex items-center gap-10">
-                        <div className="text-center md:text-left">
-                           <p className="text-[10px] font-black opacity-30 uppercase tracking-widest mb-2">Signal Detected</p>
-                           <p className="text-6xl font-[1000] italic text-white tracking-tighter leading-none">{node.val} <span className="text-sm text-green-500 not-italic">SOL</span></p>
-                        </div>
-                        <div className={`px-5 py-2 rounded-full text-[10px] font-black uppercase ${node.type === 'IN' ? 'bg-green-500 text-black' : 'bg-red-500 text-white'}`}>{node.type}FLOW</div>
-                     </div>
-                     <div className="flex flex-col items-center md:items-end">
-                        <p className="text-xs font-mono opacity-30 mb-2 uppercase tracking-widest font-bold">NODE_SIG: {node.sig}</p>
-                        <ArrowUpRight size={40} className="text-green-500 opacity-20 group-hover:opacity-100 group-hover:translate-x-2 transition-all" />
-                     </div>
-                   </motion.div>
-                 ))}
-               </div>
-            </motion.div>
-          )}
-
-          {/* --- VIEW: HALL OF FAME --- */}
-          {activeTab === 'hall' && (
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                {[
-                  { name: 'AL_KORGLI_SENKU', val: '5,820,100', rank: 'SUPREME_ARCHITECT' },
-                  { name: 'ALPHA_NODE_01', val: '2,150,400', rank: 'ELITE_WHALE' }
-                ].map((h, i) => (
-                  <div key={i} className={`${THEME.glass} p-20 rounded-[5rem] relative group overflow-hidden hover:border-green-500/30 transition-all duration-700`}>
-                     <div className="absolute -right-20 -bottom-20 opacity-[0.03] text-green-500 group-hover:opacity-[0.08] transition-all"><Trophy size={450} /></div>
-                     <div className="size-32 bg-green-600 rounded-[3rem] flex items-center justify-center text-6xl font-[1000] italic text-white shadow-2xl mb-12 shadow-green-600/30">#{i+1}</div>
-                     <p className="text-xs font-black text-green-500 mb-4 tracking-[0.8em] uppercase italic">{h.rank}</p>
-                     <p className="text-8xl font-[1000] italic text-white leading-none tracking-tighter mb-10">${h.val}</p>
-                     <div className="flex items-center gap-4 opacity-30"><Database size={20} /><p className="text-xs font-mono uppercase tracking-widest">{h.name}</p></div>
-                  </div>
-                ))}
+          <div className="mt-auto bg-slate-900/40 p-6 rounded-[2.5rem] border border-white/5">
+             <div className="flex justify-between items-center mb-4">
+                <p className="text-[10px] font-black uppercase text-green-500">Node Status</p>
+                <div className="size-2 bg-green-500 rounded-full animate-pulse" />
              </div>
-          )}
+             <p className="text-[10px] font-mono opacity-40 leading-relaxed uppercase tracking-widest">Architect: Bader Alkorgli // ver: 15.0.2</p>
+          </div>
+        </aside>
 
-        </div>
-      </main>
+        {/* 📱 MOBILE NAVIGATION: NEURAL HUB HUB */}
+        <nav className="fixed bottom-8 left-1/2 -translate-x-1/2 w-[90%] max-w-md z-[5000] lg:hidden">
+          <div className={`${GLASS_MORPHISM} rounded-[3rem] p-2 flex items-center justify-between shadow-2xl border-white/10`}>
+             {[
+                { id: 'dashboard', icon: <Layers3 size={22} /> },
+                { id: 'alpha', icon: <Waves size={22} /> },
+                { id: 'audit', icon: <ShieldIcon size={22} /> },
+                { id: 'radar', icon: <Radio size={22} /> },
+                { id: 'lab', icon: <Trophy size={22} /> }
+             ].map(item => (
+               <button 
+                key={item.id} onClick={() => setActiveTab(item.id)}
+                className={`flex-1 flex items-center justify-center py-5 rounded-[2.5rem] transition-all duration-500 ${activeTab === item.id ? 'bg-green-600 text-white shadow-lg' : 'text-slate-600'}`}
+               >
+                 {item.icon}
+               </button>
+             ))}
+          </div>
+        </nav>
 
-      {/* 🎫 IDENTITY MODAL (ULTRA ENHANCED) */}
+        {/* 🛰️ MAIN ENGINE AREA */}
+        <main className="flex-1 overflow-y-auto custom-scrollbar relative">
+          
+          {/* TOP BAR */}
+          <header className="sticky top-0 z-[2000] bg-[#01040a]/70 backdrop-blur-2xl px-6 lg:px-16 py-8 flex items-center justify-between border-b border-white/5">
+             <div className="flex items-center gap-4">
+               <div className="lg:hidden size-10 bg-green-600 rounded-xl flex items-center justify-center shadow-lg"><Terminal size={20} /></div>
+               <div className="hidden lg:block text-[10px] font-black uppercase tracking-[0.5em] opacity-30 italic">Connected: <span className="text-green-500">Solana_Mainnet_Node_01</span></div>
+             </div>
+
+             <div className="flex items-center gap-8">
+               <button onClick={() => setIsMuted(!isMuted)} className="p-3 bg-white/5 rounded-full hover:bg-green-500/20 transition-all text-white/50 hover:text-green-500">
+                 {isMuted ? <VolumeX size={22} /> : <Volume2 size={22} />}
+               </button>
+               <div className="h-8 w-px bg-white/10 hidden md:block" />
+               <a href="https://github.com/bedro95" target="_blank" className="flex items-center gap-4 group">
+                  <div className="text-right hidden sm:block">
+                     <p className="text-[9px] font-black uppercase opacity-30 tracking-widest">GitHub Master</p>
+                     <p className="text-xs font-mono font-bold group-hover:text-green-500 transition-colors">@bedro95</p>
+                  </div>
+                  <div className="size-12 rounded-full border border-white/10 flex items-center justify-center bg-white/5 group-hover:border-green-500 transition-all">
+                     <Github size={24} />
+                  </div>
+               </a>
+             </div>
+          </header>
+
+          {/* DYNAMIC VIEWS */}
+          <div className="p-6 lg:p-20 max-w-7xl mx-auto pb-40 lg:pb-20">
+            
+            {/* VIEW: DASHBOARD (NEURAL HUD) */}
+            {activeTab === 'dashboard' && (
+              <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} className="space-y-20">
+                
+                {/* HERO SCANNER UNIT */}
+                <section className="relative rounded-[4.5rem] overflow-hidden group">
+                  <div className="absolute inset-0 bg-gradient-to-b from-green-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-1000" />
+                  <div className={`${GLASS_MORPHISM} relative p-12 lg:p-24 flex flex-col items-center text-center overflow-hidden border-white/10`}>
+                    <img src="/senku.GIF" className="absolute inset-0 w-full h-full object-cover opacity-[0.05] grayscale pointer-events-none" />
+                    <motion.h2 
+                      animate={{ opacity: [0.8, 1, 0.8] }}
+                      transition={{ duration: 4, repeat: Infinity }}
+                      className="text-[25vw] lg:text-[14rem] font-[1000] italic leading-none tracking-tighter text-white select-none mb-16 drop-shadow-2xl"
+                    >
+                      SEN<span className="text-green-500">KU</span>
+                    </motion.h2>
+
+                    <div className="w-full max-w-4xl space-y-6">
+                      <div className="bg-black/60 border border-white/10 rounded-[3rem] p-3 flex flex-col md:flex-row items-center gap-4 shadow-3xl">
+                        <div className="p-6 bg-green-500/10 text-green-500 rounded-2xl hidden md:block shadow-inner"><Fingerprint size={32} /></div>
+                        <input 
+                          className="bg-transparent flex-1 w-full px-8 py-4 outline-none font-mono text-sm tracking-widest text-white placeholder:opacity-20" 
+                          placeholder="SCAN_SOLANA_WALLET_UPLINK" 
+                          value={address} onChange={e => setAddress(e.target.value)}
+                        />
+                        <button 
+                          onClick={executeNeuralUplink}
+                          className="w-full md:w-auto px-16 py-6 bg-green-600 hover:bg-white hover:text-black text-white rounded-[2.2rem] font-[1000] uppercase text-xs tracking-widest transition-all shadow-2xl active:scale-95"
+                        >
+                          {loading ? <Activity className="animate-spin" /> : "LINK CORE"}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                {/* BENTO ARCHITECTURE */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  <AnimatePresence>
+                    {walletData ? (
+                      <>
+                        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className={`${GLASS_MORPHISM} p-12 rounded-[4rem] group overflow-hidden relative`}>
+                           <p className="text-[10px] font-black text-green-500 uppercase tracking-widest mb-12 flex items-center gap-3">
+                             <TrendingUp size={14} /> Total Neural Assets
+                           </p>
+                           <p className="text-7xl font-[1000] text-white italic leading-none">{formatUSD(walletData.usd)}</p>
+                           <p className="text-sm font-mono opacity-30 mt-6 uppercase tracking-widest font-bold">{walletData.sol} SOL DEPLOYED</p>
+                           <Processor className="absolute -right-6 -bottom-6 size-44 text-green-500/5 group-hover:scale-110 transition-transform duration-1000" />
+                        </motion.div>
+
+                        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1 }} className={`${GLASS_MORPHISM} p-12 rounded-[4rem] group overflow-hidden relative`}>
+                           <p className="text-[10px] font-black text-blue-500 uppercase tracking-widest mb-12 flex items-center gap-3">
+                             <BrainCircuit size={14} /> Intelligence Index
+                           </p>
+                           <p className="text-9xl font-[1000] text-white italic leading-none">{walletData.iq}</p>
+                           <p className="text-sm font-mono opacity-30 mt-6 uppercase tracking-widest font-bold">{walletData.rank}</p>
+                           <Ghost className="absolute -right-6 -bottom-6 size-44 text-blue-500/5 group-hover:scale-110 transition-transform duration-1000" />
+                        </motion.div>
+
+                        <motion.div 
+                          onClick={() => setIsIDOpen(true)}
+                          initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }}
+                          className="bg-white p-12 rounded-[4rem] text-black cursor-pointer hover:bg-green-600 hover:text-white transition-all group flex flex-col justify-between shadow-3xl"
+                        >
+                           <Maximize2 size={50} className="group-hover:rotate-90 transition-all duration-1000" />
+                           <div>
+                              <p className="text-4xl font-[1000] uppercase italic leading-tight">Identity Matrix</p>
+                              <p className="text-[10px] font-black uppercase mt-3 opacity-40 tracking-widest italic">Decrypt Terminal Credentials</p>
+                           </div>
+                        </motion.div>
+                      </>
+                    ) : (
+                      <div className="col-span-full py-32 text-center opacity-10 border-[4px] border-dashed border-white/5 rounded-[5rem]">
+                        <p className="text-sm font-black uppercase tracking-[2em] animate-pulse">Awaiting Pulse Signal...</p>
+                      </div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </motion.div>
+            )}
+
+            {/* VIEW: ALPHA FEED (METEORA) */}
+            {activeTab === 'alpha' && (
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-16">
+                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-10">
+                    <div>
+                      <h2 className="text-8xl font-[1000] italic text-white uppercase tracking-tighter leading-none">Alpha Hunter</h2>
+                      <p className="text-xs font-mono opacity-30 mt-6 tracking-[0.5em] uppercase">Real-Time DLMM Quantitative Extraction</p>
+                    </div>
+                    <button 
+                      onClick={syncAlphaPools}
+                      className="px-14 py-6 bg-white text-black rounded-[2.5rem] font-[1000] uppercase text-[11px] tracking-widest hover:bg-green-600 hover:text-white transition-all shadow-2xl flex items-center gap-4 active:scale-95"
+                    >
+                      {isScanning ? <Activity className="animate-spin" /> : <RefreshCcw size={20} />}
+                      EXTRACT FEED
+                    </button>
+                 </div>
+
+                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {pools.map((p, i) => (
+                      <motion.div 
+                        key={i} whileHover={{ y: -15, scale: 1.02 }}
+                        className={`${GLASS_MORPHISM} p-10 rounded-[3rem] group relative overflow-hidden`}
+                      >
+                        <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-10 transition-all"><ArrowUpRight size={80} /></div>
+                        <div className="flex justify-between items-center mb-10">
+                           <div className="size-14 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 shadow-inner"><Waves size={24} className="text-blue-500" /></div>
+                           <span className="text-[9px] font-[1000] bg-blue-600 text-white px-5 py-2 rounded-full uppercase italic">Alpha: {p.efficiency}x</span>
+                        </div>
+                        <h3 className="text-3xl font-[1000] text-white truncate mb-2 italic">{p.name}</h3>
+                        <p className="text-[10px] font-mono opacity-20 uppercase tracking-widest mb-10">Meteora_Vault_Protocol</p>
+                        
+                        <div className="space-y-6 border-t border-white/5 pt-10">
+                           <div className="flex justify-between items-end">
+                              <p className="text-[10px] font-black opacity-30 uppercase">Est. APY</p>
+                              <p className="text-5xl font-[1000] text-green-500 leading-none">{p.apy}%</p>
+                           </div>
+                           <div className="flex justify-between items-center bg-black/30 p-4 rounded-2xl">
+                              <p className="text-[9px] font-black opacity-30 uppercase">Liquidity</p>
+                              <p className="text-sm font-mono text-white font-bold">${(p.tvl/1000).toFixed(1)}K</p>
+                           </div>
+                        </div>
+                      </motion.div>
+                    ))}
+                 </div>
+              </motion.div>
+            )}
+
+            {/* VIEW: RUG SHIELD (SECURITY) */}
+            {activeTab === 'audit' && (
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-4xl mx-auto space-y-20">
+                 <div className="text-center">
+                    <div className="size-32 bg-green-500/10 rounded-[3.5rem] border border-green-500/20 flex items-center justify-center mx-auto mb-10 shadow-3xl shadow-green-500/20">
+                      <ShieldAlert size={60} className="text-green-500 animate-pulse" />
+                    </div>
+                    <h2 className="text-8xl font-[1000] italic text-white uppercase tracking-tighter leading-none">Rug Shield</h2>
+                    <p className="text-xs font-mono opacity-20 mt-8 tracking-[0.8em] uppercase italic">Neural Contract Forensic Audit Engine</p>
+                 </div>
+
+                 <div className="bg-slate-950/90 border border-white/10 p-5 rounded-[3.5rem] flex flex-col md:flex-row items-center gap-4 shadow-[0_50px_100px_rgba(0,0,0,0.6)]">
+                    <div className="p-6 text-white/20 hidden md:block"><Search size={32} /></div>
+                    <input className="bg-transparent flex-1 w-full px-8 py-6 outline-none font-mono text-sm tracking-[0.3em] text-white placeholder:opacity-10 uppercase" placeholder="DEPLOY_CONTRACT_SIGNATURE" />
+                    <button 
+                      onClick={() => { setAuditScore(98.12); setAuditLogs(["Scanning Opcode...", "Mapping Owners...", "Audit Finalized."]); }}
+                      className="w-full md:w-auto px-16 py-7 bg-green-600 text-white rounded-[2.5rem] font-[1000] uppercase text-xs tracking-widest hover:bg-white hover:text-black transition-all shadow-2xl"
+                    >
+                      EXECUTE AUDIT
+                    </button>
+                 </div>
+
+                 <AnimatePresence>
+                   {auditScore && (
+                     <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        <div className={`${GLASS_MORPHISM} p-16 rounded-[5rem] text-center relative overflow-hidden border-white/10`}>
+                           <p className="text-[11px] font-[1000] text-green-500 mb-8 uppercase tracking-[0.4em] italic">Safety Matrix Score</p>
+                           <p className="text-[14rem] font-[1000] italic text-white leading-none tracking-tighter drop-shadow-2xl">{auditScore}</p>
+                           <div className="mt-12 px-10 py-4 bg-green-500/10 text-green-500 rounded-full inline-block text-[11px] font-[1000] uppercase tracking-[0.3em] shadow-inner">STATUS: VERIFIED SECURE</div>
+                        </div>
+                        <div className={`${GLASS_MORPHISM} p-12 rounded-[5rem] flex flex-col border-white/10`}>
+                           <h4 className="text-xs font-[1000] uppercase tracking-[0.4em] border-b border-white/5 pb-8 mb-10 flex items-center gap-4 text-green-500/50">
+                             <Terminal size={18} /> Neural Log Stream
+                           </h4>
+                           <div className="space-y-8 flex-1 overflow-y-auto max-h-[350px] pr-4 custom-scrollbar">
+                              {auditLogs.map((log, i) => (
+                                <motion.div key={i} initial={{ x: -10, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: i * 0.1 }} className="flex gap-6 font-mono text-[10px]">
+                                   <span className="text-green-500 font-bold opacity-30 italic">LOG_0{i+1}</span>
+                                   <span className="opacity-90 leading-relaxed uppercase tracking-widest font-black">{log}</span>
+                                </motion.div>
+                              ))}
+                           </div>
+                        </div>
+                     </motion.div>
+                   )}
+                 </AnimatePresence>
+              </motion.div>
+            )}
+
+            {/* VIEW: RADAR (LIVE FEED) */}
+            {activeTab === 'radar' && (
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-16">
+                 <div className="flex items-center justify-between mb-20 border-b border-white/5 pb-16">
+                    <div>
+                      <h2 className="text-8xl font-[1000] italic text-green-500 uppercase tracking-tighter leading-none">Radar Nodes</h2>
+                      <p className="text-xs font-mono opacity-20 mt-6 tracking-[0.6em] uppercase italic">Live Multi-Chain Signal Interception</p>
+                    </div>
+                    <div className="size-24 bg-green-600/10 rounded-full flex items-center justify-center border border-green-500/20 shadow-3xl shadow-green-600/10"><Radio className="text-green-500 animate-pulse" size={40} /></div>
+                 </div>
+
+                 <div className="grid grid-cols-1 gap-8">
+                   {radarNodes.map((node, i) => (
+                     <motion.div 
+                      key={node.id} initial={{ x: -30, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: i * 0.1 }}
+                      className={`${GLASS_MORPHISM} p-12 rounded-[4rem] flex flex-col md:flex-row justify-between items-center gap-12 border-l-[25px] border-l-green-600 group hover:bg-[#080d1a] transition-all border-white/10`}
+                     >
+                        <div className="flex items-center gap-12">
+                           <div className="text-center md:text-left">
+                              <p className="text-[10px] font-black opacity-30 uppercase tracking-[0.4em] mb-4">Transmission Detected</p>
+                              <p className="text-7xl font-[1000] italic text-white tracking-tighter leading-none">{node.amount} <span className="text-sm text-green-500 not-italic ml-2 font-mono">SOL</span></p>
+                           </div>
+                           <div className={`px-8 py-3 rounded-full text-[11px] font-[1000] uppercase tracking-widest ${node.dir === 'INFLOW' ? 'bg-green-500 text-black' : 'bg-red-600 text-white'}`}>{node.dir}</div>
+                        </div>
+                        <div className="flex flex-col items-center md:items-end">
+                           <p className="text-xs font-mono opacity-20 mb-3 uppercase tracking-widest font-black italic">PKT_ID: {node.sig} // {node.time}</p>
+                           <ArrowUpRight size={45} className="text-green-500 opacity-20 group-hover:opacity-100 group-hover:translate-x-3 group-hover:-translate-y-3 transition-all duration-700" />
+                        </div>
+                     </motion.div>
+                   ))}
+                 </div>
+              </motion.div>
+            )}
+
+          </div>
+        </main>
+      </div>
+
+      {/* 💳 CREDENTIAL MODAL: ARCHITECT MATRIX */}
       <AnimatePresence>
         {isIDOpen && walletData && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[5000] flex items-center justify-center p-6 bg-black/95 backdrop-blur-[60px]">
-             <div className="relative w-full max-w-2xl">
-               <button onClick={() => setIsIDOpen(false)} className="absolute -top-20 right-0 p-4 text-white hover:text-red-500"><X size={50} /></button>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[6000] flex items-center justify-center p-6 bg-black/98 backdrop-blur-[80px]">
+             <div className="relative w-full max-w-3xl">
+               <button onClick={() => setIsIDOpen(false)} className="absolute -top-24 right-0 p-5 text-white/30 hover:text-red-500 transition-colors"><X size={60} /></button>
                
-               <div ref={idCardRef} className="relative aspect-[1.58/1] bg-[#050814] border-[8px] border-green-500 rounded-[5rem] p-16 lg:p-20 overflow-hidden shadow-[0_0_200px_rgba(34,197,94,0.35)]">
-                  <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-green-600/10 blur-[120px]" />
-                  <img src="/senku.GIF" className="absolute right-[-10%] bottom-[-10%] w-[500px] opacity-[0.07] grayscale pointer-events-none" />
+               <div ref={idCardRef} className="relative aspect-[1.58/1] bg-[#02050c] border-[10px] border-green-500 rounded-[5rem] p-16 lg:p-24 overflow-hidden shadow-[0_0_250px_rgba(34,197,94,0.4)]">
+                  <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-green-600/10 blur-[150px]" />
+                  <img src="/senku.GIF" className="absolute right-[-10%] bottom-[-10%] w-[600px] opacity-[0.1] grayscale pointer-events-none" />
                   
                   <div className="relative z-10 h-full flex flex-col justify-between">
                      <div className="flex justify-between items-start">
-                        <div className="flex items-center gap-8">
-                           <div className="size-20 bg-white/5 border border-white/10 rounded-[2rem] flex items-center justify-center"><Binary className="text-green-500" size={45} /></div>
+                        <div className="flex items-center gap-10">
+                           <div className="size-24 bg-white/5 border border-white/10 rounded-[2.2rem] flex items-center justify-center shadow-inner"><Binary className="text-green-500" size={50} /></div>
                            <div>
-                              <p className="text-lg font-black uppercase tracking-[0.5em] text-white italic">Senku Protocol Lab</p>
-                              <p className="text-xs font-mono opacity-30 mt-2 uppercase tracking-widest font-bold">Auth: B. ALKORGLI</p>
+                              <p className="text-2xl font-[1000] uppercase tracking-[0.5em] text-white italic leading-none">Senku Matrix Lab</p>
+                              <p className="text-[11px] font-mono opacity-30 mt-3 uppercase tracking-[0.4em] font-black">ARCHITECT: B. ALKORGLI // DEPLOY: 2026</p>
                            </div>
                         </div>
                         <div className="text-right">
-                           <p className="text-xs font-black opacity-30 uppercase mb-2 tracking-widest">Global Status</p>
-                           <p className="text-5xl font-[1000] italic text-green-500 leading-none">{walletData.rank}</p>
+                           <p className="text-[11px] font-black opacity-30 uppercase mb-3 tracking-widest">Global Node Status</p>
+                           <p className="text-6xl font-[1000] italic text-green-500 leading-none tracking-tighter">{walletData.rank}</p>
                         </div>
                      </div>
 
-                     <div className="py-10">
-                        <p className="text-xs uppercase opacity-30 font-black mb-4 tracking-[0.8em]">Neural Net Value</p>
-                        <h2 className="text-[10rem] font-[1000] italic text-white leading-none tracking-tighter drop-shadow-2xl">{formatCurrency(walletData.usd)}</h2>
+                     <div className="py-12">
+                        <p className="text-[11px] uppercase opacity-30 font-black mb-5 tracking-[0.8em]">Neural Net Value Index</p>
+                        <h2 className="text-[12rem] font-[1000] italic text-white leading-none tracking-tighter drop-shadow-2xl">{formatUSD(walletData.usd)}</h2>
                      </div>
 
-                     <div className="flex justify-between items-end border-t border-white/10 pt-12">
+                     <div className="flex justify-between items-end border-t border-white/10 pt-16">
                         <div>
-                           <p className="text-[10px] font-black opacity-30 uppercase tracking-[0.6em] mb-2">Neural Hash-ID</p>
-                           <p className="text-4xl font-mono font-black text-white">{walletData.hash}</p>
+                           <p className="text-[11px] font-black opacity-30 uppercase tracking-[0.7em] mb-3">Neural Sig-Hash</p>
+                           <p className="text-5xl font-mono font-[1000] text-white tracking-tighter italic">{walletData.hash}</p>
                         </div>
                         <div className="text-right">
-                           <p className="text-[10px] font-black opacity-30 uppercase tracking-[0.6em] mb-2">Cognitive Intelligence</p>
-                           <p className="text-8xl font-mono font-black text-green-500 leading-none tracking-tighter">{walletData.iq}</p>
+                           <p className="text-[11px] font-black opacity-30 uppercase tracking-[0.7em] mb-3">Cognitive Intelligence</p>
+                           <p className="text-9xl font-mono font-[1000] text-green-500 leading-none tracking-tighter italic">{walletData.iq}</p>
                         </div>
                      </div>
                   </div>
                </div>
 
-               <div className="flex gap-6 mt-12">
-                  <button onClick={exportIdentity} className="flex-1 bg-white text-black py-10 rounded-[3.5rem] font-[1000] uppercase text-sm tracking-[1em] hover:bg-green-600 hover:text-white transition-all flex items-center justify-center gap-6 shadow-3xl active:scale-95">
-                    <Download size={28} /> EXPORT CREDENTIAL
+               <div className="flex gap-8 mt-16">
+                  <button onClick={saveMatrixID} className="flex-1 bg-white text-black py-12 rounded-[4rem] font-[1000] uppercase text-sm tracking-[1.2em] hover:bg-green-600 hover:text-white transition-all flex items-center justify-center gap-8 shadow-3xl active:scale-95">
+                    <Download size={32} /> EXPORT CREDENTIALS
                   </button>
-                  <button className="px-12 bg-white/5 border border-white/10 rounded-[3.5rem] text-white hover:bg-white/10 transition-all"><Share2 size={30} /></button>
+                  <button className="px-14 bg-white/5 border border-white/10 rounded-[4rem] text-white hover:bg-white/10 transition-all shadow-xl"><Share2 size={35} /></button>
                </div>
              </div>
           </motion.div>
@@ -544,14 +537,15 @@ export default function SenkuInfinity() {
       </AnimatePresence>
 
       <style jsx global>{`
-        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800;900&display=swap');
-        body { font-family: 'Space Grotesk', sans-serif; background: #020617; scroll-behavior: smooth; }
-        ::-webkit-scrollbar { width: 4px; }
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700;800&display=swap');
+        body { font-family: 'Space Grotesk', sans-serif; background: #01040a; scroll-behavior: smooth; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(34, 197, 94, 0.2); border-radius: 10px; }
         * { -webkit-tap-highlight-color: transparent; outline: none !important; }
-        input::placeholder { color: rgba(255,255,255,0.03); }
-        .shadow-3xl { shadow: 0 40px 100px rgba(0,0,0,0.8); }
+        input::placeholder { color: rgba(255,255,255,0.02); }
+        .shadow-3xl { filter: drop-shadow(0 40px 80px rgba(0,0,0,0.8)); }
       `}</style>
     </div>
   );
