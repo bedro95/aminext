@@ -1,14 +1,7 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from 'react';
-import { Connection, PublicKey, Transaction, SystemProgram } from '@solana/web3.js';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Download, Fingerprint, Volume2, VolumeX, Activity, 
-  Zap, ChevronRight, Trophy, Music, Github, ShieldCheck, 
-  Cpu, Calendar, Hash, Globe, BarChart3, Radio, X, Maximize2, Sparkles, Flame, Terminal, BrainCircuit, TrendingUp, ShieldAlert, Search, Eye, AlertTriangle
-} from 'lucide-react';
-import { toPng } from 'html-to-image';
+import React, { useState, useRef, useEffect } from "react";
+import { motion } from "framer-motion";
 
 /**
  * PROJECT: SENKU PROTOCOL
@@ -34,15 +27,12 @@ function SenkuAgent({ activeTab }: { activeTab: string }) {
       "Large inflows signal whale intent",
       "Follow smart money not noise",
     ],
-    "hall of fame": [
-      "Protocols ranked by on-chain dominance",
-    ],
+    "hall of fame": ["Protocols ranked by on-chain dominance"],
   };
 
   const message =
-    tips[activeTab]?.[
-      Math.floor(Math.random() * tips[activeTab].length)
-    ] || "Analyzing neural signals...";
+    tips[activeTab]?.[Math.floor(Math.random() * tips[activeTab].length)] ||
+    "Analyzing neural signals...";
 
   return (
     <motion.div
@@ -70,27 +60,19 @@ function SenkuAgent({ activeTab }: { activeTab: string }) {
    🔹 MAIN COMPONENT
    ================================ */
 export default function SenkuUltimateProtocol() {
-  const [address, setAddress] = useState('');
-  const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
-  const [isMuted, setIsMuted] = useState(false); 
-  const [activeTab, setActiveTab] = useState('scan'); 
-  const [whaleAlerts, setWhaleAlerts] = useState<any[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false); 
-  
-  const [rugAddress, setRugAddress] = useState('');
+  const [rugAddress, setRugAddress] = useState("");
   const [rugAnalysis, setRugAnalysis] = useState<any>(null);
   const [isAnalyzingRug, setIsAnalyzingRug] = useState(false);
+  const [activeTab, setActiveTab] = useState("scan");
 
   const [isNeuralProcessing, setIsNeuralProcessing] = useState(false);
   const [intentSignal, setIntentSignal] = useState<string | null>(null);
-  const [intelligenceScore, setIntelligenceScore] = useState(0);
 
-  const cardRef = useRef<HTMLDivElement>(null);
-  const modalRef = useRef<HTMLDivElement>(null);
+  const [isMuted, setIsMuted] = useState(false);
   const bgMusic = useRef<HTMLAudioElement | null>(null);
   const audioScan = useRef<HTMLAudioElement | null>(null);
-    // --- RUG SHIELD ENGINE ---
+
+  // --- RUG SHIELD ENGINE ---
   const analyzeRug = async () => {
     if (!rugAddress) return;
     setIsAnalyzingRug(true);
@@ -103,14 +85,13 @@ export default function SenkuUltimateProtocol() {
         mint: "DISABLED",
         topHolders: "4.2%",
         status: "SAFE_GRAIL",
-        riskLevel: "LOW"
+        riskLevel: "LOW",
       });
       setIsAnalyzingRug(false);
     }, 3000);
   };
 
   const triggerNeuralIntent = async () => {
-    if (!data) return;
     setIsNeuralProcessing(true);
 
     setTimeout(() => {
@@ -119,7 +100,7 @@ export default function SenkuUltimateProtocol() {
         "ASCENDING TRIANGLE FORMING",
         "INSTITUTIONAL INTENT SIGNAL",
         "MEV ACTIVITY DETECTED",
-        "LIQUIDITY SHIFT INBOUND"
+        "LIQUIDITY SHIFT INBOUND",
       ];
       setIntentSignal(predictions[Math.floor(Math.random() * predictions.length)]);
       setIsNeuralProcessing(false);
@@ -127,13 +108,16 @@ export default function SenkuUltimateProtocol() {
   };
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+
     bgMusic.current = new Audio(
-      'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Ketsa/Raising_Frequency/Ketsa_-_08_-_World_In_Motion.mp3'
+      "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Ketsa/Raising_Frequency/Ketsa_-_08_-_World_In_Motion.mp3"
     );
     bgMusic.current.loop = true;
     bgMusic.current.volume = 0.5;
+
     audioScan.current = new Audio(
-      'https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3'
+      "https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"
     );
 
     const handleClick = () => {
@@ -142,12 +126,12 @@ export default function SenkuUltimateProtocol() {
       }
     };
 
-    window.addEventListener('click', handleClick);
-    return () => window.removeEventListener('click', handleClick);
+    window.addEventListener("click", handleClick);
+    return () => window.removeEventListener("click", handleClick);
   }, [isMuted]);
 
   const toggleMute = () => {
-    setIsMuted(!isMuted);
+    setIsMuted((prev) => !prev);
     if (bgMusic.current) {
       isMuted ? bgMusic.current.play() : bgMusic.current.pause();
     }
@@ -165,18 +149,19 @@ export default function SenkuUltimateProtocol() {
           animate={{ opacity: 0.25, x: [-10, 10, -10], y: [-5, 5, -5] }}
           transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
           className="absolute inset-0 w-full h-full object-cover opacity-20 grayscale contrast-125"
+          alt="Background Senku"
         />
       </div>
 
       {/* NAV */}
       <nav className="relative z-[100] mt-4 mb-12">
         <div className="flex bg-slate-900/60 border border-white/10 p-1.5 rounded-2xl backdrop-blur-3xl">
-          {['scan', 'rug shield', 'radar', 'hall of fame'].map(tab => (
+          {["scan", "rug shield", "radar", "hall of fame"].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.2em]
-              ${activeTab === tab ? 'text-white' : 'text-white/30 hover:text-white'}`}
+              ${activeTab === tab ? "text-white" : "text-white/30 hover:text-white"}`}
             >
               {tab}
             </button>
@@ -185,11 +170,9 @@ export default function SenkuUltimateProtocol() {
       </nav>
 
       <main className="relative z-10 w-full max-w-6xl flex flex-col items-center flex-grow justify-center">
-
-        {activeTab === 'scan' && (
+        {activeTab === "scan" && (
           <motion.div className="w-full flex flex-col items-center">
             <div className="text-center mb-12">
-
               {/* 🔥 FINAL LOGO SIZE */}
               <motion.h1
                 className="
@@ -210,7 +193,8 @@ export default function SenkuUltimateProtocol() {
                 Neural Scientific Protocol
               </p>
             </div>
-                        {/* SCAN INPUT */}
+
+            {/* SCAN INPUT */}
             <div className="w-full max-w-xl mx-auto flex gap-2">
               <input
                 value={rugAddress}
@@ -220,9 +204,12 @@ export default function SenkuUltimateProtocol() {
               />
               <button
                 onClick={analyzeRug}
-                className="bg-green-500 hover:bg-green-400 text-black px-6 py-3 rounded-xl text-sm font-bold"
+                disabled={isAnalyzingRug}
+                className={`${
+                  isAnalyzingRug ? "bg-green-400 cursor-not-allowed" : "bg-green-500 hover:bg-green-400"
+                } text-black px-6 py-3 rounded-xl text-sm font-bold`}
               >
-                {isAnalyzingRug ? 'SCANNING...' : 'SCAN'}
+                {isAnalyzingRug ? "SCANNING..." : "SCAN"}
               </button>
             </div>
 
@@ -234,12 +221,8 @@ export default function SenkuUltimateProtocol() {
                     key={key}
                     className="bg-black/50 border border-white/10 rounded-xl p-4 text-center"
                   >
-                    <p className="text-[10px] uppercase tracking-widest text-white/40">
-                      {key}
-                    </p>
-                    <p className="mt-2 font-bold text-green-400 text-sm">
-                      {value}
-                    </p>
+                    <p className="text-[10px] uppercase tracking-widest text-white/40">{key}</p>
+                    <p className="mt-2 font-bold text-green-400 text-sm">{value}</p>
                   </div>
                 ))}
               </div>
@@ -247,17 +230,16 @@ export default function SenkuUltimateProtocol() {
           </motion.div>
         )}
 
-        {activeTab === 'rug shield' && (
+        {activeTab === "rug shield" && (
           <motion.div className="text-center max-w-3xl">
             <h2 className="text-4xl font-black mb-6">RUG SHIELD</h2>
             <p className="text-white/60 text-sm leading-relaxed">
-              Advanced on-chain heuristics combined with neural inference  
-              to detect rug behavior before it manifests.
+              Advanced on-chain heuristics combined with neural inference to detect rug behavior before it manifests.
             </p>
           </motion.div>
         )}
 
-        {activeTab === 'radar' && (
+        {activeTab === "radar" && (
           <motion.div className="text-center max-w-3xl">
             <h2 className="text-4xl font-black mb-6">NEURAL RADAR</h2>
             <p className="text-white/60 text-sm leading-relaxed mb-8">
@@ -266,40 +248,37 @@ export default function SenkuUltimateProtocol() {
 
             <button
               onClick={triggerNeuralIntent}
-              className="bg-white text-black px-8 py-3 rounded-xl font-bold"
+              disabled={isNeuralProcessing}
+              className={`${
+                isNeuralProcessing ? "bg-gray-400 cursor-not-allowed" : "bg-white text-black"
+              } px-8 py-3 rounded-xl font-bold`}
             >
-              {isNeuralProcessing ? 'PROCESSING...' : 'ACTIVATE RADAR'}
+              {isNeuralProcessing ? "PROCESSING..." : "ACTIVATE RADAR"}
             </button>
 
             {intentSignal && (
-              <p className="mt-6 text-green-400 font-mono tracking-widest">
-                {intentSignal}
-              </p>
+              <p className="mt-6 text-green-400 font-mono tracking-widest">{intentSignal}</p>
             )}
           </motion.div>
         )}
 
-        {activeTab === 'hall of fame' && (
+        {activeTab === "hall of fame" && (
           <motion.div className="text-center max-w-4xl">
             <h2 className="text-4xl font-black mb-10">HALL OF FAME</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {['SENKU', 'VECTORDEGEN', 'NEURALNODE'].map(name => (
-                <div
-                  key={name}
-                  className="bg-black/60 border border-white/10 rounded-xl p-6"
-                >
+              {["SENKU", "VECTORDEGEN", "NEURALNODE"].map((name) => (
+                <div key={name} className="bg-black/60 border border-white/10 rounded-xl p-6">
                   <p className="font-black text-lg">{name}</p>
-                  <p className="text-xs text-white/40 mt-2">
-                    Early Signal Contributor
-                  </p>
+                  <p className="text-xs text-white/40 mt-2">Early Signal Contributor</p>
                 </div>
               ))}
             </div>
           </motion.div>
         )}
       </main>
-            {/* SENKU AGENT */}
-      <SenkuAgent />
+
+      {/* SENKU AGENT */}
+      <SenkuAgent activeTab={activeTab} />
 
       {/* FOOTER */}
       <footer className="relative z-10 mt-16 mb-6 text-center text-[10px] text-white/40 tracking-widest">
@@ -307,54 +286,4 @@ export default function SenkuUltimateProtocol() {
       </footer>
     </div>
   );
-};
-
-export default Senku;
-
-
-/* ===========================
-   SENKU AGENT (LIVE GUIDE)
-   =========================== */
-
-const SenkuAgent = () => {
-  const tips = [
-    "Welcome to Senku — start by scanning any token address",
-    "Use Rug Shield to detect hidden risks",
-    "Neural Radar reveals whale intent & liquidity shifts",
-    "Hall of Fame shows verified early signals",
-    "Trust data. Ignore noise."
-  ];
-
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % tips.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 1 }}
-      className="fixed bottom-6 right-6 z-[200] flex items-end gap-3"
-    >
-      {/* MESSAGE */}
-      <div className="bg-black/70 border border-white/10 rounded-2xl px-4 py-3 backdrop-blur-xl max-w-[220px]">
-        <p className="text-[11px] text-green-400 font-mono leading-relaxed">
-          {tips[index]}
-        </p>
-      </div>
-
-      {/* AVATAR */}
-      <motion.img
-        src="/senku-agent.png"
-        animate={{ y: [0, -6, 0] }}
-        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-        className="w-14 h-14 rounded-full border border-green-500/40 shadow-lg shadow-green-500/20"
-      />
-    </motion.div>
-  );
-};
+}
