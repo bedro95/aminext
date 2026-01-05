@@ -282,7 +282,7 @@ export default function SenkuUltimateProtocol() {
 
       {/* FOOTER */}
       <footer className="relative z-10 mt-16 mb-6 text-center text-[10px] text-white/40 tracking-widest">
-        © 2025 SENKU PROTOCOL — Powered by Solana
+        © 2025 SENKU PROTOCOL — Powered by Bader
       </footer>
     </div>
   );
