@@ -222,7 +222,7 @@ export default function SenkuUltimateProtocol() {
                     className="bg-black/50 border border-white/10 rounded-xl p-4 text-center"
                   >
                     <p className="text-[10px] uppercase tracking-widest text-white/40">{key}</p>
-                    <p className="mt-2 font-bold text-green-400 text-sm">{value}</p>
+<p className="mt-2 font-bold text-green-400 text-sm">{String(value)}</p>
                   </div>
                 ))}
               </div>
