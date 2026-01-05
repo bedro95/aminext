@@ -186,7 +186,7 @@ export default function SenkuUltimateProtocol() {
         {activeTab === 'scan' && (
           <div className="w-full flex flex-col items-center">
             <div className="relative mb-10 select-none">
-                <h1 className="text-[25vw] md:text-[10rem] font-[1000] italic tracking-[-0.05em] leading-none text-center bg-gradient-to-b from-white via-white to-green-500 bg-clip-text text-transparent transform scale-y-110">
+                <h1 className="text-[18vw] md:text-[10rem] font-[1000] italic tracking-[-0.05em] leading-none text-center bg-gradient-to-b from-white via-white to-green-500 bg-clip-text text-transparent transform scale-y-110">
                     SENKU
                 </h1>
                 <div className="absolute -bottom-1 right-2 bg-green-600 text-black px-2 py-0.5 text-[9px] font-black skew-x-[-15deg] uppercase">V7.5 Live</div>
