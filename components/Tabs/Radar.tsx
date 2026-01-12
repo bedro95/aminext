@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const RadarTab = () => {
-  const [topGainer, setTopGainer] = useState({ name: "SENKU", volume: "2.4M", change: "+145%" });
+  const [topGainer, setTopGainer] = useState({ name: "SOL", volume: "2.4B", change: "+10%" });
   const [whaleMovements, setWhaleMovements] = useState([
-    { id: 1, wallet: "6p6W...5YtZ", action: "BOUGHT", amount: "450 SOL", token: "SENKU" },
+    { id: 1, wallet: "6p6W...5YtZ", action: "BOUGHT", amount: "450 SOL", token: "PUMP" },
     { id: 2, wallet: "4jK2...m9Qp", action: "BOUGHT", amount: "890 SOL", token: "WIF" },
   ]);
 
