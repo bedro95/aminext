@@ -1,163 +1,146 @@
 "use client";
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShieldAlert, ShieldCheck, Download, Search, Lock, Unlock, AlertTriangle, Fingerprint, Loader2 } from 'lucide-react';
-
-/**
- * @project Senku.fun
- * @component RugShield
- * @engineering 100% Build-Safe. No static imports for external libraries.
- */
+import { ShieldCheck, Brain, Download, RotateCcw, Fingerprint, Users, Search } from 'lucide-react';
+import { toPng } from 'html-to-image';
 
 const RugShieldTab = () => {
-  const [address, setAddress] = useState("");
-  const [analysis, setAnalysis] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
-  const [isExporting, setIsExporting] = useState(false);
+  const [address, setAddress] = useState('');
+  const [isScanning, setIsScanning] = useState(false);
+  const [report, setReport] = useState<any>(null);
+  const resultRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
 
-  const analyzeContract = async () => {
-    if (!address) return;
-    setLoading(true);
+  // دالة تحويل الصورة لضمان ظهورها في التصدير والخلفية
+  const getBase64Image = async (url: string) => {
     try {
-      const res = await fetch(`https://api.dexscreener.com/latest/dex/tokens/${address}`);
-      const data = await res.json();
-      const pair = data.pairs?.[0];
-
-      if (pair) {
-        setAnalysis({
-          name: pair.baseToken.name,
-          symbol: pair.baseToken.symbol,
-          liquidity: pair.liquidity?.usd || 0,
-          isLocked: pair.liquidity?.usd > 50000,
-          score: Math.floor(Math.random() * 20) + 80,
-          timestamp: new Date().toLocaleString()
-        });
-      }
-    } catch (err) {
-      console.error("Scan Error");
-    } finally {
-      setLoading(false);
-    }
+      const response = await fetch(url);
+      const blob = await response.blob();
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.readAsDataURL(blob);
+      });
+    } catch (e) { return url; }
   };
 
-  /**
-   * ✅ DYNAMIC EXECUTION
-   * This function will only try to load the library when the button is clicked.
-   */
-  const saveAsImage = async () => {
-    if (!cardRef.current) return;
-    setIsExporting(true);
-    
+  const handleDeepScan = async () => {
+    if (!address) return;
+    setIsScanning(true);
     try {
-      // Small delay for DOM stability
-      await new Promise(resolve => setTimeout(resolve, 200));
+      const [dexRes, rugRes] = await Promise.all([
+        fetch(`https://api.dexscreener.com/latest/dex/tokens/${address}`),
+        fetch(`https://api.rugcheck.xyz/v1/tokens/${address}/report`)
+      ]);
+      const dexData = await dexRes.json();
+      const rugData = await rugRes.json();
+      const pair = dexData.pairs?.[0];
 
-      // We call the library dynamically without a top-level import
-      // This is the only way to bypass your current build error
-      const html2canvas = (await import('html2canvas' as any)).default;
+      let safeImage: any = pair?.info?.imageUrl || "";
+      if (safeImage) safeImage = await getBase64Image(safeImage);
 
-      const canvas = await html2canvas(cardRef.current, {
-        useCORS: true,
-        backgroundColor: "#050505",
-        scale: 2,
-        logging: false,
+      setReport({
+        name: pair?.baseToken?.name || "Unknown",
+        symbol: pair?.baseToken?.symbol || "TOKEN",
+        score: rugData.score || 0,
+        address: address.slice(0, 6) + "..." + address.slice(-6),
+        image: safeImage,
+        details: [
+          { label: "Bundler Detection", value: rugData.score > 2000 ? "RISKY" : "CLEAN", color: rugData.score > 2000 ? "#ef4444" : "#00FF5F" },
+          { label: "Dev Holding", value: `${(rugData.topHolders?.[0]?.pct || 0).toFixed(2)}%`, color: (rugData.topHolders?.[0]?.pct || 0) > 10 ? "#fbbf24" : "#00FF5F" },
+          { label: "LP Status", value: pair?.liquidity?.usd > 0 ? "LOCKED" : "RISKY", color: "#00FF5F" },
+          { label: "Market Sentiment", value: pair?.info?.socials ? "ACTIVE" : "GHOST", color: "#00E0FF" }
+        ]
       });
+    } catch (err) { console.error("Scan Error"); } finally { setIsScanning(false); }
+  };
 
-      const image = canvas.toDataURL("image/png", 1.0);
-      const link = document.createElement("a");
-      link.href = image;
-      link.download = `Senku_Evidence_${analysis?.symbol || 'Report'}.png`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } catch (err) {
-      console.log("Export skipped: Library not installed via Terminal.");
-      alert("Note: To enable image saving, html2canvas must be added to package.json dependencies.");
-    } finally {
-      setIsExporting(false);
-    }
+  const downloadCard = async () => {
+    if (cardRef.current === null) return;
+    const dataUrl = await toPng(cardRef.current, { cacheBust: true, pixelRatio: 3 });
+    const link = document.createElement('a');
+    link.download = `senku-audit-${report.symbol}.png`;
+    link.href = dataUrl;
+    link.click();
   };
 
   return (
-    <div className="w-full min-h-screen pb-20 px-2 font-mono">
-      <div className="max-w-3xl mx-auto mb-12">
-        <div className="relative group">
-          <div className="absolute -inset-1 bg-gradient-to-r from-[#00E0FF] to-[#00FF5F] rounded-[30px] blur opacity-10 group-focus-within:opacity-30 transition"></div>
-          <div className="relative flex bg-black border border-white/10 rounded-[28px] p-2">
-            <input 
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              placeholder="Paste Solana CA..." 
-              className="flex-1 bg-transparent border-none outline-none px-6 text-sm font-bold text-white placeholder:text-white/20"
-            />
-            <button 
-              onClick={analyzeContract}
-              disabled={loading}
-              className="bg-[#00E0FF] hover:bg-[#00FF5F] text-black px-8 py-4 rounded-[22px] font-black transition-all flex items-center gap-2"
-            >
-              {loading ? <Loader2 className="animate-spin w-4 h-4" /> : <Search className="w-4 h-4" />}
-              SCAN
-            </button>
-          </div>
-        </div>
-      </div>
-
+    <div className="w-full max-w-md mx-auto space-y-4 pb-20 px-4 font-mono">
       <AnimatePresence mode="wait">
-        {analysis && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="max-w-2xl mx-auto">
-            <div ref={cardRef} className="bg-[#050505] border border-[#00E0FF]/30 rounded-[40px] p-10 relative overflow-hidden">
-              <div className="absolute top-0 right-0 p-8 opacity-10"><ShieldCheck className="w-32 h-32 text-[#00E0FF]" /></div>
-              <div className="relative z-10 flex justify-between items-start mb-10">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-[#00E0FF]/10 rounded-xl flex items-center justify-center"><ShieldAlert className="w-6 h-6 text-[#00E0FF]" /></div>
-                  <div>
-                    <h3 className="text-xl font-black text-white italic uppercase tracking-tighter">{analysis.name}</h3>
-                    <p className="text-[#00E0FF] text-[8px] font-bold tracking-[0.4em] uppercase">Security Score: {analysis.score}%</p>
+        {!report ? (
+          <motion.div key="input" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-4">
+            <div className="bg-[#0A0A0A] border border-[#00FF5F]/20 p-6 rounded-[30px] shadow-2xl backdrop-blur-xl">
+              <div className="flex items-center gap-3 mb-6">
+                <Brain className="w-5 h-5 text-[#00FF5F]" />
+                <h2 className="text-white font-black uppercase text-sm tracking-widest">Quantum Audit</h2>
+              </div>
+              <div className="space-y-3">
+                <input 
+                  value={address} onChange={(e) => setAddress(e.target.value)}
+                  placeholder="CONTRACT ADDRESS..."
+                  className="w-full bg-black/50 border border-white/10 rounded-xl p-4 text-[#00FF5F] text-[10px] outline-none focus:border-[#00FF5F]/40 transition-all"
+                />
+                <button 
+                  onClick={handleDeepScan} disabled={isScanning}
+                  className="w-full bg-[#00FF5F] text-black rounded-xl py-4 font-black text-[10px] uppercase tracking-[0.2em] shadow-[0_0_20px_rgba(0,255,95,0.2)]"
+                >
+                  {isScanning ? "Analyzing..." : "Initiate Deep Scan"}
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        ) : (
+          <motion.div key="result" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="space-y-4">
+            {/* بطاقة التصدير */}
+            <div ref={cardRef} className="relative overflow-hidden rounded-[35px] border border-[#00FF5F]/30 bg-black min-h-[520px] p-6 flex flex-col justify-between">
+              
+              {/* صورة الخلفية - الضمان النهائي للظهور */}
+              {report.image && (
+                <div className="absolute inset-0 z-0">
+                  <img src={report.image} className="w-full h-full object-cover opacity-30 blur-[40px] scale-150" alt="" />
+                  <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black" />
+                </div>
+              )}
+
+              <div className="relative z-10 flex justify-between items-start">
+                <div className="flex items-center gap-3">
+                  <img src={report.image} className="w-12 h-12 rounded-xl border border-[#00FF5F]/30 shadow-2xl" alt="" />
+                  <div className="max-w-[140px]">
+                    <h3 className="text-xl font-black text-white truncate uppercase">{report.name}</h3>
+                    <p className="text-[#00FF5F] text-[8px] font-bold tracking-tighter uppercase">{report.symbol} • {report.address}</p>
                   </div>
                 </div>
-                <div className="text-right">
-                   <div className="px-3 py-1 bg-[#00FF5F]/10 border border-[#00FF5F]/20 rounded-full">
-                      <span className="text-[#00FF5F] text-[9px] font-black uppercase italic tracking-widest">Passed</span>
-                   </div>
+                <div className="bg-black/80 border border-[#00FF5F]/40 p-3 rounded-xl text-center">
+                  <p className="text-[7px] text-[#00FF5F] font-black uppercase mb-1">Risk Score</p>
+                  <p className="text-xl font-black text-white">{report.score}</p>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-10 relative z-10 mb-10">
-                 <div className="space-y-6">
-                    <div className="flex items-center gap-3">
-                       <Lock className="w-4 h-4 text-[#00FF5F]" />
-                       <div>
-                          <p className="text-[7px] text-white/30 uppercase font-black">Liquidity</p>
-                          <p className="text-[11px] font-bold uppercase">{analysis.isLocked ? "Locked" : "Unlocked"}</p>
-                       </div>
-                    </div>
-                 </div>
-                 <div className="space-y-6">
-                    <div className="flex items-center gap-3">
-                       <Fingerprint className="w-4 h-4 text-[#00E0FF]" />
-                       <div>
-                          <p className="text-[7px] text-white/30 uppercase font-black">Ownership</p>
-                          <p className="text-[11px] font-bold uppercase">Renounced</p>
-                       </div>
-                    </div>
-                 </div>
+
+              <div className="relative z-10 space-y-3 my-6">
+                {report.details.map((item: any, i: number) => (
+                  <div key={i} className="bg-black/60 border border-white/5 p-4 rounded-2xl flex justify-between items-center shadow-inner">
+                    <span className="text-[9px] text-white/40 uppercase font-bold">{item.label}</span>
+                    <span className="text-[10px] font-black" style={{ color: item.color }}>{item.value}</span>
+                  </div>
+                ))}
               </div>
-              <div className="pt-6 border-t border-white/5 flex justify-between items-center text-[7px] font-bold text-white/20 uppercase tracking-widest italic relative z-10">
-                 <div>Report: {address.slice(0, 12)}...</div>
-                 <div className="text-[#00E0FF]">Senku Lab Engine</div>
+
+              <div className="relative z-10 pt-4 border-t border-white/5 flex justify-between items-center">
+                <span className="text-[8px] text-white/40 uppercase font-black tracking-widest">Senku Protocol Audit</span>
+                <ShieldCheck className="w-4 h-4 text-[#00FF5F]" />
               </div>
             </div>
 
-            <motion.button 
-              whileTap={{ scale: 0.98 }}
-              onClick={saveAsImage}
-              disabled={isExporting}
-              className="w-full mt-6 bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 py-6 rounded-[32px] flex items-center justify-center gap-4 transition-all group"
-            >
-              {isExporting ? <Loader2 className="w-5 h-5 text-[#00FF5F] animate-spin" /> : <Download className="w-5 h-5 text-[#00FF5F]" />}
-              <span className="text-xs font-black uppercase tracking-[0.3em]">Save Security Evidence</span>
-            </motion.button>
+            {/* أزرار التحكم */}
+            <div className="grid grid-cols-2 gap-3">
+              <button onClick={downloadCard} className="bg-[#00FF5F] text-black py-4 rounded-2xl font-black text-[9px] uppercase tracking-widest flex items-center justify-center gap-2">
+                <Download className="w-4 h-4" /> Export Card
+              </button>
+              <button onClick={() => setReport(null)} className="bg-white/5 border border-white/10 text-white py-4 rounded-2xl font-black text-[9px] uppercase tracking-widest flex items-center justify-center gap-2">
+                <RotateCcw className="w-4 h-4 text-[#00FF5F]" /> New Scan
+              </button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
