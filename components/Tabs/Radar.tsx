@@ -5,8 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Radio, Cpu, ArrowUpRight, Share2, Zap, Waves } from 'lucide-react';
 
 /**
- * @project Senku (Wagmi)
- * @developer Bader Alkorgli & Gemini
+ * @project Senku 
+ * @developer Bader Alkorgli 
  * @feature Nexus Radar - Smart Money Migration Tracker
  */
 
