@@ -31,11 +31,15 @@ export default function SenkuUltraPage() {
       case "scan": return <ScanTab />;
       case "rug shield": return <RugShieldTab />;
       case "radar": return <RadarTab />;
-      case "bags": return <div className="p-8 text-center border border-[#22C55E]/20 bg-[#22C55E]/5 rounded-3xl backdrop-blur-xl">
-          <h2 className="text-[#22C55E] text-2xl font-black mb-4">BAGS INSIGHTS</h2>
-          <p className="text-white/60">Senku Neural Engine analyzing BagsApp social metrics...</p>
-          <div className="mt-8 py-2 px-4 bg-[#22C55E]/20 text-[#22C55E] rounded-full text-[10px] animate-pulse inline-block">SCANNING ECOSYSTEM</div>
-      </div>;
+      case "bags": return (
+        <div className="p-6 md:p-8 text-center border border-[#22C55E]/20 bg-[#22C55E]/5 rounded-3xl backdrop-blur-xl">
+          <h2 className="text-[#22C55E] text-xl md:text-2xl font-black mb-4 uppercase tracking-tighter">Bags Ecosystem Tool</h2>
+          <p className="text-white/60 text-xs md:text-sm">Senku Neural Engine analyzing real-time social metrics for BagsApp users.</p>
+          <div className="mt-6 py-2 px-4 bg-[#22C55E]/20 text-[#22C55E] rounded-full text-[9px] animate-pulse inline-block font-bold tracking-widest">
+            LIVE_SYNCING_DATA
+          </div>
+        </div>
+      );
       case "hall of fame": return <HallOfFameTab />;
       default: return <ScanTab />;
     }
@@ -49,7 +53,7 @@ export default function SenkuUltraPage() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#001a0a_0%,#000_100%)] opacity-90" />
       </div>
 
-      <div className="relative z-10 w-full max-w-7xl min-h-screen flex flex-col pt-4 md:pt-6 pb-24 md:pb-20 px-4">
+      <div className="relative z-10 w-full max-w-7xl min-h-screen flex flex-col pt-4 md:pt-6 pb-28 md:pb-20 px-4">
         
         <div className="w-full bg-black/40 border border-white/5 rounded-[30px] md:rounded-[45px] backdrop-blur-3xl overflow-hidden shadow-[0_0_80px_rgba(0,0,0,0.5)] flex flex-col">
           
@@ -72,7 +76,6 @@ export default function SenkuUltraPage() {
             </div>
 
             <div className="flex items-center gap-2 md:gap-4">
-               {/* Mobile/Desktop Bags Indicator */}
                <div className="px-3 py-1.5 bg-[#22C55E]/10 border border-[#22C55E]/20 rounded-lg flex items-center gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-[#22C55E] animate-pulse" />
                   <span className="text-[7px] md:text-[9px] font-black text-[#22C55E] uppercase tracking-widest">Bags_Module</span>
@@ -85,8 +88,8 @@ export default function SenkuUltraPage() {
 
           <div className="flex flex-col md:flex-row min-h-[60vh] md:min-h-[75vh]">
             
-            {/* NAVIGATION (Updated for Mobile & Desktop) */}
-            <nav className="fixed bottom-4 left-4 right-4 md:relative md:bottom-auto md:left-auto md:right-auto md:w-32 border md:border-r border-white/10 md:border-white/5 flex md:flex-col items-center justify-around md:justify-center gap-2 md:gap-5 p-3 md:p-6 bg-black/80 md:bg-black/40 backdrop-blur-2xl md:backdrop-blur-none rounded-2xl md:rounded-none z-[100]">
+            {/* NAVIGATION (Mobile & Desktop) */}
+            <nav className="fixed bottom-4 left-4 right-4 md:relative md:bottom-auto md:left-auto md:right-auto md:w-32 border md:border-r border-white/10 md:border-white/5 flex md:flex-col items-center justify-around md:justify-center gap-2 md:gap-5 p-3 md:p-6 bg-black/90 md:bg-black/40 backdrop-blur-2xl md:backdrop-blur-none rounded-2xl md:rounded-none z-[100] shadow-2xl md:shadow-none">
               {TABS.map((tab) => {
                 const Icon = tab.icon;
                 const isActive = activeTab === tab.id;
@@ -106,7 +109,7 @@ export default function SenkuUltraPage() {
             </nav>
 
             {/* MAIN CONTENT */}
-            <main className="flex-1 relative p-4 md:p-12">
+            <main className="flex-1 relative p-4 md:p-12 pb-20 md:pb-12">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeTab}
@@ -132,7 +135,8 @@ export default function SenkuUltraPage() {
         </div>
       </div>
 
-      <div className="fixed bottom-24 right-6 md:bottom-10 md:right-10 z-[90]">
+      {/* 🛠 FIXED SENKU AGENT POSITIONING FOR MOBILE */}
+      <div className="fixed bottom-24 right-4 md:bottom-10 md:right-10 z-[110] scale-[0.85] md:scale-100 origin-bottom-right">
         <SenkuAgent activeTab={activeTab} />
       </div>
     </div>
