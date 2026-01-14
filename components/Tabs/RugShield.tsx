@@ -53,9 +53,14 @@ const RugShieldTab = () => {
   const downloadCard = async () => {
     if (cardRef.current === null) return;
     try {
-      const dataUrl = await toPng(cardRef.current, { cacheBust: true, pixelRatio: 2 });
+      // تحسين دقة التصدير لضمان ظهور الصور
+      const dataUrl = await toPng(cardRef.current, { 
+        cacheBust: true, 
+        pixelRatio: 3,
+        skipFonts: true,
+      });
       const link = document.createElement('a');
-      link.download = `senku-report-${report.symbol}.png`;
+      link.download = `senku-audit-${report.symbol}.png`;
       link.href = dataUrl;
       link.click();
     } catch (error) {
@@ -66,9 +71,9 @@ const RugShieldTab = () => {
   return (
     <div className="w-full max-w-full md:max-w-5xl mx-auto space-y-6 pb-24 px-2">
       {/* 🛡️ INPUT SECTION */}
-      <div className="bg-[#050505] border border-[#00FF5F]/20 p-6 md:p-10 rounded-[35px] backdrop-blur-3xl shadow-2xl relative overflow-hidden group">
+      <div className="bg-[#050505] border border-[#00FF5F]/20 p-6 md:p-10 rounded-[35px] backdrop-blur-3xl shadow-2xl relative">
         <div className="flex items-center gap-4 mb-8">
-           <div className="p-3 bg-[#00FF5F]/10 rounded-xl border border-[#00FF5F]/20 shadow-[0_0_15px_rgba(0,255,95,0.1)]">
+           <div className="p-3 bg-[#00FF5F]/10 rounded-xl border border-[#00FF5F]/20">
               <Brain className="w-6 h-6 text-[#00FF5F]" />
            </div>
            <div>
@@ -77,7 +82,7 @@ const RugShieldTab = () => {
            </div>
         </div>
 
-        <div className="flex flex-col gap-3 relative z-10">
+        <div className="flex flex-col gap-3">
           <input 
             type="text" 
             placeholder="PASTE CONTRACT ADDRESS..." 
@@ -88,7 +93,7 @@ const RugShieldTab = () => {
           <button 
             onClick={handleDeepScan}
             disabled={isScanning}
-            className="w-full bg-[#00FF5F] text-black rounded-2xl py-4 font-black text-xs uppercase tracking-widest shadow-[0_0_20px_rgba(0,255,95,0.2)] active:scale-95 transition-all"
+            className="w-full bg-[#00FF5F] text-black rounded-2xl py-4 font-black text-xs uppercase tracking-widest active:scale-95 transition-all"
           >
             {isScanning ? "Analyzing Chain..." : "Start Deep Audit"}
           </button>
@@ -100,61 +105,66 @@ const RugShieldTab = () => {
         {report && (
           <motion.div 
             ref={resultRef}
-            initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
             className="space-y-6"
           >
-            {/* DYNAMIC EXPORTABLE CARD */}
-            <div className="relative group">
+            {/* THE EXPORTABLE CARD (FIXED) */}
+            <div className="relative">
               <div 
                 ref={cardRef} 
-                className="bg-black border border-[#00FF5F]/30 p-6 md:p-10 rounded-[40px] relative overflow-hidden min-h-[450px] flex flex-col justify-between"
+                className="bg-[#000000] border border-[#00FF5F]/30 p-8 rounded-[40px] relative overflow-hidden min-h-[500px] flex flex-col justify-between"
+                style={{ backgroundColor: '#000000' }} // ضمان لون خلفية صلب للتصدير
               >
-                {/* Dynamic Image Background */}
+                {/* Fixed Dynamic Background Image */}
                 {report.image && (
                   <div className="absolute inset-0 z-0">
                     <img 
                       src={report.image} 
-                      alt="bg" 
-                      className="w-full h-full object-cover opacity-30 blur-[40px] scale-110"
+                      alt="" 
+                      className="w-full h-full object-cover opacity-40 blur-[50px] scale-150"
                       crossOrigin="anonymous"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-black via-black/40 to-black shadow-inner" />
                   </div>
                 )}
 
-                <div className="relative z-10 flex justify-between items-start">
+                {/* Content Header */}
+                <div className="relative z-20 flex justify-between items-start">
                   <div className="flex items-center gap-4">
-                    {report.image && (
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-[#00FF5F]/20 blur-lg rounded-full" />
                       <img 
-                        src={report.image} 
-                        className="w-14 h-14 rounded-2xl border border-white/20 shadow-2xl" 
+                        src={report.image || "https://avatar.vercel.sh/senku"} 
+                        className="w-16 h-16 rounded-2xl border-2 border-[#00FF5F]/30 shadow-2xl relative z-10 bg-black" 
                         crossOrigin="anonymous"
                       />
-                    )}
+                    </div>
                     <div>
-                      <h3 className="text-3xl font-black text-white tracking-tighter leading-none">{report.name}</h3>
-                      <p className="text-[#00FF5F] font-mono text-xs tracking-widest uppercase mt-1 opacity-80">{report.symbol} • {report.address}</p>
+                      <h3 className="text-3xl font-black text-white tracking-tighter leading-none uppercase">{report.name}</h3>
+                      <p className="text-[#00FF5F] font-mono text-[10px] tracking-[0.2em] uppercase mt-2 font-bold">{report.symbol} • {report.address}</p>
                     </div>
                   </div>
-                  <div className="bg-black/60 backdrop-blur-md border border-[#00FF5F]/40 p-3 rounded-2xl text-center min-w-[80px]">
+                  <div className="bg-black/80 backdrop-blur-xl border border-[#00FF5F]/40 p-4 rounded-2xl text-center min-w-[90px] shadow-2xl">
                     <span className="block text-[8px] text-[#00FF5F] uppercase font-black mb-1">Risk Score</span>
                     <span className="text-2xl font-mono font-black text-white">{report.score}</span>
                   </div>
                 </div>
 
-                <div className="relative z-10 grid grid-cols-1 gap-3 mt-8">
+                {/* Main Stats Details */}
+                <div className="relative z-20 grid grid-cols-1 gap-3 my-8">
                   {report.details.map((item: any, i: number) => (
-                    <div key={i} className="bg-black/40 backdrop-blur-md border border-white/5 p-4 rounded-2xl flex justify-between items-center group/item hover:border-[#00FF5F]/30 transition-colors">
-                      <span className="text-[10px] text-white/50 font-mono uppercase tracking-[0.2em]">{item.label}</span>
+                    <div key={i} className="bg-black/60 backdrop-blur-xl border border-white/10 p-5 rounded-2xl flex justify-between items-center shadow-lg">
+                      <span className="text-[10px] text-white/50 font-mono uppercase tracking-[0.2em] font-bold">{item.label}</span>
                       <span className="text-sm font-black font-mono tracking-tighter" style={{ color: item.color }}>{item.value}</span>
                     </div>
                   ))}
                 </div>
 
-                <div className="relative z-10 mt-10 pt-6 border-t border-white/10 flex justify-between items-center opacity-60">
+                {/* Footer Brand */}
+                <div className="relative z-20 pt-6 border-t border-white/10 flex justify-between items-center opacity-80">
                    <div className="flex items-center gap-2">
                       <div className="w-2 h-2 rounded-full bg-[#00FF5F] animate-pulse" />
-                      <span className="text-[9px] font-mono uppercase tracking-[0.3em] text-white">Senku Protocol Audit</span>
+                      <span className="text-[9px] font-mono uppercase tracking-[0.3em] text-white font-bold">Senku Protocol • Audit Result</span>
                    </div>
                    <ShieldCheck className="w-5 h-5 text-[#00FF5F]" />
                 </div>
@@ -163,10 +173,10 @@ const RugShieldTab = () => {
               {/* SAVE BUTTON */}
               <button 
                 onClick={downloadCard}
-                className="w-full mt-4 bg-white/5 hover:bg-[#00FF5F]/10 border border-white/10 text-white py-5 rounded-[24px] flex items-center justify-center gap-3 font-black text-xs uppercase tracking-[0.2em] transition-all group"
+                className="w-full mt-6 bg-[#00FF5F] hover:shadow-[0_0_30px_#00FF5F] text-black py-5 rounded-[24px] flex items-center justify-center gap-3 font-black text-xs uppercase tracking-[0.2em] transition-all group active:scale-95"
               >
-                <Download className="w-5 h-5 text-[#00FF5F] group-hover:scale-110 transition-transform" /> 
-                Export Security Report
+                <Download className="w-5 h-5" /> 
+                Export Security Report (PNG)
               </button>
             </div>
           </motion.div>
