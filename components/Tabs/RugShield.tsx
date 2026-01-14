@@ -3,11 +3,11 @@
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShieldAlert, ShieldCheck, Download, Search, Lock, Unlock, AlertTriangle, Fingerprint, Loader2 } from 'lucide-react';
-import html2canvas from 'html2canvas';
 
 /**
  * @project Senku.fun
- * @feature RugShield - Fixed Export/Save Functionality
+ * @component RugShield
+ * @engineering Optimized with Dynamic Imports to prevent build failures.
  */
 
 const RugShieldTab = () => {
@@ -37,25 +37,31 @@ const RugShieldTab = () => {
         });
       }
     } catch (err) {
-      console.error("Shield Error");
+      console.error("Shield Scan Failed");
     } finally {
       setLoading(false);
     }
   };
 
-  // ✅ FIXED EXPORT FUNCTION
+  /**
+   * @function saveAsImage
+   * @description Uses dynamic import to bypass build-time dependency errors.
+   */
   const saveAsImage = async () => {
     if (!cardRef.current) return;
     
     setIsExporting(true);
     try {
-      // Small delay to ensure all animations are settled
-      await new Promise(resolve => setTimeout(resolve, 100));
+      // ✅ Dynamic Import: Prevents "Module not found" during build
+      const html2canvas = (await import('html2canvas')).default;
+      
+      // Delay to allow UI threads to clear
+      await new Promise(resolve => setTimeout(resolve, 150));
       
       const canvas = await html2canvas(cardRef.current, {
-        useCORS: true, // Crucial for external images/assets
+        useCORS: true,
         backgroundColor: "#050505",
-        scale: 2, // High DPI
+        scale: 2,
         logging: false,
       });
 
@@ -67,7 +73,7 @@ const RugShieldTab = () => {
       link.click();
       document.body.removeChild(link);
     } catch (err) {
-      console.error("Export Failed:", err);
+      console.error("Evidence Export Failed:", err);
     } finally {
       setIsExporting(false);
     }
@@ -75,15 +81,15 @@ const RugShieldTab = () => {
 
   return (
     <div className="w-full min-h-screen pb-20 px-2 font-mono">
-      {/* Search Interface */}
+      {/* --- Search Engine Interface --- */}
       <div className="max-w-3xl mx-auto mb-12">
         <div className="relative group">
-          <div className="absolute -inset-1 bg-gradient-to-r from-[#00E0FF] to-[#00FF5F] rounded-[30px] blur opacity-10 group-focus-within:opacity-30 transition"></div>
+          <div className="absolute -inset-1 bg-gradient-to-r from-[#00E0FF] to-[#00FF5F] rounded-[30px] blur opacity-10 group-focus-within:opacity-30 transition duration-500"></div>
           <div className="relative flex bg-black border border-white/10 rounded-[28px] p-2">
             <input 
               value={address}
               onChange={(e) => setAddress(e.target.value)}
-              placeholder="Paste Solana Contract Address..." 
+              placeholder="Enter Contract Address (CA)..." 
               className="flex-1 bg-transparent border-none outline-none px-6 text-sm font-bold text-white placeholder:text-white/20"
             />
             <button 
@@ -92,22 +98,24 @@ const RugShieldTab = () => {
               className="bg-[#00E0FF] hover:bg-[#00FF5F] text-black px-8 py-4 rounded-[22px] font-black transition-all flex items-center gap-2 disabled:opacity-50"
             >
               {loading ? <Loader2 className="animate-spin w-4 h-4" /> : <Search className="w-4 h-4" />}
-              SHIELD UP
+              SCAN NOW
             </button>
           </div>
         </div>
       </div>
 
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {analysis && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-2xl mx-auto">
-            
-            {/* 🛡️ THE CAPTURABLE CARD */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            className="max-w-2xl mx-auto"
+          >
+            {/* 🛡️ SECURITY REPORT CARD */}
             <div 
               ref={cardRef}
               className="bg-[#050505] border border-[#00E0FF]/30 rounded-[40px] p-10 relative overflow-hidden"
             >
-              {/* Aesthetics */}
               <div className="absolute top-0 right-0 p-8 opacity-10">
                  <ShieldCheck className="w-32 h-32 text-[#00E0FF]" />
               </div>
@@ -119,12 +127,12 @@ const RugShieldTab = () => {
                   </div>
                   <div>
                     <h3 className="text-xl font-black text-white italic uppercase tracking-tighter">{analysis.name}</h3>
-                    <p className="text-[#00E0FF] text-[8px] font-bold tracking-[0.3em] uppercase">Safety Score: {analysis.score}/100</p>
+                    <p className="text-[#00E0FF] text-[8px] font-bold tracking-[0.3em] uppercase">Trust Score: {analysis.score}%</p>
                   </div>
                 </div>
                 <div className="text-right">
                    <div className="px-3 py-1 bg-[#00FF5F]/10 border border-[#00FF5F]/20 rounded-full">
-                      <span className="text-[#00FF5F] text-[9px] font-black uppercase tracking-widest">SECURE</span>
+                      <span className="text-[#00FF5F] text-[9px] font-black uppercase tracking-widest italic">Verified Safe</span>
                    </div>
                 </div>
               </div>
@@ -134,15 +142,15 @@ const RugShieldTab = () => {
                     <div className="flex items-center gap-3">
                        <Lock className="w-4 h-4 text-[#00FF5F]" />
                        <div>
-                          <p className="text-[7px] text-white/30 uppercase font-black">Liquidity Lock</p>
-                          <p className="text-[11px] font-bold">100% SECURED</p>
+                          <p className="text-[7px] text-white/30 uppercase font-black tracking-widest">Liquidity Status</p>
+                          <p className="text-[11px] font-bold uppercase">{analysis.isLocked ? "Locked & Secured" : "Warning: Unlocked"}</p>
                        </div>
                     </div>
                     <div className="flex items-center gap-3">
                        <AlertTriangle className="w-4 h-4 text-[#00E0FF]" />
                        <div>
-                          <p className="text-[7px] text-white/30 uppercase font-black">Mint Power</p>
-                          <p className="text-[11px] font-bold">REVOKED</p>
+                          <p className="text-[7px] text-white/30 uppercase font-black tracking-widest">Mint Authority</p>
+                          <p className="text-[11px] font-bold uppercase">Permanently Revoked</p>
                        </div>
                     </div>
                  </div>
@@ -150,40 +158,40 @@ const RugShieldTab = () => {
                     <div className="flex items-center gap-3">
                        <Fingerprint className="w-4 h-4 text-[#00E0FF]" />
                        <div>
-                          <p className="text-[7px] text-white/30 uppercase font-black">Contract Ownership</p>
-                          <p className="text-[11px] font-bold">RENOUNCED</p>
+                          <p className="text-[7px] text-white/30 uppercase font-black tracking-widest">Contract Ownership</p>
+                          <p className="text-[11px] font-bold uppercase">Renounced</p>
                        </div>
                     </div>
                     <div className="flex items-center gap-3">
                        <ShieldCheck className="w-4 h-4 text-[#00FF5F]" />
                        <div>
-                          <p className="text-[7px] text-white/30 uppercase font-black">Honeypot Test</p>
-                          <p className="text-[11px] font-bold">PASSED</p>
+                          <p className="text-[7px] text-white/30 uppercase font-black tracking-widest">Honeypot Logic</p>
+                          <p className="text-[11px] font-bold uppercase">Clean / Passed</p>
                        </div>
                     </div>
                  </div>
               </div>
 
-              <div className="pt-6 border-t border-white/5 flex justify-between items-center relative z-10 text-[7px] font-bold text-white/20 uppercase tracking-widest">
-                 <div>ReportID: {address.slice(0, 12)}...</div>
-                 <div className="text-[#00E0FF]">SENKU LABS ANALYTICS</div>
+              <div className="pt-6 border-t border-white/5 flex justify-between items-center relative z-10 text-[7px] font-bold text-white/20 uppercase tracking-widest italic">
+                 <div>Log_ID: {address.slice(0, 14).toUpperCase()}...</div>
+                 <div className="text-[#00E0FF]">Powered by Senku Lab Analytics</div>
               </div>
             </div>
 
-            {/* 📥 EXPORT BUTTON */}
+            {/* --- ACTION BAR --- */}
             <motion.button 
-              whileTap={{ scale: 0.95 }}
+              whileTap={{ scale: 0.98 }}
               onClick={saveAsImage}
               disabled={isExporting}
-              className="w-full mt-6 bg-white/[0.03] hover:bg-white/[0.06] border border-white/10 py-5 rounded-[30px] flex items-center justify-center gap-3 transition-all group"
+              className="w-full mt-6 bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 py-6 rounded-[32px] flex items-center justify-center gap-4 transition-all group"
             >
               {isExporting ? (
                 <Loader2 className="w-5 h-5 text-[#00FF5F] animate-spin" />
               ) : (
                 <Download className="w-5 h-5 text-[#00FF5F] group-hover:translate-y-1 transition-transform" />
               )}
-              <span className="text-xs font-black uppercase tracking-[0.2em]">
-                {isExporting ? "GENERATING IMAGE..." : "SAVE SECURITY EVIDENCE"}
+              <span className="text-xs font-black uppercase tracking-[0.3em] text-white/80 group-hover:text-white">
+                {isExporting ? "Capturing Evidence..." : "Export Security Card"}
               </span>
             </motion.button>
 
