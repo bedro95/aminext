@@ -2,91 +2,147 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Rocket, Target, Zap, Coins, Lock } from 'lucide-react';
+import { 
+  Rocket, 
+  Target, 
+  Zap, 
+  Coins, 
+  Lock, 
+  ChevronRight, 
+  FlaskConical 
+} from 'lucide-react';
 
-const roadmapData = [
+/**
+ * Roadmap Data Structure
+ * Engineered to include Token-Gated milestones and futuristic development phases.
+ */
+const ROADMAP_STEPS = [
   { 
-    phase: "Phase 1", 
-    title: "Foundation", 
-    status: "Completed", 
+    phase: "PHASE 01", 
+    title: "Neural Foundation", 
+    status: "STABLE", 
     icon: Rocket, 
-    color: "#00FF5F",
-    desc: "Core Neural Interface and RugShield Security Audit deployment." 
+    color: "#00FF5F", // Neon Green
+    description: "Deployment of the core Senku Neural Interface and RugShield audit protocols for Solana smart contracts." 
   },
   { 
-    phase: "Phase 2", 
-    title: "Neural Expansion", 
-    status: "In Progress", 
+    phase: "PHASE 02", 
+    title: "Intelligence Expansion", 
+    status: "SYNCING", 
     icon: Target, 
-    color: "#00E0FF",
-    desc: "Whale Radar integration and social sentiment AI analysis."
+    color: "#00E0FF", // Neon Blue
+    description: "Integration of Whale Radar and social sentiment AI engines to track market manipulation in real-time."
   },
   { 
-    phase: "Phase 3", 
+    phase: "PHASE 03", 
     title: "Token Genesis", 
-    status: "Upcoming", 
+    status: "UPCOMING", 
     icon: Coins, 
-    color: "#fbbf24",
-    desc: "Launch of $SENKU token and integration of Token-Gated premium features." 
+    color: "#fbbf24", // Gold/Amber
+    description: "Launch of $SENKU Utility Token. Implementing Token-Gated access for high-tier analytics and private nodes." 
   },
   { 
-    phase: "Phase 4", 
-    title: "Ecosystem Utility", 
-    status: "Concept", 
+    phase: "PHASE 04", 
+    title: "The Singularity", 
+    status: "ENCRYPTED", 
     icon: Lock, 
-    color: "#FFFFFF",
-    desc: "Staking nodes and DAO governance for protocol upgrades." 
+    color: "#FFFFFF", 
+    description: "Transitioning to a decentralized governance (DAO) where $SENKU holders dictate the laboratory's evolution." 
   }
 ];
 
 const RoadmapTab = () => {
   return (
-    <div className="w-full max-w-2xl mx-auto p-6 space-y-8 font-mono">
-      <div className="text-center mb-12">
-        <h2 className="text-2xl font-black text-white uppercase tracking-[0.3em]">
-          Senku <span className="text-[#00FF5F]">Protocols</span>
-        </h2>
-        <p className="text-[10px] text-white/30 mt-2 uppercase tracking-widest italic">Evolutionary Roadmap 2026</p>
-      </div>
+    <div className="w-full max-w-3xl mx-auto py-10 px-6 font-mono selection:bg-[#00FF5F]/30">
+      
+      {/* SECTION HEADER */}
+      <header className="text-center mb-16 space-y-2">
+        <motion.div 
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex justify-center items-center gap-3 mb-4"
+        >
+          <FlaskConical className="w-6 h-6 text-[#00FF5F] animate-pulse" />
+          <h2 className="text-3xl font-black text-white uppercase tracking-[0.4em]">
+            Evolution <span className="text-[#00FF5F]">Map</span>
+          </h2>
+        </motion.div>
+        <p className="text-[10px] text-white/40 uppercase tracking-[0.2em] font-bold">
+          Strategic trajectory for the Senku Neural Protocol
+        </p>
+      </header>
 
-      <div className="relative border-l-2 border-[#00FF5F]/20 ml-4 space-y-12">
-        {roadmapData.map((item, index) => (
+      {/* ROADMAP TIMELINE */}
+      <div className="relative border-l border-white/10 ml-6 space-y-8">
+        {ROADMAP_STEPS.map((step, index) => (
           <motion.div 
             key={index}
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
+            transition={{ delay: index * 0.1 }}
             viewport={{ once: true }}
-            className="relative pl-10"
+            className="relative pl-12 group"
           >
-            {/* Glow Point */}
-            <div className="absolute -left-[13px] top-0 w-6 h-6 rounded-full bg-black border-2 border-[#00FF5F] flex items-center justify-center shadow-[0_0_20px_rgba(0,255,95,0.4)]">
-               <item.icon className="w-3 h-3" style={{ color: item.color }} />
+            {/* NODE POINT */}
+            <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-black border border-white/20 flex items-center justify-center group-hover:border-[#00FF5F] transition-colors duration-500 shadow-[0_0_15px_rgba(255,255,255,0.05)]">
+               <div className="w-1.5 h-1.5 rounded-full bg-white/20 group-hover:bg-[#00FF5F] group-hover:shadow-[0_0_10px_#00FF5F] transition-all" />
             </div>
 
-            <div className="bg-[#0A0A0A]/80 border border-white/5 p-6 rounded-[30px] backdrop-blur-3xl hover:border-[#00FF5F]/30 transition-all group">
-              <div className="flex justify-between items-start mb-2">
-                <span className="text-[10px] font-black tracking-[0.2em]" style={{ color: item.color }}>{item.phase}</span>
-                <span className="text-[8px] bg-white/5 px-2 py-1 rounded-md text-white/40 uppercase">{item.status}</span>
-              </div>
-              <h3 className="text-xl font-black text-white uppercase group-hover:text-[#00FF5F] transition-colors">{item.title}</h3>
-              <p className="text-white/40 text-[10px] mt-3 leading-relaxed uppercase tracking-tighter">
-                {item.desc}
-              </p>
+            {/* CONTENT CARD */}
+            <div className="bg-[#0A0A0A]/60 border border-white/5 p-8 rounded-[35px] backdrop-blur-2xl hover:bg-black/80 hover:border-[#00FF5F]/20 transition-all duration-500 relative overflow-hidden">
               
-              {/* Token-Utility Indicator for Phase 3 & 4 */}
-              {index >= 2 && (
-                <div className="mt-4 pt-4 border-t border-white/5 flex items-center gap-2">
-                  <Zap className="w-3 h-3 text-[#00FF5F]" />
-                  <span className="text-[8px] text-[#00FF5F] font-bold uppercase tracking-widest italic">Powered by $SENKU</span>
+              {/* BACKDROP GLOW */}
+              <div className="absolute top-0 right-0 p-4 opacity-5">
+                <step.icon className="w-24 h-24" style={{ color: step.color }} />
+              </div>
+
+              <div className="relative z-10">
+                <div className="flex justify-between items-center mb-4">
+                  <div className="flex items-center gap-3">
+                    <span className="text-[10px] font-black tracking-widest px-3 py-1 rounded-full bg-white/5" style={{ color: step.color }}>
+                      {step.phase}
+                    </span>
+                    <ChevronRight className="w-3 h-3 text-white/20" />
+                    <span className="text-[8px] font-bold text-white/30 tracking-widest uppercase">
+                      Status: {step.status}
+                    </span>
+                  </div>
+                  <step.icon className="w-5 h-5 opacity-50" style={{ color: step.color }} />
                 </div>
-              )}
+
+                <h3 className="text-xl font-black text-white uppercase tracking-tight mb-3 group-hover:translate-x-1 transition-transform">
+                  {step.title}
+                </h3>
+                
+                <p className="text-[11px] text-white/50 leading-relaxed uppercase tracking-wide max-w-lg">
+                  {step.description}
+                </p>
+
+                {/* TOKEN UTILITY INDICATOR (Phases 3 & 4) */}
+                {index >= 2 && (
+                  <div className="mt-6 flex items-center gap-2 border-t border-white/5 pt-4">
+                    <Zap className="w-3 h-3 text-[#00FF5F]" />
+                    <span className="text-[9px] text-[#00FF5F] font-black uppercase tracking-widest italic">
+                      Requires $SENKU Neural Authorization
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
           </motion.div>
         ))}
       </div>
+
+      {/* FOOTER NOTE */}
+      <footer className="mt-20 text-center">
+        <div className="inline-block px-6 py-3 bg-white/5 border border-white/10 rounded-2xl">
+          <p className="text-[9px] text-white/30 uppercase font-bold tracking-[0.2em]">
+            Protocol Version: 2.5.0-LABS | Node_Active: True
+          </p>
+        </div>
+      </footer>
     </div>
   );
 };
 
 export default RoadmapTab;
-
