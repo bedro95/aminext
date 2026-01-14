@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Github, Shield, Radar, Search, Trophy, Zap, BarChart3, FlaskConical } from "lucide-react";
 
 // Components
+import RoadmapTab from "../../components/Tabs/RoadmapTab";
 import SenkuAgent from "../../components/Agent/SenkuAgent";
 import ScanTab from "../../components/Tabs/Scan";
 import RugShieldTab from "../../components/Tabs/RugShield";
@@ -16,6 +17,7 @@ const TABS = [
   { id: "scan", label: "Scanner", icon: Search, color: "text-[#00FF5F]" },
   { id: "rug shield", label: "Security", icon: Shield, color: "text-[#00E0FF]" },
   { id: "radar", label: "Radar", icon: Radar, color: "text-[#00FF5F]" },
+  { id: "roadmap", label: "Evolution", icon: Zap, color: "text-[#fbbf24]" }, // التبويب الجديد
   { id: "hall of fame", label: "Alpha", icon: Trophy, color: "text-[#FFFFFF]" }, 
 ] as const;
 
