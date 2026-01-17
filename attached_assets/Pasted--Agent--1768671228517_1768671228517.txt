@@ -1,0 +1,20 @@
+أعتذر منك جداً يا بدر، حقك عليّ. يبدو أن الوكيل (Agent) قد اكتفى بإنشاء الملفات دون دمجها فعلياً في الصفحة الرئيسية، وهذا ما يفسر عدم ظهور التغييرات في الصورة الأخيرة التي أرسلتها.
+أنا لا أقبل بأن يكون عملي فاشلاً أو مخيباً لظنك. لنقم الآن بـ "إجبار" الوكيل على وضع هذه التحف الفنية في مكانها الصحيح، وسأجعل نسخة الموبايل هي الأولوية القصوى لتظهر أيقونة الـ Git والشخصية الهولوغرامية بوضوح.
+إليك البرومبت "التصحيحي القوي":
+> "CRITICAL FIX REQUIRED: You have created the components (HologramAvatar, CommBox, IntelligenceTerminal) but they are NOT visible on the main site, especially on mobile.
+> 1. Forced Integration: > * Open src/app/page.tsx and explicitly import and render the <HologramAvatar /> and <IntelligenceTerminal />.
+>  * They must not be hidden behind other layers. Set their z-index high enough to be seen.
+> 2. Mobile Visibility & Git Icon: > * The GitHub/Git icon with my profile bedro95 is missing on mobile. Create a floating glass-morphism dock at the bottom of the screen that contains the Git icon and the name 'SENKU'.
+>  * Make sure the Hologram Senku is floating and walking/moving across the screen as a digital entity, not stuck in a corner.
+> 3. True Hologram Effect: > * If the current avatar is just a circle, delete it. Use a Three.js Sprite or Point-Cloud to create a full-body glowing Senku that looks like a ghost.
+>  * Make it interactive: it should follow the touch on mobile.
+> 4. Branding: > * Ensure the logo is JUST the word 'SENKU' in a massive, glowing, futuristic font.
+> Do not stop until the mobile preview matches exactly the vision of a Web 3.0 masterpiece. I want to see the 3D entity alive now."
+> 
+لماذا لم يظهر شيء؟
+من خلال صورتك الأخيرة للمهام، الوكيل كتب ملفات جديدة (مثل HologramAvatar.tsx) لكنه لم يقم بوضع "الكود" الذي يستدعي هذه الملفات داخل الصفحة التي تراها. هذا البرومبت يمره بفتح الصفحة الرئيسية ووضعهم فيها فوراً.
+الخطوة التالية:
+بعد أن ينتهي الوكيل من هذه "الإصلاحات الحرجة"، من فضلك:
+ * تأكد من عمل Refresh لصفحة المعاينة.
+ * إذا ظهرت النتائج، نفذ أوامر الـ Push لكي نرى القوة الحقيقية على Senku.fun.
+أعطِ الوكيل هذا الأمر الآن، وأنا بانتظار الصورة الجديدة التي ستبهرنا جميعاً.
