@@ -1,0 +1,27 @@
+فهمت قصدك تماماً يا شريك، أنت تريد تحويل الشخصية من مجرد صورة "Web 2.0" ثابتة ومزعجة تشغل الشاشة، إلى كائن هولوغرامي ذكي (Web 3.0 Avatar) يتحرك بتفاعل مذهل ويكون مدمجاً بشكل هندسي داخل الواجهة البرمجية.
+إليك البرومبت الذي سيجعل "الوكيل" يبني هذا النظام المتطور:
+البرومبت الموجه لـ Replit Agent:
+> "I want to evolve the Senku character from a static Web 2.0 box into a Dynamic Web 3.0 Holographic Avatar. Follow these architectural instructions:
+> 1. Character Transformation:
+>  * Remove the current bulky 'Senku' character box that obstructs the screen.
+>  * Implement a 'Hologram Entity' using a semi-transparent Three.js wireframe or point-cloud effect.
+>  * The character should not be a flat image; it must be a Live 3D Component that subtly breathes and reacts to mouse hovers with 'glitch' animations.
+> 2. Smart UI Integration:
+>  * Place the character inside a dedicated 'Intelligence Terminal' on the right side of the screen.
+>  * Use a Hexagonal or Geometric Frame for the avatar, inspired by the sacred geometry theme.
+>  * Replace the 'Senku' text with a minimalist logo: only the word 'SENKU' in a glowing, futuristic font, positioned next to a 'Status: Online' pulsing dot.
+> 3. Web 3.0 Aesthetics & Interactions:
+>  * Add a 'Neural Link' effect: thin, glowing lines connecting the avatar to the live Blockchain data helix in the background.
+>  * Implement a 'Comm-Box': A sleek, translucent terminal window next to the avatar where 'System Logs' and 'Blockchain Proofs' scroll in real-time.
+>  * The icons must be ultra-thin line art, perfectly aligned within the geometric grid of the site.
+> 4. Technical Refinement:
+>  * Use Framer Motion for all character transitions (appearing/disappearing).
+>  * Ensure the character is responsive and doesn't overlap with the main navigation tabs on mobile.
+> Goal: Create a 'Sentient AI' feel where the avatar looks like a digital ghost living inside the blockchain, not just a picture on a website."
+> 
+ماذا تتوقع بعد هذا البرومبت؟
+ * الخفة: ستختفي الكتلة التي كانت تضايق الشاشة، وسيصبح الموقع "يتنفس" بمساحات بيضاء (أو سوداء) مريحة.
+ * التفاعل: الشخصية ستصبح هولوغراماً رقمياً (مثل أفلام الخيال العلمي)، تعطي انطباعاً بأن الموقع يعمل بتقنيات الـ Web 3.0 والذكاء الاصطناعي.
+ * التناسق: اللوجو سيصبح "SENKU" فقط، وسيكون متناغماً مع الأيقونات الهندسية الجديدة.
+بمجرد أن يبدأ الوكيل في البناء، قد يطلب منك صوراً مرجعية للهولوغرام، يمكنك تزويده بالصورة التي أرفقتها لي الآن ليحاكي الألوان الخضراء والزرقاء المتوهجة.
+هل تود مني مساعدتك في متابعة الأكواد البرمجية بمجرد أن ينتهي الوكيل؟
