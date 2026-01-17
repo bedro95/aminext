@@ -2,17 +2,20 @@
 
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Github, Shield, Radar, Search, Trophy, Zap, BarChart3, FlaskConical, Map, Activity } from "lucide-react";
+import { 
+  Github, Shield, Radar, Search, Trophy, 
+  Zap, BarChart3, FlaskConical, Map, Activity 
+} from "lucide-react";
 
-// Components
-import Terminal from "../components/Terminal";
-import RoadmapTab from "../components/Tabs/RoadmapTab";
-import SenkuAgent from "../components/Agent/SenkuAgent";
-import ScanTab from "../components/Tabs/Scan";
-import RugShieldTab from "../components/Tabs/RugShield";
-import RadarTab from "../components/Tabs/Radar";
-import HallOfFameTab from "../components/Tabs/HallOfFame";
-import { useAudioController } from "../hooks/useAudio";
+// ✅ ROOT-LEVEL IMPORTS (Navigating from src/app to Root) [cite: 2026-01-10]
+import Terminal from "../../components/Terminal";
+import RoadmapTab from "../../components/Tabs/RoadmapTab";
+import SenkuAgent from "../../components/Agent/SenkuAgent";
+import ScanTab from "../../components/Tabs/Scan";
+import RugShieldTab from "../../components/Tabs/RugShield";
+import RadarTab from "../../components/Tabs/Radar";
+import HallOfFameTab from "../../components/Tabs/HallOfFame";
+import { useAudioController } from "../../hooks/useAudio";
 
 const TABS = [
   { id: "scan", label: "Scanner", icon: Search, color: "text-[#00FF5F]" },
@@ -25,6 +28,7 @@ const TABS = [
 export default function SenkuUltraPage() {
   const [activeTab, setActiveTab] = useState<(typeof TABS)[number]["id"]>("scan");
   
+  // Initialize Neural Audio Interface
   useAudioController();
 
   const renderTabContent = useMemo(() => {
@@ -39,24 +43,25 @@ export default function SenkuUltraPage() {
   }, [activeTab]);
 
   return (
-    <div className="min-h-screen bg-[#020202] text-white flex flex-col items-center selection:bg-[#00FF5F]/30 overflow-x-hidden">
+    <div className="min-h-screen bg-[#020202] text-white flex flex-col items-center selection:bg-[#00FF5F]/30 overflow-x-hidden font-sans">
       
-      {/* 🌌 ENHANCED DYNAMIC BACKGROUND - The Empire Vibe */}
+      {/* 🌌 NEURAL BACKDROP */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#001a0a_0%,#000_100%)] opacity-90" />
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-50 contrast-150"></div>
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 brightness-50 contrast-150"></div>
       </div>
 
       <div className="relative z-10 w-full max-w-7xl min-h-screen flex flex-col pt-4 md:pt-6 pb-32 md:pb-20 px-4">
         
-        <div className="w-full bg-black/40 border border-[#00FF5F]/10 rounded-[35px] md:rounded-[45px] backdrop-blur-3xl overflow-hidden shadow-[0_0_80px_rgba(0,255,95,0.05)] flex flex-col">
+        {/* MAIN TERMINAL CONTAINER */}
+        <div className="w-full bg-black/40 border border-[#00FF5F]/10 rounded-[35px] md:rounded-[45px] backdrop-blur-3xl overflow-hidden shadow-[0_0_80px_rgba(0,0,0,0.5)] flex flex-col">
           
-          {/* 🧪 HEADER - SCIENTIFIC INTELLIGENCE BRANDING */}
+          {/* 🧪 SYSTEM HEADER */}
           <div className="w-full px-5 md:px-10 py-6 md:py-8 flex justify-between items-center border-b border-white/5 bg-gradient-to-r from-[#00FF5F]/[0.02] to-transparent">
             <div className="flex items-center gap-4 md:gap-6">
               <div className="relative group">
                 <div className="absolute -inset-1 bg-gradient-to-r from-[#00FF5F] to-[#00E0FF] rounded-xl md:rounded-2xl blur-md opacity-40 animate-pulse group-hover:opacity-100 transition duration-1000"></div>
-                <div className="relative w-11 h-11 md:w-14 md:h-14 bg-black border border-[#00FF5F]/30 rounded-xl md:rounded-2xl flex items-center justify-center overflow-hidden shadow-[inset_0_0_15px_rgba(0,255,95,0.4)]">
+                <div className="relative w-11 h-11 md:w-14 md:h-14 bg-black border border-[#00FF5F]/30 rounded-xl md:rounded-2xl flex items-center justify-center overflow-hidden">
                   <span className="text-2xl md:text-3xl font-black text-[#00FF5F] drop-shadow-[0_0_10px_rgba(0,255,95,0.8)]">S</span>
                   <FlaskConical className="absolute bottom-1 right-1 w-3 h-3 text-[#00E0FF] opacity-50" />
                 </div>
@@ -68,20 +73,16 @@ export default function SenkuUltraPage() {
                 </h1>
                 <div className="flex items-center gap-2">
                    <Activity className="w-2 h-2 text-[#00FF5F] animate-bounce" />
-                   <span className="text-[7px] md:text-[8px] font-mono tracking-[0.4em] text-[#00FF5F]/60 uppercase">Neural Engine Active</span>
+                   <span className="text-[7px] md:text-[8px] font-mono tracking-[0.4em] text-[#00FF5F]/60 uppercase">System Integrity Nominal</span>
                 </div>
               </div>
             </div>
 
             <div className="hidden sm:flex items-center gap-4">
-               <div className="px-4 py-2 bg-[#00FF5F]/5 border border-[#00FF5F]/10 rounded-xl flex items-center gap-3">
-                  <BarChart3 className="w-3 h-3 text-[#00FF5F]" />
-                  <span className="text-[9px] font-black text-white/60 tracking-widest uppercase italic">Network_Stable</span>
-               </div>
                <motion.a 
                 whileHover={{ scale: 1.1, rotate: 5 }}
                 href="https://github.com/bedro95"
-                className="p-3 bg-white/5 border border-white/10 rounded-xl hover:text-[#00FF5F] transition-all"
+                className="p-3 bg-white/5 border border-white/10 rounded-xl hover:text-[#00FF5F] transition-all text-white"
                >
                 <Github className="w-5 h-5" />
                </motion.a>
@@ -90,8 +91,8 @@ export default function SenkuUltraPage() {
 
           <div className="flex flex-col md:flex-row min-h-[60vh] md:min-h-[75vh]">
             
-            {/* NAVIGATION (Global Standards) */}
-            <nav className="fixed bottom-6 left-6 right-6 md:relative md:bottom-auto md:left-auto md:right-auto md:w-32 border md:border-r border-white/10 md:border-white/5 flex md:flex-col items-center justify-around md:justify-center gap-1 md:gap-5 p-3 md:p-6 bg-black/95 md:bg-black/40 backdrop-blur-3xl rounded-[28px] md:rounded-none z-[200] shadow-[0_-10px_40px_rgba(0,0,0,0.8)]">
+            {/* 🛡️ NAVIGATION INTERFACE */}
+            <nav className="fixed bottom-6 left-6 right-6 md:relative md:w-32 border md:border-r border-white/10 flex md:flex-col items-center justify-around md:justify-center gap-1 md:gap-5 p-3 md:p-6 bg-black/90 md:bg-transparent backdrop-blur-3xl rounded-[28px] md:rounded-none z-[200]">
               {TABS.map((tab) => {
                 const Icon = tab.icon;
                 const isActive = activeTab === tab.id;
@@ -105,7 +106,7 @@ export default function SenkuUltraPage() {
                     {isActive && (
                       <motion.div 
                         layoutId="navIndicator" 
-                        className="absolute -bottom-1 md:-right-[33px] md:top-1/2 md:-translate-y-1/2 w-6 h-[3px] md:w-1 md:h-12 bg-[#00FF5F] rounded-full shadow-[0_0_20px_#00FF5F]"
+                        className="absolute -bottom-1 md:-right-[33px] md:top-1/2 md:-translate-y-1/2 w-6 h-[3px] md:w-1 md:h-12 bg-[#00FF5F] rounded-full shadow-[0_0_15px_#00FF5F]"
                       />
                     )}
                   </button>
@@ -113,15 +114,15 @@ export default function SenkuUltraPage() {
               })}
             </nav>
 
-            {/* MAIN CONTENT AREA */}
+            {/* ⚡ ACTIVE CONTENT NODE */}
             <main className="flex-1 relative p-4 md:p-12 pb-56 md:pb-12 overflow-y-auto overflow-x-hidden scroll-smooth">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeTab}
-                  initial={{ opacity: 0, scale: 0.98 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 1.02 }}
-                  transition={{ duration: 0.4, ease: "easeOut" }}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 10 }}
+                  transition={{ duration: 0.3 }}
                   className="w-full h-full"
                 >
                   {renderTabContent}
@@ -130,14 +131,13 @@ export default function SenkuUltraPage() {
             </main>
           </div>
 
-          {/* FOOTER - THE TRUST SIGNALS */}
+          {/* 📡 SYSTEM FOOTER */}
           <footer className="hidden md:flex w-full px-10 py-5 justify-between items-center bg-black/60 border-t border-white/5 text-[10px] font-mono tracking-widest text-white/20 uppercase italic">
             <div className="flex items-center gap-6">
-              <span className="flex items-center gap-2 text-[#00FF5F]"><div className="w-1.5 h-1.5 rounded-full bg-[#00FF5F] animate-ping" /> Connection_Encrypted</span>
-              <span>Uptime: 99.99%</span>
-              <span className="text-white/40 italic">Dev: @bedro95</span>
+              <span className="flex items-center gap-2 text-[#00FF5F]"><div className="w-1.5 h-1.5 rounded-full bg-[#00FF5F] animate-ping" /> Connection_Secure</span>
+              <span className="text-white/40 italic">Operator: Bader Alkorgli</span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 text-white/40">
               <Zap className="w-3 h-3 text-[#fbbf24]" />
               Senku Lab v2.5.0-ALPHA
             </div>
@@ -145,14 +145,14 @@ export default function SenkuUltraPage() {
         </div>
       </div>
 
-      {/* 🚀 SENKU AGENT - THE SOUL OF THE EMPIRE */}
+      {/* 🚀 NEURAL AGENT INTERFACE */}
       <motion.div 
-        initial={{ opacity: 0, x: 50 }}
-        animate={{ opacity: 1, x: 0 }}
-        className="fixed bottom-28 right-2 md:bottom-10 md:right-10 z-[50] pointer-events-auto"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="fixed bottom-28 right-4 md:bottom-10 md:right-10 z-[50]"
       >
         <div className="relative group cursor-pointer">
-          <div className="absolute inset-0 bg-[#00FF5F]/5 blur-[100px] rounded-full scale-150 group-hover:bg-[#00FF5F]/20 transition-all duration-1000" />
+          <div className="absolute inset-0 bg-[#00FF5F]/5 blur-[60px] rounded-full group-hover:bg-[#00FF5F]/20 transition-all duration-1000" />
           <SenkuAgent activeTab={activeTab} />
         </div>
       </motion.div>
