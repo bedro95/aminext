@@ -1,19 +1,16 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: 'export',      // Essential for generating the 'out' folder for IPFS
   images: {
-    unoptimized: true,   // Required for GIF and PNG support on decentralized networks
+    unoptimized: true,
   },
-  trailingSlash: true,   // Optimizes URL routing within IPFS gateways
-  
-  // ✅ BYPASS BUILD ERRORS (Ensuring successful export) [cite: 2026-01-10]
+  trailingSlash: true,
   eslint: {
     ignoreDuringBuilds: true,
   },
   typescript: {
     ignoreBuildErrors: true,
-  }
+  },
 };
 
 export default nextConfig;
