@@ -22,7 +22,7 @@ export default function HologramAvatar() {
         {/* Hologram Core Image */}
         <div className="relative w-64 h-64 md:w-96 md:h-96">
           <img 
-            src="/senku.png" 
+            src="/senku.GIF" 
             alt="Senku Hologram"
             className="w-full h-full object-contain opacity-80 filter drop-shadow-[0_0_20px_rgba(0,255,204,0.5)]"
             style={{
