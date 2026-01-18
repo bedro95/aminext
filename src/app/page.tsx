@@ -119,6 +119,7 @@ export default function SenkuUltraPage() {
             <PriceTickerItem symbol="SOL" data={prices.SOL} />
             <PriceTickerItem symbol="JUP" data={prices.JUP} />
             <PriceTickerItem symbol="RAY" data={prices.RAY} />
+            <PriceTickerItem symbol="SEND" data={prices.SEND} />
           </div>
 
           <div className="w-full bg-black/60 border border-white/10 rounded-[45px] backdrop-blur-3xl overflow-hidden shadow-[0_0_150px_rgba(0,255,204,0.05)] flex flex-col">

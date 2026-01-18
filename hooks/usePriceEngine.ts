@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 
-const JUP_PRICE_API = "https://price.jup.ag/v4/price?ids=SOL,JUP,RAY,USDC";
+const JUP_PRICE_API = "https://price.jup.ag/v6/price?ids=SOL,JUP,RAY,SEND";
 
 export interface PriceData {
   price: number;
@@ -14,7 +14,7 @@ export function usePriceEngine() {
     SOL: { price: 0, trend: "stable" },
     JUP: { price: 0, trend: "stable" },
     RAY: { price: 0, trend: "stable" },
-    USDC: { price: 0, trend: "stable" },
+    SEND: { price: 0, trend: "stable" },
   });
   const [loading, setLoading] = useState(true);
 
@@ -26,7 +26,7 @@ export function usePriceEngine() {
         
         setPrices((prev) => {
           const newPrices: Record<string, PriceData> = {};
-          ["SOL", "JUP", "RAY", "USDC"].forEach((id) => {
+          ["SOL", "JUP", "RAY", "SEND"].forEach((id) => {
             const currentPrice = json.data[id]?.price || 0;
             const prevPrice = prev[id]?.price || 0;
             let trend: "up" | "down" | "stable" = "stable";
@@ -47,7 +47,7 @@ export function usePriceEngine() {
     };
 
     fetchPrices();
-    const interval = setInterval(fetchPrices, 20000);
+    const interval = setInterval(fetchPrices, 10000); // 10s auto-refresh
     return () => clearInterval(interval);
   }, []);
 

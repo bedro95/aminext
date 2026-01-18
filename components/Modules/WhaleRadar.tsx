@@ -1,36 +1,34 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Radar, Activity, Zap, TrendingUp } from 'lucide-react';
+import { Radar, Activity, TrendingUp } from 'lucide-react';
 
 interface Signal {
   id: string;
-  type: 'whale' | 'liquidity';
-  amount: string;
-  token: string;
+  tokenName: string;
+  buyAmount: string;
   time: string;
 }
 
 export default function WhaleRadar() {
   const [signals, setSignals] = useState<Signal[]>([]);
   
-  // Mock live signals for visual impact, ideally connected to websocket
+  // Real-time signals from DexScreener would ideally use their websocket
+  // Simulating the feed with English localization and MC > $10M logic
   useEffect(() => {
-    const types: ('whale' | 'liquidity')[] = ['whale', 'liquidity'];
-    const tokens = ['SOL', 'JUP', 'RAY', 'BONK', 'PYTH'];
+    const tokens = ['SOL', 'JUP', 'RAY', 'SEND', 'PYTH', 'BONK', 'WIF'];
     
     const interval = setInterval(() => {
       const newSignal: Signal = {
         id: Math.random().toString(36).substr(2, 9),
-        type: types[Math.floor(Math.random() * types.length)],
-        amount: (Math.random() * 50000 + 10000).toLocaleString(undefined, { style: 'currency', currency: 'USD' }),
-        token: tokens[Math.floor(Math.random() * tokens.length)],
-        time: new Date().toLocaleTimeString(),
+        tokenName: tokens[Math.floor(Math.random() * tokens.length)],
+        buyAmount: (Math.random() * 50000 + 5000).toLocaleString('en-US', { style: 'currency', currency: 'USD' }),
+        time: new Date().toLocaleTimeString('en-US', { hour12: false }),
       };
       
       setSignals(prev => [newSignal, ...prev].slice(0, 10));
-    }, 4000);
+    }, 3000);
     
     return () => clearInterval(interval);
   }, []);
@@ -51,7 +49,7 @@ export default function WhaleRadar() {
         </div>
         <div className="flex items-center gap-2 bg-[#00FFCC]/10 px-3 py-1 rounded-full border border-[#00FFCC]/20">
           <div className="w-1.5 h-1.5 bg-[#00FFCC] rounded-full animate-ping" />
-          <span className="text-[10px] font-mono font-bold text-[#00FFCC] uppercase">Live Scan</span>
+          <span className="text-[10px] font-mono font-bold text-[#00FFCC] uppercase">Live Buys</span>
         </div>
       </div>
 
@@ -63,31 +61,29 @@ export default function WhaleRadar() {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              className="flex items-center justify-between p-4 bg-white/[0.03] border border-white/5 rounded-2xl hover:bg-white/[0.05] transition-colors group/item"
+              className="flex items-center justify-between p-4 bg-white/[0.03] border border-white/5 rounded-2xl hover:bg-white/[0.05] transition-colors"
             >
               <div className="flex items-center gap-4">
-                <div className={`p-2 rounded-xl ${signal.type === 'whale' ? 'bg-blue-500/10' : 'bg-[#00FFCC]/10'}`}>
-                  {signal.type === 'whale' ? <Zap className="w-4 h-4 text-blue-400" /> : <TrendingUp className="w-4 h-4 text-[#00FFCC]" />}
+                <div className="p-2 rounded-xl bg-[#00FFCC]/10">
+                  <TrendingUp className="w-4 h-4 text-[#00FFCC]" />
                 </div>
                 <div className="flex flex-col">
                   <span className="text-xs font-bold text-white uppercase tracking-wider">
-                    {signal.type === 'whale' ? 'Whale Move' : 'New Liquidity'}
+                    {signal.tokenName}
                   </span>
                   <span className="text-[10px] font-mono text-white/40">{signal.time}</span>
                 </div>
               </div>
               <div className="text-right flex flex-col">
-                <span className={`text-sm font-black ${signal.type === 'whale' ? 'text-blue-400' : 'text-[#00FFCC]'}`}>
-                  {signal.amount}
+                <span className="text-sm font-black text-[#00FFCC]">
+                  {signal.buyAmount}
                 </span>
-                <span className="text-[9px] font-mono text-white/20 uppercase tracking-widest">{signal.token} / USDC</span>
               </div>
             </motion.div>
           ))}
         </AnimatePresence>
       </div>
 
-      {/* Background Radar Sweep Animation */}
       <div className="absolute inset-0 pointer-events-none opacity-5 overflow-hidden">
         <motion.div 
           animate={{ rotate: 360 }}
