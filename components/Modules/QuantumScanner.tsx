@@ -5,8 +5,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Loader2, ShieldCheck, Coins, Database, Activity } from 'lucide-react';
 import { Connection, PublicKey } from '@solana/web3.js';
 
-// Using a more reliable public RPC node
-const RPC_ENDPOINT = "https://api.mainnet-beta.solana.com";
+// Using a more reliable public RPC node with better rate limits
+const RPC_ENDPOINTS = [
+  "https://api.mainnet-beta.solana.com",
+  "https://solana-api.projectserum.com",
+  "https://rpc.ankr.com/solana"
+];
 
 interface TokenInfo {
   mint: string;
@@ -47,38 +51,49 @@ export default function QuantumScanner() {
       setProgress(prev => Math.min(prev + (Math.random() * 15), 90));
     }, 400);
 
-    try {
-      const connection = new Connection(RPC_ENDPOINT, 'confirmed');
-      const pubkey = new PublicKey(address);
-      
-      const [balance, tokenAccounts] = await Promise.all([
-        connection.getBalance(pubkey),
-        connection.getParsedTokenAccountsByOwner(pubkey, {
-          programId: new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"),
-        })
-      ]);
+    let lastError = '';
+    
+    // Try multiple RPCs to handle 403/Rate limits
+    for (const endpoint of RPC_ENDPOINTS) {
+      try {
+        const connection = new Connection(endpoint, 'confirmed');
+        const pubkey = new PublicKey(address);
+        
+        const [balance, tokenAccounts] = await Promise.all([
+          connection.getBalance(pubkey),
+          connection.getParsedTokenAccountsByOwner(pubkey, {
+            programId: new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"),
+          })
+        ]);
 
-      const solBalance = balance / 1e9;
-      const tokens: TokenInfo[] = tokenAccounts.value.map((acc: any) => ({
-        mint: acc.account.data.parsed.info.mint,
-        amount: acc.account.data.parsed.info.tokenAmount.uiAmount,
-        decimals: acc.account.data.parsed.info.tokenAmount.decimals,
-      })).filter(t => t.amount > 0);
+        const solBalance = balance / 1e9;
+        const tokens: TokenInfo[] = tokenAccounts.value.map((acc: any) => ({
+          mint: acc.account.data.parsed.info.mint,
+          amount: acc.account.data.parsed.info.tokenAmount.uiAmount,
+          decimals: acc.account.data.parsed.info.tokenAmount.decimals,
+        })).filter(t => t.amount > 0);
 
-      clearInterval(progressInterval);
-      setProgress(100);
-      
-      setTimeout(() => {
-        setResults({ balance: solBalance, tokens });
-        setIsScanning(false);
-      }, 500);
+        clearInterval(progressInterval);
+        setProgress(100);
+        
+        setTimeout(() => {
+          setResults({ balance: solBalance, tokens });
+          setIsScanning(false);
+        }, 500);
+        
+        return; // Success, exit the loop
 
-    } catch (err: any) {
-      clearInterval(progressInterval);
-      console.error('Scan Error:', err);
-      setError('Network Congestion: RPC limit reached. Retrying neural link...');
-      setIsScanning(false);
+      } catch (err: any) {
+        console.warn(`RPC Fail [${endpoint}]:`, err);
+        lastError = err.message || 'Connection Error';
+        continue; // Try next RPC
+      }
     }
+
+    // If all RPCs fail
+    clearInterval(progressInterval);
+    setError(`Access Forbidden: Global RPC congestion. Senku suggests retrying in 30s.`);
+    setIsScanning(false);
   };
 
   return (
