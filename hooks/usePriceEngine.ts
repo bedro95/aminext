@@ -2,39 +2,54 @@
 
 import { useState, useEffect } from "react";
 
-const JUP_PRICE_API = "https://api.jup.ag/price/v2?ids=";
+const JUP_PRICE_API = "https://price.jup.ag/v4/price?ids=SOL,JUP,RAY,USDC";
+
+export interface PriceData {
+  price: number;
+  trend: "up" | "down" | "stable";
+}
 
 export function usePriceEngine() {
-  const [prices, setPrices] = useState({
-    sol: 0,
-    jup: 0,
-    ray: 0
+  const [prices, setPrices] = useState<Record<string, PriceData>>({
+    SOL: { price: 0, trend: "stable" },
+    JUP: { price: 0, trend: "stable" },
+    RAY: { price: 0, trend: "stable" },
+    USDC: { price: 0, trend: "stable" },
   });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchPrices = async () => {
       try {
-        const solMint = "So11111111111111111111111111111111111111112";
-        const jupMint = "JUPyiwrB7vYmhcduj6CwLDJgfSotp96Z5H8Mv1YV69S";
-        const rayMint = "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R";
-        
-        const response = await fetch(`${JUP_PRICE_API}${solMint},${jupMint},${rayMint}`);
+        const response = await fetch(JUP_PRICE_API);
         const json = await response.json();
         
-        setPrices({
-          sol: parseFloat(json.data[solMint]?.price || "0"),
-          jup: parseFloat(json.data[jupMint]?.price || "0"),
-          ray: parseFloat(json.data[rayMint]?.price || "0")
+        setPrices((prev) => {
+          const newPrices: Record<string, PriceData> = {};
+          ["SOL", "JUP", "RAY", "USDC"].forEach((id) => {
+            const currentPrice = json.data[id]?.price || 0;
+            const prevPrice = prev[id]?.price || 0;
+            let trend: "up" | "down" | "stable" = "stable";
+            
+            if (prevPrice !== 0) {
+              if (currentPrice > prevPrice) trend = "up";
+              else if (currentPrice < prevPrice) trend = "down";
+            }
+            
+            newPrices[id] = { price: currentPrice, trend };
+          });
+          return newPrices;
         });
+        setLoading(false);
       } catch (e) {
         console.error("Price fetch error", e);
       }
     };
 
     fetchPrices();
-    const interval = setInterval(fetchPrices, 30000);
+    const interval = setInterval(fetchPrices, 20000);
     return () => clearInterval(interval);
   }, []);
 
-  return prices;
+  return { prices, loading };
 }

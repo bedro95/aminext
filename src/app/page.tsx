@@ -4,7 +4,7 @@ import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Github, Shield, Radar, Search, Trophy, 
-  Map, Activity, Flame
+  Map, Activity, Flame, TrendingUp, TrendingDown, Minus
 } from "lucide-react";
 
 import RoadmapTab from "../../components/Tabs/RoadmapTab";
@@ -33,10 +33,10 @@ const TABS = [
 ] as const;
 
 export default function SenkuUltraPage() {
+  const { prices, loading } = usePriceEngine();
   const [activeTab, setActiveTab] = useState<(typeof TABS)[number]["id"]>("scan");
   const [hasEntered, setHasEntered] = useState(false);
   const [solMetrics, setSolMetrics] = useState<any>(null);
-  const prices = usePriceEngine();
   
   useAudioController();
 
@@ -60,6 +60,27 @@ export default function SenkuUltraPage() {
       default: return <ScanTab />;
     }
   }, [activeTab]);
+
+  const PriceTickerItem = ({ symbol, data }: { symbol: string; data: any }) => {
+    const Icon = data.trend === "up" ? TrendingUp : data.trend === "down" ? TrendingDown : Minus;
+    const colorClass = data.trend === "up" ? "text-green-400" : data.trend === "down" ? "text-red-400" : "text-[#00FFCC]";
+    
+    return (
+      <div className="flex items-center gap-2 border-l border-white/10 pl-6">
+        <span className="text-white/40">{symbol}:</span>
+        {loading ? (
+          <span className="text-[#00FFCC] animate-pulse">Syncing...</span>
+        ) : (
+          <div className="flex items-center gap-1">
+            <span className={`${colorClass} font-bold drop-shadow-[0_0_5px_rgba(0,255,204,0.3)]`}>
+              ${data.price.toLocaleString(undefined, { minimumFractionDigits: symbol === "JUP" ? 4 : 2, maximumFractionDigits: symbol === "JUP" ? 4 : 2 })}
+            </span>
+            <Icon className={`w-3 h-3 ${colorClass}`} />
+          </div>
+        )}
+      </div>
+    );
+  };
 
   return (
     <>
@@ -86,8 +107,8 @@ export default function SenkuUltraPage() {
 
         <div className="relative z-10 w-full max-w-[1440px] min-h-screen flex flex-col pt-4 md:pt-6 pb-24 md:pb-10 px-4">
           
-          {/* 📊 SOLANA LIVE METRICS */}
-          <div className="w-full flex justify-between px-6 py-3 mb-6 glass-morphism rounded-full text-[10px] font-mono tracking-tighter uppercase text-white gap-6 border border-[#00FFCC]/20 shadow-[0_0_30px_rgba(0,255,204,0.1)] overflow-x-auto whitespace-nowrap">
+          {/* 📊 SOLANA LIVE METRICS & PRICE TICKER */}
+          <div className="w-full flex justify-between px-6 py-3 mb-6 glass-morphism rounded-full text-[10px] font-mono tracking-tighter uppercase text-white gap-6 border border-[#00FFCC]/20 shadow-[0_0_30px_rgba(0,255,204,0.1)] overflow-x-auto whitespace-nowrap scrollbar-hide">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-[#00FFCC] rounded-full animate-pulse" />
               SOL_TPS: <span className="text-[#00FFCC] font-bold">{solMetrics?.tps || '---'}</span>
@@ -95,15 +116,9 @@ export default function SenkuUltraPage() {
             <div className="flex items-center gap-2 border-l border-white/10 pl-6">
               EPOCH: <span className="text-[#00E0FF] font-bold">{solMetrics?.epoch || '---'}</span>
             </div>
-            <div className="flex items-center gap-2 border-l border-white/10 pl-6">
-              SOL: <span className="text-[#00FFCC] font-bold">${prices.sol.toFixed(2)}</span>
-            </div>
-            <div className="flex items-center gap-2 border-l border-white/10 pl-6">
-              JUP: <span className="text-[#00E0FF] font-bold">${prices.jup.toFixed(4)}</span>
-            </div>
-            <div className="flex items-center gap-2 border-l border-white/10 pl-6">
-              RAY: <span className="text-[#00FFCC] font-bold">${prices.ray.toFixed(2)}</span>
-            </div>
+            <PriceTickerItem symbol="SOL" data={prices.SOL} />
+            <PriceTickerItem symbol="JUP" data={prices.JUP} />
+            <PriceTickerItem symbol="RAY" data={prices.RAY} />
           </div>
 
           <div className="w-full bg-black/60 border border-white/10 rounded-[45px] backdrop-blur-3xl overflow-hidden shadow-[0_0_150px_rgba(0,255,204,0.05)] flex flex-col">
