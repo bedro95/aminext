@@ -4,10 +4,12 @@ import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Github, Shield, Radar, Search, Trophy, 
-  Map, Activity, Flame, TrendingUp, TrendingDown, Minus
+  Map, Activity, Flame, TrendingUp, TrendingDown, Minus, Info, Fingerprint
 } from "lucide-react";
 
-import RoadmapTab from "../../components/Tabs/RoadmapTab";
+import RoadmapSection from "../../components/Modules/RoadmapSection";
+import AboutSection from "../../components/Modules/AboutSection";
+import ScientificPassport from "../../components/Modules/ScientificPassport";
 import ScanTab from "../../components/Tabs/Scan";
 import RugShieldTab from "../../components/Tabs/RugShield";
 import RadarTab from "../../components/Tabs/Radar";
@@ -29,7 +31,8 @@ const TABS = [
   { id: "security", label: "Security", icon: Shield, color: "text-[#00E0FF]" },
   { id: "radar", label: "Radar", icon: Radar, color: "text-[#00FFCC]" },
   { id: "roadmap", label: "Roadmap", icon: Map, color: "text-[#fbbf24]" }, 
-  { id: "alpha", label: "Alpha", icon: Trophy, color: "text-[#FFFFFF]" }, 
+  { id: "passport", label: "ID Card", icon: Fingerprint, color: "text-[#00FFCC]" },
+  { id: "about", label: "About", icon: Info, color: "text-white" },
 ] as const;
 
 export default function SenkuUltraPage() {
@@ -55,8 +58,9 @@ export default function SenkuUltraPage() {
       case "scan": return <ScanTab />;
       case "security": return <RugShieldTab />;
       case "radar": return <RadarTab />;
-      case "roadmap": return <RoadmapTab />; 
-      case "alpha": return <HallOfFameTab />;
+      case "roadmap": return <RoadmapSection />; 
+      case "passport": return <div className="flex items-center justify-center h-full"><ScientificPassport /></div>;
+      case "about": return <AboutSection />;
       default: return <ScanTab />;
     }
   }, [activeTab]);
@@ -152,7 +156,7 @@ export default function SenkuUltraPage() {
             <div className="flex flex-col lg:flex-row min-h-[80vh]">
               
               {/* 🛡️ NAVIGATION */}
-              <nav className="hidden md:flex md:w-32 border-r border-white/10 flex-col items-center justify-center gap-12 p-8 bg-black/40">
+              <nav className="hidden md:flex md:w-32 border-r border-white/10 flex-col items-center justify-center gap-10 p-8 bg-black/40">
                 {TABS.map((tab) => {
                   const Icon = tab.icon;
                   const isActive = activeTab === tab.id;
