@@ -1,15 +1,13 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Github, Shield, Radar, Search, Trophy, 
-  Zap, BarChart3, FlaskConical, Map, Activity,
-  Cpu, Globe, Flame
+  Map, Activity, Flame, Menu, X
 } from "lucide-react";
 
 import RoadmapTab from "../../components/Tabs/RoadmapTab";
-import SenkuAgent from "../../components/Agent/SenkuAgent";
 import ScanTab from "../../components/Tabs/Scan";
 import RugShieldTab from "../../components/Tabs/RugShield";
 import RadarTab from "../../components/Tabs/Radar";
@@ -20,172 +18,190 @@ import { useCryptoData } from "../../hooks/useCryptoData";
 import DNAHelixBackground from "../../components/Visuals/DNAHelix";
 import DigitalDust from "../../components/Visuals/DigitalDust";
 import IntelligenceTerminal from "../../components/Visuals/IntelligenceTerminal";
+import HologramAvatar from "../../components/Visuals/HologramAvatar";
+import BlackHoleGateway from "../../components/Visuals/BlackHoleGateway";
+import QuantumScanner from "../../components/Modules/QuantumScanner";
+import { getSolanaMetrics } from "@/lib/solana-connection";
 
 const TABS = [
   { id: "scan", label: "Scanner", icon: Search, color: "text-[#00FFCC]" },
-  { id: "rug shield", label: "Security", icon: Shield, color: "text-[#00E0FF]" },
+  { id: "security", label: "Security", icon: Shield, color: "text-[#00E0FF]" },
   { id: "radar", label: "Radar", icon: Radar, color: "text-[#00FFCC]" },
   { id: "roadmap", label: "Roadmap", icon: Map, color: "text-[#fbbf24]" }, 
-  { id: "hall of fame", label: "Alpha", icon: Trophy, color: "text-[#FFFFFF]" }, 
+  { id: "alpha", label: "Alpha", icon: Trophy, color: "text-[#FFFFFF]" }, 
 ] as const;
 
 export default function SenkuUltraPage() {
   const [activeTab, setActiveTab] = useState<(typeof TABS)[number]["id"]>("scan");
+  const [hasEntered, setHasEntered] = useState(false);
+  const [solMetrics, setSolMetrics] = useState<any>(null);
   const { prices, gas } = useCryptoData();
   
   useAudioController();
 
+  useEffect(() => {
+    const fetchMetrics = async () => {
+      const metrics = await getSolanaMetrics();
+      if (metrics) setSolMetrics(metrics);
+    };
+    fetchMetrics();
+    const interval = setInterval(fetchMetrics, 10000);
+    return () => clearInterval(interval);
+  }, []);
+
   const renderTabContent = useMemo(() => {
     switch (activeTab) {
       case "scan": return <ScanTab />;
-      case "rug shield": return <RugShieldTab />;
+      case "security": return <RugShieldTab />;
       case "radar": return <RadarTab />;
       case "roadmap": return <RoadmapTab />; 
-      case "hall of fame": return <HallOfFameTab />;
+      case "alpha": return <HallOfFameTab />;
       default: return <ScanTab />;
     }
   }, [activeTab]);
 
   return (
-    <div className="min-h-screen bg-[#020202] text-white flex flex-col items-center selection:bg-[#00FFCC]/30 overflow-x-hidden font-sans">
-      
-      <DNAHelixBackground />
-      <DigitalDust />
+    <>
+      <AnimatePresence>
+        {!hasEntered && <BlackHoleGateway onEnter={() => setHasEntered(true)} />}
+      </AnimatePresence>
 
-      {/* SVG Filters for Liquid Effect */}
-      <svg className="hidden">
-        <defs>
-          <filter id="liquid">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
-            <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="liquid" />
-          </filter>
-        </defs>
-      </svg>
-
-      <div className="relative z-10 w-full max-w-7xl min-h-screen flex flex-col pt-4 md:pt-6 pb-32 md:pb-20 px-4">
+      <div className="min-h-screen bg-[#020202] text-white flex flex-col items-center selection:bg-[#00FFCC]/30 overflow-x-hidden font-sans">
         
-        {/* 📊 TRACKER */}
-        <div className="w-full flex justify-between px-6 py-2 mb-4 glass-morphism rounded-full text-[10px] font-mono tracking-tighter uppercase text-white/60 overflow-x-auto whitespace-nowrap gap-6 border border-[#00FFCC]/20 shadow-[0_0_20px_rgba(0,255,204,0.1)]">
-          <div className="flex items-center gap-2">
-            <div className="w-1.5 h-1.5 bg-[#00FFCC] rounded-full animate-pulse shadow-[0_0_10px_#00FFCC]" />
-            BTC: <span className="text-white">${prices.btc.toLocaleString()}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            ETH: <span className="text-white">${prices.eth.toLocaleString()}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            SOL: <span className="text-white">${prices.sol.toLocaleString()}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Flame className="w-3 h-3 text-orange-500" />
-            GAS: <span className="text-white">{gas} Gwei</span>
+        <DNAHelixBackground />
+        <DigitalDust />
+        <HologramAvatar />
+
+        {/* 🛸 MOBILE FLOATING DOCK */}
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[500] md:hidden">
+          <div className="glass-morphism px-6 py-3 rounded-full border border-white/20 flex items-center gap-6 shadow-[0_0_50px_rgba(0,255,204,0.2)]">
+            <h2 className="text-xl font-black italic tracking-tighter text-white">SENKU</h2>
+            <div className="w-px h-6 bg-white/20" />
+            <a href="https://github.com/bedro95" target="_blank" rel="noopener noreferrer" className="p-2 bg-black rounded-full border border-[#00FFCC]/30">
+              <Github className="w-5 h-5 text-[#00FFCC]" />
+            </a>
           </div>
         </div>
 
-        <div className="w-full bg-black/60 border border-white/10 rounded-[45px] backdrop-blur-3xl overflow-hidden shadow-[0_0_150px_rgba(0,255,204,0.05)] flex flex-col">
+        <div className="relative z-10 w-full max-w-[1440px] min-h-screen flex flex-col pt-4 md:pt-6 pb-24 md:pb-10 px-4">
           
-          {/* 🧪 LOGO ONLY "SENKU" */}
-          <div className="w-full px-5 md:px-10 py-8 flex justify-between items-center border-b border-white/5 bg-gradient-to-r from-[#00FFCC]/[0.05] to-transparent">
-            <div className="flex items-center gap-6">
+          {/* 📊 SOLANA LIVE METRICS */}
+          <div className="w-full flex justify-between px-6 py-3 mb-6 glass-morphism rounded-full text-[10px] font-mono tracking-tighter uppercase text-white gap-6 border border-[#00FFCC]/20 shadow-[0_0_30px_rgba(0,255,204,0.1)] overflow-x-auto whitespace-nowrap">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-[#00FFCC] rounded-full animate-pulse" />
+              SOL_TPS: <span className="text-[#00FFCC]">{solMetrics?.tps || '---'}</span>
+            </div>
+            <div className="flex items-center gap-2 border-l border-white/10 pl-6">
+              EPOCH: <span className="text-[#00E0FF]">{solMetrics?.epoch || '---'}</span>
+            </div>
+            <div className="flex items-center gap-2 border-l border-white/10 pl-6">
+              SLOT: <span className="text-[#00FFCC]">{solMetrics?.slot || '---'}</span>
+            </div>
+            <div className="flex items-center gap-2 border-l border-white/10 pl-6">
+              SOL: <span className="text-white">${prices.sol.toLocaleString()}</span>
+            </div>
+          </div>
+
+          <div className="w-full bg-black/60 border border-white/10 rounded-[45px] backdrop-blur-3xl overflow-hidden shadow-[0_0_150px_rgba(0,255,204,0.05)] flex flex-col">
+            
+            <div className="w-full px-5 md:px-10 py-10 flex justify-between items-center border-b border-white/5 bg-gradient-to-r from-[#00FFCC]/[0.05] to-transparent">
               <div className="flex flex-col">
-                <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-white uppercase italic leading-none">
+                <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-white uppercase italic leading-none shadow-[0_0_30px_rgba(255,255,255,0.1)]">
                   SENKU
                 </h1>
-                <div className="flex items-center gap-2 mt-2">
-                   <div className="w-1 h-1 bg-[#00FFCC] rounded-full" />
-                   <span className="text-[10px] font-mono tracking-[0.5em] text-[#00FFCC]/80 uppercase">Bioluminescent Terminal</span>
+                <div className="flex items-center gap-3 mt-4">
+                   <div className="w-2 h-2 bg-[#00FFCC] rounded-full shadow-[0_0_10px_#00FFCC]" />
+                   <span className="text-[12px] font-mono tracking-[0.6em] text-[#00FFCC] uppercase font-bold">Quantum Intelligence Platform</span>
                 </div>
               </div>
-            </div>
-            
-            <div className="hidden sm:flex items-center gap-4">
-               <motion.a 
-                whileHover={{ scale: 1.1, rotate: 5 }}
-                href="https://github.com/bedro95"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="relative p-4 bg-black border border-[#00FFCC]/30 rounded-full shadow-[0_0_20px_rgba(0,255,204,0.2)] group"
-               >
-                <Github className="w-6 h-6 text-[#00FFCC]" />
-                <div className="absolute inset-0 rounded-full bg-[#00FFCC] opacity-0 group-hover:opacity-10 blur-xl transition-opacity" />
-               </motion.a>
-            </div>
-          </div>
-
-          <div className="flex flex-col md:flex-row min-h-[75vh]">
-            
-            {/* 🛡️ ZEN NAVIGATION */}
-            <nav className="fixed bottom-6 left-6 right-6 md:relative md:w-32 border md:border-r border-white/10 flex md:flex-col items-center justify-around md:justify-center gap-1 md:gap-10 p-4 md:p-8 bg-black/90 md:bg-transparent backdrop-blur-3xl rounded-[40px] md:rounded-none z-[200]">
-              {TABS.map((tab) => {
-                const Icon = tab.icon;
-                const isActive = activeTab === tab.id;
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
-                    className="relative group"
-                  >
-                    <motion.div
-                      whileHover={{ scale: 1.2, filter: "url(#liquid)" }}
-                      className={`p-5 rounded-3xl transition-all duration-500 ${isActive ? "bg-[#00FFCC]/10 border border-[#00FFCC]/20" : "opacity-30 group-hover:opacity-100"}`}
-                    >
-                      <Icon className={`w-7 h-7 md:w-8 md:h-8 ${isActive ? "text-[#00FFCC]" : "text-white"}`} />
-                    </motion.div>
-                    {isActive && (
-                      <motion.div 
-                        layoutId="navIndicator" 
-                        className="absolute -bottom-3 md:-right-[40px] md:top-1/2 md:-translate-y-1/2 w-10 h-[5px] md:w-2 md:h-20 bg-[#00FFCC] rounded-full shadow-[0_0_40px_#00FFCC]"
-                        transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                      />
-                    )}
-                  </button>
-                );
-              })}
-            </nav>
-
-            <div className="flex-1 flex flex-col md:flex-row">
-              <main className="flex-1 relative p-6 md:p-12 overflow-y-auto custom-scrollbar">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={activeTab}
-                    initial={{ opacity: 0, y: 20, filter: "blur(20px)" }}
-                    animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                    exit={{ opacity: 0, y: -20, filter: "blur(20px)" }}
-                    transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                    className="w-full h-full"
-                  >
-                    {renderTabContent}
-                  </motion.div>
-                </AnimatePresence>
-              </main>
-
-              {/* 🚀 INTELLIGENCE TERMINAL */}
-              <div className="hidden lg:block p-8 border-l border-white/5">
-                <IntelligenceTerminal />
+              
+              <div className="hidden md:flex items-center gap-4">
+                 <motion.a 
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  href="https://github.com/bedro95"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="relative p-5 bg-black border border-[#00FFCC]/30 rounded-full shadow-[0_0_30px_rgba(0,255,204,0.3)] group"
+                 >
+                  <Github className="w-8 h-8 text-[#00FFCC]" />
+                  <div className="absolute inset-0 rounded-full bg-[#00FFCC] opacity-0 group-hover:opacity-20 blur-2xl transition-opacity" />
+                 </motion.a>
               </div>
             </div>
-          </div>
 
-          <footer className="hidden md:flex w-full px-10 py-5 justify-between items-center bg-black/80 border-t border-white/5 text-[10px] font-mono tracking-widest text-white/30 uppercase italic">
-            <div className="flex items-center gap-8">
-              <span className="flex items-center gap-3 text-[#00FFCC]">
-                <div className="w-2 h-2 rounded-full bg-[#00FFCC] animate-ping" /> 
-                System_Status: Optimal
-              </span>
-              <span className="text-white/50 border-l border-white/10 pl-8">Latency: 24ms</span>
-              <span className="text-white/50 border-l border-white/10 pl-8">Uptime: 99.99%</span>
+            <div className="flex flex-col lg:flex-row min-h-[80vh]">
+              
+              {/* 🛡️ NAVIGATION */}
+              <nav className="hidden md:flex md:w-32 border-r border-white/10 flex-col items-center justify-center gap-12 p-8 bg-black/40">
+                {TABS.map((tab) => {
+                  const Icon = tab.icon;
+                  const isActive = activeTab === tab.id;
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id)}
+                      className="relative group"
+                    >
+                      <motion.div
+                        whileHover={{ scale: 1.2 }}
+                        className={`p-5 rounded-[2rem] transition-all duration-500 ${isActive ? "bg-[#00FFCC]/10 border border-[#00FFCC]/30 shadow-[0_0_30px_rgba(0,255,204,0.1)]" : "opacity-20 group-hover:opacity-100"}`}
+                      >
+                        <Icon className={`w-8 h-8 ${isActive ? "text-[#00FFCC]" : "text-white"}`} />
+                      </motion.div>
+                      {isActive && (
+                        <motion.div 
+                          layoutId="navIndicator" 
+                          className="absolute -right-[40px] top-1/2 -translate-y-1/2 w-2 h-20 bg-[#00FFCC] rounded-full shadow-[0_0_40px_#00FFCC]"
+                          transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                        />
+                      )}
+                    </button>
+                  );
+                })}
+              </nav>
+
+              <div className="flex-1 flex flex-col lg:flex-row">
+                {/* 📊 MAIN CONTENT */}
+                <main className="flex-1 relative p-6 md:p-12 overflow-y-auto custom-scrollbar">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={activeTab}
+                      initial={{ opacity: 0, scale: 0.98, filter: "blur(20px)" }}
+                      animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                      exit={{ opacity: 0, scale: 1.02, filter: "blur(20px)" }}
+                      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                      className="w-full h-full"
+                    >
+                      {renderTabContent}
+                    </motion.div>
+                  </AnimatePresence>
+                </main>
+
+                {/* 🚀 SIDEBARS */}
+                <aside className="w-full lg:w-[400px] p-6 md:p-10 border-t lg:border-t-0 lg:border-l border-white/5 flex flex-col gap-10">
+                  <QuantumScanner />
+                  <IntelligenceTerminal />
+                </aside>
+              </div>
             </div>
-            <div className="flex items-center gap-3 text-[#00FFCC]/60">
-              <Activity className="w-4 h-4" />
-              Processing Engine v3.0.0-PRO
-            </div>
-          </footer>
+
+            <footer className="hidden lg:flex w-full px-10 py-6 justify-between items-center bg-black/80 border-t border-white/5 text-[10px] font-mono tracking-widest text-white/30 uppercase italic">
+              <div className="flex items-center gap-10">
+                <span className="flex items-center gap-3 text-[#00FFCC] font-bold">
+                  <div className="w-2 h-2 rounded-full bg-[#00FFCC] animate-ping" /> 
+                  Terminal_Sync: ACTIVE
+                </span>
+                <span className="text-white/50 border-l border-white/10 pl-10">Network: Solana_Mainnet</span>
+                <span className="text-white/50 border-l border-white/10 pl-10">Uptime: 99.9997%</span>
+              </div>
+              <div className="flex items-center gap-3 text-[#00FFCC]/60">
+                <Activity className="w-4 h-4" />
+                SENKU_OS v4.2.1-ULTRA
+              </div>
+            </footer>
+          </div>
         </div>
       </div>
-
-      <div className="fixed bottom-28 right-4 md:bottom-10 md:right-10 z-[50]">
-        <SenkuAgent activeTab={activeTab} />
-      </div>
-    </div>
+    </>
   );
 }
