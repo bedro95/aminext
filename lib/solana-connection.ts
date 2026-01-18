@@ -41,17 +41,21 @@ export async function getSolanaMetrics() {
 }
 
 export async function getWalletInfo(address: string) {
-  try {
-    const pubKey = new PublicKey(address);
-    const balance = await connection.getBalance(pubKey);
-    const signatures = await connection.getSignaturesForAddress(pubKey, { limit: 5 });
-    
-    return {
-      balance: balance / LAMPORTS_PER_SOL,
-      transactions: signatures,
-    };
-  } catch (error) {
-    console.error('Wallet fetch error:', error);
-    return null;
+  for (const endpoint of RPC_ENDPOINTS) {
+    try {
+      const connection = new Connection(endpoint, 'confirmed');
+      const pubKey = new PublicKey(address);
+      const balance = await connection.getBalance(pubKey);
+      const signatures = await connection.getSignaturesForAddress(pubKey, { limit: 5 });
+      
+      return {
+        balance: balance / LAMPORTS_PER_SOL,
+        transactions: signatures,
+      };
+    } catch (error) {
+      console.warn(`Wallet RPC Fail [${endpoint}]:`, error);
+      continue;
+    }
   }
+  return null;
 }
