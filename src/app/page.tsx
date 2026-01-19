@@ -109,15 +109,15 @@ export default function SenkuUltraPage() {
           </div>
         </div>
 
-        <div className="relative z-10 w-full max-w-[1440px] min-h-screen flex flex-col pt-4 md:pt-6 pb-24 md:pb-10 px-4">
+        <div className="relative z-10 w-full max-w-[1440px] min-h-screen flex flex-col pt-4 md:pt-6 pb-24 md:pb-10 px-2 md:px-4">
           
           {/* 📊 SOLANA LIVE METRICS & PRICE TICKER */}
-          <div className="w-full flex justify-between px-6 py-3 mb-6 glass-morphism rounded-full text-[10px] font-mono tracking-tighter uppercase text-white gap-6 border border-[#00FFCC]/20 shadow-[0_0_30px_rgba(0,255,204,0.1)] overflow-x-auto whitespace-nowrap scrollbar-hide">
+          <div className="w-full flex justify-between px-4 md:px-6 py-3 mb-4 md:mb-6 glass-morphism rounded-full text-[9px] md:text-[10px] font-mono tracking-tighter uppercase text-white gap-4 md:gap-6 border border-[#00FFCC]/20 shadow-[0_0_30px_rgba(0,255,204,0.1)] overflow-x-auto whitespace-nowrap scrollbar-hide">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-[#00FFCC] rounded-full animate-pulse" />
               SOL_TPS: <span className="text-[#00FFCC] font-bold">{solMetrics?.tps || '---'}</span>
             </div>
-            <div className="flex items-center gap-2 border-l border-white/10 pl-6">
+            <div className="flex items-center gap-2 border-l border-white/10 pl-4 md:pl-6">
               EPOCH: <span className="text-[#00E0FF] font-bold">{solMetrics?.epoch || '---'}</span>
             </div>
             <PriceTickerItem symbol="SOL" data={prices.SOL} />
@@ -126,16 +126,16 @@ export default function SenkuUltraPage() {
             <PriceTickerItem symbol="SEND" data={prices.SEND} />
           </div>
 
-          <div className="w-full bg-black/60 border border-white/10 rounded-[45px] backdrop-blur-3xl overflow-hidden shadow-[0_0_150px_rgba(0,255,204,0.05)] flex flex-col">
+          <div className="w-full bg-black/60 border border-white/10 rounded-[30px] md:rounded-[45px] backdrop-blur-3xl overflow-hidden shadow-[0_0_150px_rgba(0,255,204,0.05)] flex flex-col">
             
-            <div className="w-full px-5 md:px-10 py-10 flex justify-between items-center border-b border-white/5 bg-gradient-to-r from-[#00FFCC]/[0.05] to-transparent">
+            <div className="w-full px-5 md:px-10 py-6 md:py-10 flex justify-between items-center border-b border-white/5 bg-gradient-to-r from-[#00FFCC]/[0.05] to-transparent">
               <div className="flex flex-col">
-                <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-white uppercase italic leading-none drop-shadow-[0_0_15px_rgba(0,255,204,0.5)]">
+                <h1 className="text-4xl md:text-7xl font-black tracking-tighter text-white uppercase italic leading-none drop-shadow-[0_0_15px_rgba(0,255,204,0.5)]">
                   Senku
                 </h1>
-                <div className="flex items-center gap-3 mt-4">
+                <div className="flex items-center gap-3 mt-2 md:mt-4">
                    <div className="w-2 h-2 bg-[#00FFCC] rounded-full shadow-[0_0_10px_#00FFCC]" />
-                   <span className="text-[12px] font-mono tracking-[0.6em] text-[#00FFCC] uppercase font-bold">Protocol Terminal</span>
+                   <span className="text-[10px] md:text-[12px] font-mono tracking-[0.4em] md:tracking-[0.6em] text-[#00FFCC] uppercase font-bold">Protocol Terminal</span>
                 </div>
               </div>
               
