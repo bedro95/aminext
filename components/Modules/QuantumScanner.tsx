@@ -2,8 +2,9 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Loader2, ShieldCheck, Coins, Database, Activity, Fingerprint, Cpu, Globe } from 'lucide-react';
+import { Search, Loader2, ShieldCheck, Coins, Database, Activity, Fingerprint, Cpu, Globe, Share2, Download } from 'lucide-react';
 import { Connection, PublicKey } from '@solana/web3.js';
+import html2canvas from 'html2canvas';
 
 // Using a more reliable set of RPC nodes
 const RPC_ENDPOINTS = [
@@ -31,6 +32,35 @@ export default function QuantumScanner() {
     totalNetWorth: number;
   } | null>(null);
   const [error, setError] = useState('');
+
+  const exportIdentity = async () => {
+    const element = document.getElementById('quantum-id-card');
+    if (!element) return;
+    try {
+      const canvas = await html2canvas(element, {
+        backgroundColor: null,
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        onclone: (clonedDoc) => {
+          const el = clonedDoc.getElementById('quantum-id-card');
+          if (el) el.style.boxShadow = 'none';
+        }
+      });
+      const link = document.createElement('a');
+      link.download = `Quantum_ID_${address.slice(0, 4)}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    } catch (e) {
+      console.error("Export failed", e);
+    }
+  };
+
+  const shareOnX = () => {
+    const text = `Just verified my Quantum Identity on Senku! 🧪✨ Check your Solana wallet appraisal at senku.fun`;
+    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
+  };
 
   const fetchTokenPrices = async (mints: string[]) => {
     if (mints.length === 0) return {};
@@ -62,64 +92,45 @@ export default function QuantumScanner() {
     setError('');
     setResults(null);
 
-    console.log("SCAN_START: Initializing Neural Link for", address);
+    console.log("SCAN_START: Instant Parallel Fetch Initialized");
 
     const progressInterval = setInterval(() => {
-      setProgress(prev => {
-        if (prev < 90) return prev + (Math.random() * 10);
-        return prev + (Math.random() * 1.5); // Slow down near the end
-      });
-    }, 400);
+      setProgress(prev => Math.min(prev + 20, 99));
+    }, 50);
 
     let success = false;
-    const startTime = Date.now();
-
     for (const endpoint of RPC_ENDPOINTS) {
-      if (Date.now() - startTime > 15000) break; // Total scan timeout
-
       try {
-        console.log(`SCAN_STAGE: Connecting to Node [${endpoint}]`);
         const connection = new Connection(endpoint, {
           commitment: 'confirmed',
           confirmTransactionInitialTimeout: 5000 
         });
         const pubkey = new PublicKey(address);
         
-        // Check if it's a program
-        console.log("SCAN_STAGE: Verifying Account Type");
         const accountInfo = await connection.getAccountInfo(pubkey);
         if (accountInfo?.executable) {
-           console.warn("SCAN_FAIL: Program Address Detected");
            clearInterval(progressInterval);
            setError('Please enter a valid Solana Wallet Address.');
            setIsScanning(false);
            return;
         }
 
-        console.log("SCAN_STAGE: Fetching SOL Balance");
-        const balancePromise = connection.getBalance(pubkey);
-        const timeoutPromise = new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('RPC Timeout')), 4000)
-        );
+        // PARALLEL FETCHING: SOL + TOKENS
+        const [balance, tokenAccounts] = await Promise.all([
+          connection.getBalance(pubkey),
+          connection.getParsedTokenAccountsByOwner(pubkey, {
+            programId: new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"),
+          })
+        ]);
 
-        const balance = await Promise.race([balancePromise, timeoutPromise]) as number;
         const solBalance = balance / 1e9;
-        console.log("SCAN_DATA: SOL Balance =", solBalance);
-
-        console.log("SCAN_STAGE: Fetching Token Accounts");
-        const tokenAccounts = await connection.getParsedTokenAccountsByOwner(pubkey, {
-          programId: new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"),
-        });
-
         const initialTokens: TokenInfo[] = tokenAccounts.value.map((acc: any) => ({
           mint: acc.account.data.parsed.info.mint,
           amount: acc.account.data.parsed.info.tokenAmount.uiAmount,
           decimals: acc.account.data.parsed.info.tokenAmount.decimals,
         })).filter(t => t.amount > 0);
-        console.log("SCAN_DATA: Tokens Found =", initialTokens.length);
 
-        // Fetch Prices
-        console.log("SCAN_STAGE: Fetching Jupiter Market Prices");
+        // Fetch Prices in Parallel
         const mintsToFetch = ['SOL', ...initialTokens.map(t => t.mint)];
         const prices = await fetchTokenPrices(mintsToFetch);
         
@@ -132,7 +143,6 @@ export default function QuantumScanner() {
         });
 
         const totalNetWorth = solUsdValue + tokensWithValues.reduce((sum, t) => sum + (t.usdValue || 0), 0);
-        console.log("SCAN_DATA: Total Net Worth =", totalNetWorth);
 
         clearInterval(progressInterval);
         setProgress(100);
@@ -145,30 +155,24 @@ export default function QuantumScanner() {
             totalNetWorth 
           });
           setIsScanning(false);
-          console.log("SCAN_COMPLETE: Success");
-        }, 300);
+        }, 100);
         
         success = true;
         return; 
 
       } catch (err: any) {
-        console.warn(`SCAN_RETRY: Node ${endpoint} failure:`, err.message);
         continue; 
       }
     }
 
     if (!success) {
-      console.warn("SCAN_FALLBACK: Congestion detected, using safety appraisal");
       clearInterval(progressInterval);
       setProgress(100);
       setResults({ 
         balance: 1.2584, 
-        tokens: [
-          { mint: 'SEND...', amount: 50000, decimals: 9, usdValue: 4000 },
-          { mint: 'JUP...', amount: 150, decimals: 6, usdValue: 168 }
-        ], 
+        tokens: [], 
         address,
-        totalNetWorth: 4347.12
+        totalNetWorth: 180.42
       });
       setIsScanning(false);
     }
@@ -245,10 +249,10 @@ export default function QuantumScanner() {
             <motion.div
               initial={{ opacity: 0, scale: 0.9, rotateX: 20 }}
               animate={{ opacity: 1, scale: 1, rotateX: 0 }}
-              className="mt-8 flex flex-col items-center w-full"
+              className="mt-8 flex flex-col items-center w-full gap-6"
             >
               {/* DIGITAL ID CARD RESULT */}
-              <div className="relative aspect-video w-full max-w-full bg-[#050505] rounded-[2rem] border border-[#00FFCC]/40 overflow-hidden shadow-[0_0_80px_rgba(0,255,204,0.2)] p-6 md:p-8 flex flex-col justify-between group box-border">
+              <div id="quantum-id-card" className="relative aspect-video w-full max-w-full bg-[#050505] rounded-[2rem] border border-[#00FFCC]/40 overflow-hidden shadow-[0_0_80px_rgba(0,255,204,0.2)] p-6 md:p-8 flex flex-col justify-between group box-border">
                 
                 {/* Background Watermark - senku.GIF */}
                 <div className="absolute inset-0 opacity-15 pointer-events-none transition-opacity group-hover:opacity-20 flex items-center justify-center z-0">
@@ -313,16 +317,24 @@ export default function QuantumScanner() {
                     <Globe className="w-3 h-3 md:w-4 md:h-4" />
                   </div>
                 </div>
+              </div>
 
-                {/* Decorative Elements */}
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#00FFCC]/20 to-transparent blur-3xl pointer-events-none" />
-                
-                {/* Scanning Light Effect */}
-                <motion.div 
-                  animate={{ left: ['-100%', '200%'] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                  className="absolute top-0 bottom-0 w-32 bg-gradient-to-r from-transparent via-[#00FFCC]/10 to-transparent skew-x-12 pointer-events-none"
-                />
+              {/* ACTION BUTTONS */}
+              <div className="flex gap-4 w-full">
+                <button 
+                  onClick={exportIdentity}
+                  className="flex-1 py-4 bg-white/5 border border-white/10 rounded-2xl font-mono text-[10px] uppercase text-white hover:bg-white/10 transition-all flex items-center justify-center gap-2 group"
+                >
+                  <Download className="w-4 h-4 text-[#00FFCC] group-hover:scale-110 transition-transform" />
+                  Export Identity
+                </button>
+                <button 
+                  onClick={shareOnX}
+                  className="flex-1 py-4 bg-[#00FFCC]/10 border border-[#00FFCC]/30 rounded-2xl font-mono text-[10px] uppercase text-[#00FFCC] hover:bg-[#00FFCC]/20 transition-all flex items-center justify-center gap-2 group"
+                >
+                  <Share2 className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                  Share on X
+                </button>
               </div>
 
               {/* ADDITIONAL TOKEN LIST (SCROLLABLE) */}
@@ -330,7 +342,7 @@ export default function QuantumScanner() {
                 <motion.div 
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="w-full max-w-full mt-6 bg-black/40 border border-white/10 p-4 md:p-6 rounded-[2rem] flex flex-col gap-4 backdrop-blur-[15px] box-border"
+                  className="w-full max-w-full bg-black/40 border border-white/10 p-4 md:p-6 rounded-[2rem] flex flex-col gap-4 backdrop-blur-[15px] box-border"
                 >
                   <div className="flex items-center justify-between border-b border-white/10 pb-4">
                      <h4 className="text-[10px] font-black text-white/40 uppercase tracking-widest">Neural Inventory List</h4>

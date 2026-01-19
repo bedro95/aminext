@@ -98,17 +98,23 @@ const ScanTab = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-8">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
                 <div className="space-y-2">
                   <p className="text-[10px] text-white/30 uppercase tracking-[0.3em] font-mono">Current Price</p>
                   <p className="text-2xl font-mono text-white font-bold leading-none">
                     ${parseFloat(result.priceUsd).toFixed(8)}
                   </p>
                 </div>
-                <div className="space-y-2 text-right">
+                <div className="space-y-2 text-right md:text-left">
                   <p className="text-[10px] text-white/30 uppercase tracking-[0.3em] font-mono">24H Evolution</p>
                   <p className={`text-2xl font-mono font-bold leading-none ${result.priceChange.h24 >= 0 ? 'text-[#00FF5F]' : 'text-red-500'}`}>
                     {result.priceChange.h24 >= 0 ? '+' : ''}{result.priceChange.h24}%
+                  </p>
+                </div>
+                <div className="space-y-2 md:text-right col-span-2 md:col-span-1">
+                  <p className="text-[10px] text-white/30 uppercase tracking-[0.3em] font-mono">Market Cap</p>
+                  <p className="text-2xl font-mono text-white font-bold leading-none">
+                    ${result.fdv?.toLocaleString() || '---'}
                   </p>
                 </div>
               </div>
