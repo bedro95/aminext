@@ -42,7 +42,7 @@ export default function SenkuUltraPage() {
   const [activeTab, setActiveTab] = useState<(typeof TABS)[number]["id"]>("scan");
   const [hasEntered, setHasEntered] = useState(false);
   const [solMetrics, setSolMetrics] = useState<any>(null);
-  
+  const [scannedAddress, setScannedAddress] = useState("");
   useAudioController();
 
   useEffect(() => {
@@ -60,8 +60,8 @@ export default function SenkuUltraPage() {
       case "scan": return <ScanTab />;
       case "security": return <QuantumAudit />;
       case "radar": return <RadarTab />;
-      case "roadmap": return <RoadmapSection />; 
-      case "passport": return <div className="flex items-center justify-center h-full"><ScientificPassport /></div>;
+      case "roadmap": return <RoadmapSection />;
+      case "passport": return <div className="flex items-center justify-center h-full py-10"><ScientificPassport address={scannedAddress} /></div>;
       case "about": return <AboutSection />;
       default: return <ScanTab />;
     }
