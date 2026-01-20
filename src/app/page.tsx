@@ -21,11 +21,11 @@ import DNAHelixBackground from "../../components/Visuals/DNAHelix";
 import DigitalDust from "../../components/Visuals/DigitalDust";
 import IntelligenceTerminal from "../../components/Visuals/IntelligenceTerminal";
 import HologramAvatar from "../../components/Visuals/HologramAvatar";
-import NeuralEntryPortal from "../../components/Visuals/NeuralEntryPortal";
-import FloatingMascot from "../../components/Visuals/FloatingMascot";
+import NeuralEntryPortal from "../components/Visuals/NeuralEntryPortal";
+import FloatingMascot from "../components/Visuals/FloatingMascot";
 import QuantumScanner from "../../components/Modules/QuantumScanner";
 import WhaleRadar from "../../components/Modules/WhaleRadar";
-import QuantumAudit from "../../components/Modules/QuantumAudit";
+import QuantumAudit from "../components/Modules/QuantumAudit";
 import { getSolanaMetrics } from "@/lib/solana-connection";
 
 const TABS = [
