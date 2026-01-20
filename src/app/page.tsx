@@ -21,14 +21,16 @@ import DNAHelixBackground from "../../components/Visuals/DNAHelix";
 import DigitalDust from "../../components/Visuals/DigitalDust";
 import IntelligenceTerminal from "../../components/Visuals/IntelligenceTerminal";
 import HologramAvatar from "../../components/Visuals/HologramAvatar";
-import BlackHoleGateway from "../../components/Visuals/BlackHoleGateway";
+import NeuralEntryPortal from "../../components/Visuals/NeuralEntryPortal";
+import FloatingMascot from "../../components/Visuals/FloatingMascot";
 import QuantumScanner from "../../components/Modules/QuantumScanner";
 import WhaleRadar from "../../components/Modules/WhaleRadar";
+import QuantumAudit from "../../components/Modules/QuantumAudit";
 import { getSolanaMetrics } from "@/lib/solana-connection";
 
 const TABS = [
   { id: "scan", label: "Scanner", icon: Search, color: "text-[#00FFCC]" },
-  { id: "security", label: "Security", icon: Shield, color: "text-[#00E0FF]" },
+  { id: "security", label: "Audit", icon: Shield, color: "text-[#00E0FF]" },
   { id: "radar", label: "Radar", icon: Radar, color: "text-[#00FFCC]" },
   { id: "roadmap", label: "Roadmap", icon: Map, color: "text-[#fbbf24]" }, 
   { id: "passport", label: "ID Card", icon: Fingerprint, color: "text-[#00FFCC]" },
@@ -56,7 +58,7 @@ export default function SenkuUltraPage() {
   const renderTabContent = useMemo(() => {
     switch (activeTab) {
       case "scan": return <ScanTab />;
-      case "security": return <RugShieldTab />;
+      case "security": return <QuantumAudit />;
       case "radar": return <RadarTab />;
       case "roadmap": return <RoadmapSection />; 
       case "passport": return <div className="flex items-center justify-center h-full"><ScientificPassport /></div>;
@@ -89,19 +91,32 @@ export default function SenkuUltraPage() {
   return (
     <>
       <AnimatePresence>
-        {!hasEntered && <BlackHoleGateway onEnter={() => setHasEntered(true)} />}
+        {!hasEntered && <NeuralEntryPortal onComplete={() => setHasEntered(true)} />}
       </AnimatePresence>
 
-      <div className="min-h-screen bg-[#020202] text-white flex flex-col items-center selection:bg-[#00FFCC]/30 overflow-x-hidden font-sans">
+      <div 
+        className="min-h-screen bg-[#020202] text-white flex flex-col items-center selection:bg-[#00FFCC]/30 overflow-x-hidden font-sans relative"
+        style={{
+          backgroundImage: "url('/senku.GIF')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed'
+        }}
+      >
+        <div className="absolute inset-0 bg-black/80 backdrop-blur-[2px] z-0" />
         
         <DNAHelixBackground />
         <DigitalDust />
         <HologramAvatar />
+        <FloatingMascot />
 
         {/* 🛸 MOBILE FLOATING DOCK */}
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[500] md:hidden">
           <div className="glass-morphism px-6 py-3 rounded-full border border-white/20 flex items-center gap-6 shadow-[0_0_50px_rgba(0,255,204,0.2)]">
-            <h2 className="text-xl font-black italic tracking-tighter text-white">Senku</h2>
+            <div className="flex items-center gap-2">
+              <img src="/Senku-icon.png" className="w-6 h-6 object-contain" alt="Logo" />
+              <h2 className="text-xl font-black italic tracking-tighter text-white">Senku</h2>
+            </div>
             <div className="w-px h-6 bg-white/20" />
             <a href="https://github.com/bedro95" target="_blank" rel="noopener noreferrer" className="p-2 bg-black rounded-full border border-[#00FFCC]/30">
               <Github className="w-5 h-5 text-[#00FFCC]" />
@@ -109,10 +124,21 @@ export default function SenkuUltraPage() {
           </div>
         </div>
 
-        <div className="relative z-10 w-full max-w-[1440px] min-h-screen flex flex-col pt-4 md:pt-6 pb-24 md:pb-10 px-2 md:px-4">
+        <div className="relative z-10 w-full max-w-[1440px] min-h-screen flex flex-col pt-0 md:pt-0 pb-24 md:pb-10 px-2 md:px-4">
           
+          {/* 🌟 DAY 1 BANNER */}
+          <div className="w-full bg-gradient-to-r from-[#00FFCC]/20 via-[#00FFCC] to-[#00FFCC]/20 py-2 text-center overflow-hidden">
+            <motion.span 
+              animate={{ opacity: [0.5, 1, 0.5] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="text-black font-black text-[10px] md:text-xs tracking-[0.3em] uppercase"
+            >
+              LAB STATUS: OPEN ACCESS (DAY 1). $SENKU TOKEN REQUIRED STARTING DAY 2.
+            </motion.span>
+          </div>
+
           {/* 📊 SOLANA LIVE METRICS & PRICE TICKER */}
-          <div className="w-full flex justify-between px-4 md:px-6 py-3 mb-4 md:mb-6 glass-morphism rounded-full text-[9px] md:text-[10px] font-mono tracking-tighter uppercase text-white gap-4 md:gap-6 border border-[#00FFCC]/20 shadow-[0_0_30px_rgba(0,255,204,0.1)] overflow-x-auto whitespace-nowrap scrollbar-hide">
+          <div className="w-full flex justify-between px-4 md:px-6 py-3 my-4 md:my-6 glass-morphism rounded-full text-[9px] md:text-[10px] font-mono tracking-tighter uppercase text-white gap-4 md:gap-6 border border-[#00FFCC]/20 shadow-[0_0_30px_rgba(0,255,204,0.1)] overflow-x-auto whitespace-nowrap scrollbar-hide">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-[#00FFCC] rounded-full animate-pulse" />
               SOL_TPS: <span className="text-[#00FFCC] font-bold">{solMetrics?.tps || '---'}</span>
@@ -129,13 +155,16 @@ export default function SenkuUltraPage() {
           <div className="w-full bg-black/60 border border-white/10 rounded-[30px] md:rounded-[45px] backdrop-blur-3xl overflow-hidden shadow-[0_0_150px_rgba(0,255,204,0.05)] flex flex-col">
             
             <div className="w-full px-5 md:px-10 py-6 md:py-10 flex justify-between items-center border-b border-white/5 bg-gradient-to-r from-[#00FFCC]/[0.05] to-transparent">
-              <div className="flex flex-col">
-                <h1 className="text-4xl md:text-7xl font-black tracking-tighter text-white uppercase italic leading-none drop-shadow-[0_0_15px_rgba(0,255,204,0.5)]">
-                  Senku
-                </h1>
-                <div className="flex items-center gap-3 mt-2 md:mt-4">
-                   <div className="w-2 h-2 bg-[#00FFCC] rounded-full shadow-[0_0_10px_#00FFCC]" />
-                   <span className="text-[10px] md:text-[12px] font-mono tracking-[0.4em] md:tracking-[0.6em] text-[#00FFCC] uppercase font-bold">Protocol Terminal</span>
+              <div className="flex items-center gap-6">
+                <img src="/Senku-icon.png" className="w-12 h-12 md:w-20 md:h-20 object-contain drop-shadow-[0_0_15px_rgba(0,255,204,0.5)]" alt="Senku" />
+                <div className="flex flex-col">
+                  <h1 className="text-4xl md:text-7xl font-black tracking-tighter text-white uppercase italic leading-none drop-shadow-[0_0_15px_rgba(0,255,204,0.5)]">
+                    Senku Protocol
+                  </h1>
+                  <div className="flex items-center gap-3 mt-2 md:mt-4">
+                     <div className="w-2 h-2 bg-[#00FFCC] rounded-full shadow-[0_0_10px_#00FFCC]" />
+                     <span className="text-[10px] md:text-[12px] font-mono tracking-[0.4em] md:tracking-[0.6em] text-[#00FFCC] uppercase font-bold">Scientific Labs Terminal</span>
+                  </div>
                 </div>
               </div>
               
@@ -210,14 +239,37 @@ export default function SenkuUltraPage() {
               </div>
             </div>
 
-            <footer className="hidden lg:flex w-full px-10 py-6 justify-between items-center bg-black/80 border-t border-white/5 text-[10px] font-mono tracking-widest text-white/30 uppercase italic">
-              <div className="flex items-center gap-10">
+            {/* 🏢 ENTERPRISE FOOTER */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10 px-10 py-12 bg-black/80 border-t border-white/10">
+              <div className="flex flex-col gap-4">
+                <h4 className="text-[#00FFCC] font-black italic uppercase text-xs tracking-[0.2em]">Community</h4>
+                <a href="https://x.com/i/communities/2006055334024982921" className="text-white/40 hover:text-white transition-colors text-xs font-mono">X Community</a>
+                <a href="#" className="text-white/40 hover:text-white transition-colors text-xs font-mono">Discord Lab</a>
+              </div>
+              <div className="flex flex-col gap-4">
+                <h4 className="text-[#00FFCC] font-black italic uppercase text-xs tracking-[0.2em]">Founder</h4>
+                <a href="https://x.com/itsabader?s=21" className="text-white/40 hover:text-white transition-colors text-xs font-mono">Bader Alkorgli</a>
+                <a href="#" className="text-white/40 hover:text-white transition-colors text-xs font-mono">Contact Lab</a>
+              </div>
+              <div className="flex flex-col gap-4">
+                <h4 className="text-[#00FFCC] font-black italic uppercase text-xs tracking-[0.2em]">Products</h4>
+                <div className="grid grid-cols-2 gap-2 text-white/40 text-xs font-mono">
+                  <span>Quantum Scanner</span>
+                  <span>Whale Radar</span>
+                  <span>Quantum Audit</span>
+                  <span>Scientific Passport</span>
+                </div>
+              </div>
+            </div>
+
+            <footer className="w-full px-10 py-6 flex flex-col md:flex-row justify-between items-center bg-black border-t border-white/5 text-[10px] font-mono tracking-widest text-white/30 uppercase italic gap-4">
+              <div className="flex flex-wrap items-center justify-center gap-10">
                 <span className="flex items-center gap-3 text-[#00FFCC] font-bold">
                   <div className="w-2 h-2 rounded-full bg-[#00FFCC] animate-ping" /> 
                   Sync_Status: Optimal
                 </span>
-                <span className="text-white/50 border-l border-white/10 pl-10">Network: Solana_Mainnet</span>
-                <span className="text-white/50 border-l border-white/10 pl-10">Uptime: 99.9997%</span>
+                <span className="text-white/50 md:border-l border-white/10 md:pl-10">Network: Solana_Mainnet</span>
+                <span className="text-white/50 md:border-l border-white/10 md:pl-10">© 2026 Senku Protocol. Engineered by Bader Alkorgli</span>
               </div>
               <div className="flex items-center gap-3 text-[#00FFCC]/60">
                 <Activity className="w-4 h-4" />
