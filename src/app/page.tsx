@@ -108,7 +108,6 @@ export default function SenkuUltraPage() {
         <DNAHelixBackground />
         <DigitalDust />
         <HologramAvatar />
-        <FloatingMascot />
 
         {/* 🛸 MOBILE FLOATING DOCK */}
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[500] md:hidden">
