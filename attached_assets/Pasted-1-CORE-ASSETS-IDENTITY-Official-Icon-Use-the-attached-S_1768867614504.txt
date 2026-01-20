@@ -1,0 +1,34 @@
+1. CORE ASSETS & IDENTITY:
+• Official Icon: Use the attached Senku-icon.png as the site's Favicon and main Navbar Logo.
+• The Soul: MUST KEEP the existing senku.GIF as the core dashboard background. Do not delete or replace it.
+• Project Name: Senku Protocol.
+• Founder: Bader Alkorgli.
+2. THE NEURAL ENTRY PORTAL (First Impression):
+• Create a high-end "Neural Link" splash screen before the dashboard.
+• Centerpiece: A pulsing, neon-green circular orb containing the Senku-icon.png.
+• Animation: Below the orb, a sleek loading bar with neon text: "INITIATING NEURAL LINK TO SENKU LABS...".
+• Transition: Once loaded, it should vanish with a "digital glitch" or "fade-out" effect to reveal the main lab (senku.GIF).
+3. THE "FLOATING MASCOT" (SuperRouter Style):
+• Implement a Floating Animated Mascot inspired by superrouter.fun.
+• Position a small, transparent version of the "Senku Character" in the bottom-right corner.
+• Logic: Apply a continuous CSS "Floating/Bobbing" animation.
+• Interaction: On hover, a neon speech bubble appears: "SCIENTIFIC STATUS: OPTIMAL".
+4. THE VIRAL SCIENTIFIC PASSPORT (World-Class Digital ID):
+• Visuals: Redesign the Passport into a prestigious Glassmorphism ID Card.
+• Dynamic Ranks: The card's aura/color must change based on wallet strength:
+• Green: Rookie Analyst.
+• Blue: Quantum Specialist.
+• Purple/Gold: Legendary Scientist.
+• Features: Display Wallet Address, a Unique "Neural ID", and a "Verified by Senku AI" glowing seal.
+• Viral Loop: Add a prominent "Share on X" button that generates a high-quality image of the card to dominate the CT timeline.
+5. LIVE DATA & LOGIC (Solana RPC):
+• Quantum Audit (Rug Check): Transform it from a UI into a real tool. Use Solana RPC to fetch: Holder Count, LP Burned/Locked status, Bundled Wallets, and Contract Renouncement.
+• The 100% Fix: Ensure the scanner hits exactly 100% before displaying the "Scientific Verdict".
+• Mobile Parity: Every feature (Audit, Radar, Passport) must be 100% responsive and look perfect on mobile devices.
+6. STRATEGIC UTILITY & FOOTER:
+• Day 1 Logic: Add a glowing top banner: "LAB STATUS: OPEN ACCESS (DAY 1). $SENKU TOKEN REQUIRED STARTING DAY 2."
+• Enterprise Footer: 3-Column Layout:
+• Community: https://x.com/i/communities/2006055334024982921
+• Founder: https://x.com/itsabader?s=21
+• Products: Quantum Scanner, Whale Radar, Quantum Audit, Scientific Passport.
+• Copyright: "© 2026 Senku Protocol. Engineered by Bader Alkorgli."
