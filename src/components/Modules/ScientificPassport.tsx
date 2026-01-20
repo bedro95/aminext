@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { Twitter, ShieldCheck } from "lucide-react";
 
-export default function ScientificPassport({ walletAddress = "0x...1234" }) {
+export default function ScientificPassport({ address }: { address?: string }) {
   // Rank logic based on some placeholder "strength"
   const strength = 1000; 
   const getRank = () => {
