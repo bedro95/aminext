@@ -123,19 +123,6 @@ export default function SenkuUltraPage() {
           </div>
         </div>
 
-        <div className="relative z-10 w-full max-w-[1440px] min-h-screen flex flex-col pt-0 md:pt-0 pb-24 md:pb-10 px-2 md:px-4">
-          
-          {/* 🌟 DAY 1 BANNER */}
-          <div className="w-full bg-gradient-to-r from-[#00FFCC]/20 via-[#00FFCC] to-[#00FFCC]/20 py-2 text-center overflow-hidden">
-            <motion.span 
-              animate={{ opacity: [0.5, 1, 0.5] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="text-black font-black text-[10px] md:text-xs tracking-[0.3em] uppercase"
-            >
-              LAB STATUS: OPEN ACCESS (DAY 1). $SENKU TOKEN REQUIRED STARTING DAY 2.
-            </motion.span>
-          </div>
-
           {/* 📊 SOLANA LIVE METRICS & PRICE TICKER */}
           <div className="w-full flex justify-between px-4 md:px-6 py-3 my-4 md:my-6 glass-morphism rounded-full text-[9px] md:text-[10px] font-mono tracking-tighter uppercase text-white gap-4 md:gap-6 border border-[#00FFCC]/20 shadow-[0_0_30px_rgba(0,255,204,0.1)] overflow-x-auto whitespace-nowrap scrollbar-hide">
             <div className="flex items-center gap-2">
