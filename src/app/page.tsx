@@ -246,7 +246,6 @@ export default function SenkuUltraPage() {
                   <span>Scientific Passport</span>
                 </div>
               </div>
-            </div>
 
             <footer className="w-full px-10 py-6 flex flex-col md:flex-row justify-between items-center bg-black border-t border-white/5 text-[10px] font-mono tracking-widest text-white/30 uppercase italic gap-4">
               <div className="flex flex-wrap items-center justify-center gap-10">
