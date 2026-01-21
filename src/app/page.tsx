@@ -319,9 +319,10 @@ export default function SenkuUltraPage() {
                 whileHover={{ rotate: 360, scale: 1.1 }}
                 transition={{ duration: 0.8 }}
                 src="/Senku-icon.png" 
-                className="w-12 h-12 md:w-20 md:h-20 object-contain drop-shadow-[0_0_15px_rgba(0,255,204,0.5)]" 
+                className="w-12 h-12 md:w-20 md:h-20 object-contain rounded-full border-2 border-[#00FFCC]/30 shadow-[0_0_30px_rgba(0,255,204,0.5)] bg-black/40 p-2" 
                 alt="Senku" 
-              />
+                />
+
               <div className="flex flex-col">
                 <h1 className="text-4xl md:text-7xl font-black tracking-tighter text-white uppercase italic leading-none drop-shadow-[0_0_15px_rgba(0,255,204,0.5)]">
                   Senku Protocol
