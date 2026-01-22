@@ -11,7 +11,7 @@ Wifi, WifiOff, Database, Server, Terminal, Code
 // ============================================
 
 const MatrixRain = () => {
-const canvasRef = useRef<HTMLCanvasElement>(null);
+const canvasRef = useRef(null);
 
 useEffect(() => {
 const canvas = canvasRef.current;
@@ -27,7 +27,7 @@ canvas.height = window.innerHeight;
 const chars = 'SENKU01アイウエオカキクケコサシスセソ';
 const fontSize = 14;
 const columns = canvas.width / fontSize;
-const drops: number[] = Array(Math.floor(columns)).fill(1);
+const drops = Array(Math.floor(columns)).fill(1);
 
 const draw = () => {
   ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
@@ -70,7 +70,7 @@ background: ‘radial-gradient(circle at 50% 50%, transparent 0%, rgba(0,0,0,0.8
 );
 };
 
-const PulsingOrb = ({ className = “” }: { className?: string }) => {
+const PulsingOrb = ({ className = “” }) => {
 return (
 <div className={`relative ${className}`}>
 <div className="absolute inset-0 bg-[#00FFCC] rounded-full animate-ping opacity-20" />
@@ -199,7 +199,7 @@ const color = data.change > 0 ? ‘text-green-400’ : ‘text-red-400’;
 // ============================================
 
 const TerminalWindow = () => {
-const [logs, setLogs] = useState<string[]>([
+const [logs, setLogs] = useState([
 ‘> Initializing Senku Protocol…’,
 ‘> Connecting to Solana mainnet…’,
 ‘> Loading quantum scanner modules…’,
@@ -207,8 +207,8 @@ const [logs, setLogs] = useState<string[]>([
 ]);
 const [input, setInput] = useState(’’);
 
-const handleCommand = (cmd: string) => {
-const responses: Record<string, string> = {
+const handleCommand = (cmd) => {
+const responses = {
 ‘scan’: ‘> Initiating deep scan of contract…’,
 ‘audit’: ‘> Running security audit protocols…’,
 ‘status’: ‘> All systems operational. Network synced.’,
@@ -306,7 +306,7 @@ return () => clearInterval(interval);
 
 }, []);
 
-const getIcon = (type: string) => {
+const getIcon = (type) => {
 switch(type) {
 case ‘whale’: return <Target className="w-4 h-4 text-blue-400" />;
 case ‘scan’: return <Shield className="w-4 h-4 text-green-400" />;
@@ -354,7 +354,7 @@ return (
 // ============================================
 
 const NetworkVisualizer = () => {
-const canvasRef = useRef<HTMLCanvasElement>(null);
+const canvasRef = useRef(null);
 
 useEffect(() => {
 const canvas = canvasRef.current;
