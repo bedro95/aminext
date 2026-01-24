@@ -1,4 +1,4 @@
-"use client";  ✅ (normal quotes)
+"use client";
 import React, { useState, useEffect, useRef } from "react";
 import { 
   Shield, Radar, Search, Activity, TrendingUp, TrendingDown, 
