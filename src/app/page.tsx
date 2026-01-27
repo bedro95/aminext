@@ -1,215 +1,234 @@
 "use client";
+
 import React, { useState, useEffect, useRef } from "react";
 import { 
-  Shield, Radar, Search, Activity, TrendingUp, TrendingDown, 
-  Lock, Unlock, Server, Terminal, Bell, Target, Zap, Radio,
-  AlertCircle, CheckCircle, XCircle, Menu, X, ChevronRight,
-  Fingerprint, Rocket, Eye, Cpu, Database, Globe, Flame,
-  Award, BarChart3, Users, Code, GitBranch, Sparkles
+  Shield, Radar, Search, Activity, TrendingUp, TrendingDown, Lock, Unlock,
+  Server, Terminal, Bell, Target, Zap, Radio, AlertCircle, CheckCircle, 
+  XCircle, Menu, X, ChevronRight, Rocket, Database, Users, Sparkles,
+  Eye, Flame, Award, BarChart3, Globe, Cpu, Download, Share2, Star,
+  ArrowUpRight, Fingerprint, Volume2, VolumeX, Brain
 } from "lucide-react";
 
-// ============================================
-// ADVANCED 3D BACKGROUND
-// ============================================
-const NeuralNetwork3D = () => {
+const useAudio = () => {
+  const [muted, setMuted] = useState(false);
+  
+  const playSound = (type) => {
+    if (muted || typeof window === 'undefined') return;
+    
+    try {
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      const sounds = {
+        click: { freq: 800, duration: 50 },
+        scan: { freq: 600, duration: 100 },
+        success: { freq: 1200, duration: 150 },
+        hover: { freq: 500, duration: 30 }
+      };
+      
+      const sound = sounds[type] || sounds.click;
+      oscillator.frequency.value = sound.freq;
+      gainNode.gain.value = 0.1;
+      
+      oscillator.start();
+      setTimeout(() => oscillator.stop(), sound.duration);
+    } catch (e) {
+      console.log('Audio not supported');
+    }
+  };
+  
+  return { playSound, muted, setMuted };
+};
+
+const ParticleField3D = () => {
   const canvasRef = useRef(null);
   
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    
+    const ctx = canvas.getContext('2d');
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     };
     resize();
-    window.addEventListener("resize", resize);
+    window.addEventListener('resize', resize);
     
-    const nodes = Array.from({ length: 80 }, () => ({
+    const particles = Array.from({ length: 120 }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
-      z: Math.random() * 1000,
-      vx: (Math.random() - 0.5) * 0.5,
-      vy: (Math.random() - 0.5) * 0.5,
-      vz: (Math.random() - 0.5) * 2
+      z: Math.random() * 1500,
+      vx: (Math.random() - 0.5) * 0.8,
+      vy: (Math.random() - 0.5) * 0.8,
+      vz: (Math.random() - 0.5) * 3,
+      color: Math.random() > 0.5 ? [138, 43, 226] : [6, 182, 212]
     }));
     
-    const draw = () => {
-      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+    const animate = () => {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.03)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
-      nodes.forEach((node, i) => {
-        node.x += node.vx;
-        node.y += node.vy;
-        node.z += node.vz;
+      particles.forEach((p, i) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.z += p.vz;
         
-        if (node.x < 0 || node.x > canvas.width) node.vx *= -1;
-        if (node.y < 0 || node.y > canvas.height) node.vy *= -1;
-        if (node.z < 0 || node.z > 1000) node.vz *= -1;
+        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+        if (p.z < 0 || p.z > 1500) p.vz *= -1;
         
-        const scale = 1000 / (1000 + node.z);
-        const x2d = node.x * scale + canvas.width / 2 * (1 - scale);
-        const y2d = node.y * scale + canvas.height / 2 * (1 - scale);
-        const size = 2 * scale;
+        const scale = 1500 / (1500 + p.z);
+        const x2d = p.x * scale + canvas.width / 2 * (1 - scale);
+        const y2d = p.y * scale + canvas.height / 2 * (1 - scale);
+        const size = 3 * scale;
+        
+        const gradient = ctx.createRadialGradient(x2d, y2d, 0, x2d, y2d, size * 5);
+        gradient.addColorStop(0, `rgba(${p.color.join(',')}, ${scale * 0.8})`);
+        gradient.addColorStop(1, `rgba(${p.color.join(',')}, 0)`);
         
         ctx.beginPath();
         ctx.arc(x2d, y2d, size, 0, Math.PI * 2);
-        const gradient = ctx.createRadialGradient(x2d, y2d, 0, x2d, y2d, size * 4);
-        gradient.addColorStop(0, "rgba(138, 43, 226, " + scale + ")");
-        gradient.addColorStop(1, "rgba(138, 43, 226, 0)");
         ctx.fillStyle = gradient;
         ctx.fill();
         
-        nodes.slice(i + 1).forEach(other => {
-          const dx = node.x - other.x;
-          const dy = node.y - other.y;
-          const dz = node.z - other.z;
+        particles.slice(i + 1, i + 4).forEach(p2 => {
+          const dx = p.x - p2.x;
+          const dy = p.y - p2.y;
+          const dz = p.z - p2.z;
           const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
           
-          if (dist < 150) {
-            const scale2 = 1000 / (1000 + other.z);
-            const x2d2 = other.x * scale2 + canvas.width / 2 * (1 - scale2);
-            const y2d2 = other.y * scale2 + canvas.height / 2 * (1 - scale2);
+          if (dist < 200) {
+            const scale2 = 1500 / (1500 + p2.z);
+            const x2d2 = p2.x * scale2 + canvas.width / 2 * (1 - scale2);
+            const y2d2 = p2.y * scale2 + canvas.height / 2 * (1 - scale2);
             
             ctx.beginPath();
             ctx.moveTo(x2d, y2d);
             ctx.lineTo(x2d2, y2d2);
-            ctx.strokeStyle = "rgba(138, 43, 226, " + (0.2 * (1 - dist / 150)) + ")";
-            ctx.lineWidth = 1;
+            ctx.strokeStyle = `rgba(${p.color.join(',')}, ${0.15 * (1 - dist / 200)})`;
+            ctx.lineWidth = 0.5;
             ctx.stroke();
           }
         });
       });
       
-      requestAnimationFrame(draw);
+      requestAnimationFrame(animate);
     };
     
-    draw();
-    return () => window.removeEventListener("resize", resize);
+    animate();
+    return () => window.removeEventListener('resize', resize);
   }, []);
   
-  return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0" />;
+  return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0 opacity-60" />;
 };
 
-// ============================================
-// FLOATING PARTICLES
-// ============================================
-const FloatingParticles = () => {
-  return (
-    <div className="fixed inset-0 pointer-events-none z-[1] overflow-hidden">
-      {Array.from({ length: 20 }).map((_, i) => (
-        <div
-          key={i}
-          className="absolute w-1 h-1 bg-purple-400 rounded-full animate-float"
-          style={{
-            left: Math.random() * 100 + "%",
-            top: Math.random() * 100 + "%",
-            animationDelay: Math.random() * 5 + "s",
-            animationDuration: (10 + Math.random() * 10) + "s"
-          }}
-        />
-      ))}
-    </div>
-  );
-};
-
-// ============================================
-// METRICS BAR
-// ============================================
-const MetricsBar = () => {
-  const [metrics, setMetrics] = useState({ 
-    tps: 3241, 
-    validators: 1954, 
-    tvl: "5.2B",
-    users: "247K"
+const LiveMetrics = () => {
+  const [metrics, setMetrics] = useState({
+    tps: 3842,
+    validators: 2047,
+    tvl: "7.2B",
+    users: "312K",
+    scans: 18467,
+    threats: 143
   });
   
   useEffect(() => {
     const interval = setInterval(() => {
-      setMetrics({
-        tps: Math.floor(2500 + Math.random() * 1500),
-        validators: 1800 + Math.floor(Math.random() * 200),
-        tvl: (5 + Math.random() * 2).toFixed(1) + "B",
-        users: (240 + Math.floor(Math.random() * 20)) + "K"
-      });
-    }, 3000);
+      setMetrics(prev => ({
+        tps: Math.floor(3200 + Math.random() * 1800),
+        validators: 1950 + Math.floor(Math.random() * 200),
+        tvl: (6.5 + Math.random() * 3).toFixed(1) + "B",
+        users: (300 + Math.floor(Math.random() * 30)) + "K",
+        scans: prev.scans + Math.floor(Math.random() * 7),
+        threats: prev.threats + (Math.random() > 0.8 ? 1 : 0)
+      }));
+    }, 2200);
     return () => clearInterval(interval);
   }, []);
   
+  const metricsData = [
+    { label: "TPS", value: metrics.tps.toLocaleString(), gradient: "from-purple-500 to-purple-600", icon: Zap },
+    { label: "Validators", value: metrics.validators, gradient: "from-cyan-500 to-cyan-600", icon: Server },
+    { label: "TVL", value: "$" + metrics.tvl, gradient: "from-green-500 to-green-600", icon: Database },
+    { label: "Users", value: metrics.users, gradient: "from-yellow-500 to-yellow-600", icon: Users },
+    { label: "Scans", value: metrics.scans.toLocaleString(), gradient: "from-blue-500 to-blue-600", icon: Search },
+    { label: "Blocked", value: metrics.threats, gradient: "from-red-500 to-red-600", icon: Shield }
+  ];
+  
   return (
-    <div className="w-full bg-gradient-to-r from-purple-900/50 via-black/90 to-purple-900/50 backdrop-blur-2xl border-b border-purple-500/30 py-3 px-4 overflow-x-auto">
-      <div className="flex items-center justify-center gap-6 md:gap-12 text-xs font-mono whitespace-nowrap">
-        <div className="flex items-center gap-2">
-          <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse shadow-[0_0_10px_#a855f7]" />
-          <span className="text-purple-300">TPS</span>
-          <span className="text-white font-bold">{metrics.tps.toLocaleString()}</span>
-        </div>
-        
-        <div className="flex items-center gap-2">
-          <Server className="w-3.5 h-3.5 text-cyan-400" />
-          <span className="text-cyan-300">Validators</span>
-          <span className="text-white font-bold">{metrics.validators}</span>
-        </div>
-        
-        <div className="flex items-center gap-2">
-          <Database className="w-3.5 h-3.5 text-green-400" />
-          <span className="text-green-300">TVL</span>
-          <span className="text-white font-bold">${metrics.tvl}</span>
-        </div>
-        
-        <div className="flex items-center gap-2">
-          <Users className="w-3.5 h-3.5 text-yellow-400" />
-          <span className="text-yellow-300">Users</span>
-          <span className="text-white font-bold">{metrics.users}</span>
-        </div>
+    <div className="w-full bg-gradient-to-r from-purple-950/80 via-black/90 to-cyan-950/80 backdrop-blur-2xl border-b border-purple-500/30 py-3 px-3 md:px-6 overflow-x-auto scrollbar-hide shadow-lg">
+      <div className="flex items-center justify-center gap-3 md:gap-6 text-[9px] md:text-xs font-mono whitespace-nowrap">
+        {metricsData.map((m, i) => {
+          const Icon = m.icon;
+          return (
+            <div key={i} className="flex items-center gap-1.5 md:gap-2 group">
+              <div className={`p-1 md:p-1.5 rounded-lg bg-gradient-to-br ${m.gradient} shadow-lg group-hover:scale-110 transition-transform`}>
+                <Icon className="w-2.5 h-2.5 md:w-3.5 md:h-3.5 text-white" />
+              </div>
+              <div className="flex flex-col md:flex-row md:items-center md:gap-1.5">
+                <span className="text-white/50 text-[8px] md:text-xs">{m.label}</span>
+                <span className="font-bold text-white tabular-nums">{m.value}</span>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
 };
 
-// ============================================
-// PRICE TICKER
-// ============================================
 const PriceTicker = () => {
   const [prices, setPrices] = useState({
-    SOL: { price: 185.42, change: 2.3 },
-    JUP: { price: 0.8234, change: -1.2 },
-    RAY: { price: 4.56, change: 5.7 },
-    BONK: { price: 0.00002145, change: 12.4 }
+    SOL: { price: 189.34, change: 4.2, volume: "2.8B" },
+    JUP: { price: 0.8712, change: -2.1, volume: "167M" },
+    RAY: { price: 4.89, change: 7.8, volume: "94M" },
+    BONK: { price: 0.00002456, change: 18.4, volume: "267M" },
+    ORCA: { price: 3.42, change: -1.7, volume: "73M" },
+    PYTH: { price: 0.67, change: 5.3, volume: "112M" }
   });
   
   useEffect(() => {
     const interval = setInterval(() => {
-      setPrices(prev => ({
-        SOL: { ...prev.SOL, price: prev.SOL.price + (Math.random() - 0.5) * 2, change: (Math.random() - 0.5) * 5 },
-        JUP: { ...prev.JUP, price: prev.JUP.price + (Math.random() - 0.5) * 0.01, change: (Math.random() - 0.5) * 3 },
-        RAY: { ...prev.RAY, price: prev.RAY.price + (Math.random() - 0.5) * 0.1, change: (Math.random() - 0.5) * 4 },
-        BONK: { ...prev.BONK, price: prev.BONK.price + (Math.random() - 0.5) * 0.000001, change: (Math.random() - 0.5) * 8 }
-      }));
-    }, 2000);
+      setPrices(prev => {
+        const updated = {};
+        Object.keys(prev).forEach(key => {
+          const volatility = key === 'BONK' ? 0.03 : key === 'JUP' ? 0.015 : 0.01;
+          updated[key] = {
+            ...prev[key],
+            price: Math.max(0, prev[key].price + (Math.random() - 0.5) * prev[key].price * volatility),
+            change: (Math.random() - 0.5) * 12
+          };
+        });
+        return updated;
+      });
+    }, 3500);
     return () => clearInterval(interval);
   }, []);
   
-  const items = [...Object.entries(prices), ...Object.entries(prices), ...Object.entries(prices)];
+  const allPrices = [...Object.entries(prices), ...Object.entries(prices), ...Object.entries(prices)];
   
   return (
-    <div className="w-full bg-gradient-to-r from-purple-950/40 via-black/60 to-purple-950/40 border-b border-purple-500/20 py-2 overflow-hidden">
-      <div className="flex animate-ticker whitespace-nowrap">
-        {items.map(([symbol, data], idx) => {
+    <div className="w-full bg-gradient-to-r from-purple-950/60 via-black/80 to-cyan-950/60 border-b border-purple-500/20 py-2.5 overflow-hidden shadow-inner">
+      <div className="flex animate-ticker-slow whitespace-nowrap">
+        {allPrices.map(([symbol, data], idx) => {
           const Icon = data.change > 0 ? TrendingUp : TrendingDown;
-          const color = data.change > 0 ? "text-green-400" : "text-red-400";
+          const colorClass = data.change > 0 ? 'text-green-400' : 'text-red-400';
+          const bgClass = data.change > 0 ? 'bg-green-500/10' : 'bg-red-500/10';
+          
           return (
-            <div key={idx} className="inline-flex items-center gap-2 mx-6 text-xs font-mono">
+            <div key={idx} className={`inline-flex items-center gap-2 mx-5 px-3 py-1.5 rounded-lg ${bgClass} border border-white/5 text-[10px] md:text-xs font-mono hover:scale-105 transition-transform`}>
               <span className="text-purple-300 font-bold">{symbol}</span>
-              <span className="text-white font-bold">
-                ${symbol === "BONK" ? data.price.toFixed(8) : symbol === "JUP" ? data.price.toFixed(4) : data.price.toFixed(2)}
+              <span className="text-white font-bold tabular-nums">
+                ${symbol === 'BONK' ? data.price.toFixed(8) : symbol === 'JUP' || symbol === 'PYTH' ? data.price.toFixed(4) : data.price.toFixed(2)}
               </span>
-              <span className={"flex items-center gap-0.5 font-semibold " + color}>
+              <span className={`flex items-center gap-0.5 ${colorClass} font-semibold`}>
                 <Icon className="w-3 h-3" />
-                {Math.abs(data.change).toFixed(2)}%
+                {Math.abs(data.change).toFixed(1)}%
               </span>
             </div>
           );
@@ -219,88 +238,120 @@ const PriceTicker = () => {
   );
 };
 
-// ============================================
-// SCANNER TAB WITH PREMIUM CARD
-// ============================================
-const ScannerTab = () => {
+const QuantumScanner = ({ playSound }) => {
   const [address, setAddress] = useState("");
   const [scanning, setScanning] = useState(false);
+  const [progress, setProgress] = useState(0);
   const [result, setResult] = useState(null);
   
   const handleScan = () => {
     if (!address) return;
+    playSound('scan');
     setScanning(true);
+    setProgress(0);
     setResult(null);
     
+    const progressInterval = setInterval(() => {
+      setProgress(p => {
+        if (p >= 100) {
+          clearInterval(progressInterval);
+          return 100;
+        }
+        return p + 4;
+      });
+    }, 90);
+    
     setTimeout(() => {
-      const score = Math.floor(70 + Math.random() * 30);
-      const isSafe = score > 80;
+      const score = Math.floor(62 + Math.random() * 38);
+      const isSafe = score > 82;
+      
       setResult({
-        status: isSafe ? "safe" : score > 60 ? "warning" : "danger",
-        score: score,
-        address: address,
+        status: isSafe ? "safe" : score > 65 ? "warning" : "danger",
+        score,
+        address,
+        holders: Math.floor(2000 + Math.random() * 8000),
+        liquidity: "$" + (1 + Math.random() * 8).toFixed(2) + "M",
+        volume24h: "$" + (2 + Math.random() * 15).toFixed(2) + "M",
+        marketCap: "$" + (10 + Math.random() * 90).toFixed(1) + "M",
         checks: [
-          { name: "Contract Verification", passed: true, detail: "Source code verified on chain" },
-          { name: "Liquidity Lock", passed: isSafe, detail: isSafe ? "Locked for 365 days" : "Not locked" },
-          { name: "Ownership Status", passed: Math.random() > 0.3, detail: "Renounced" },
-          { name: "Honeypot Detection", passed: isSafe, detail: isSafe ? "No honeypot detected" : "Possible honeypot" },
-          { name: "Token Holders", passed: true, detail: "1,247 holders" },
-          { name: "Trading Volume", passed: Math.random() > 0.2, detail: "$2.4M (24h)" }
+          { name: "Contract Verified", passed: true, detail: "✓ Source code on-chain" },
+          { name: "Liquidity Locked", passed: isSafe, detail: isSafe ? "🔒 365 days" : "⚠️ Not locked" },
+          { name: "Ownership Renounced", passed: Math.random() > 0.35, detail: "Status checked" },
+          { name: "Honeypot Detection", passed: isSafe, detail: isSafe ? "✓ Clean" : "⚠️ Detected" },
+          { name: "Mint Authority", passed: true, detail: "✓ Disabled" },
+          { name: "Freeze Authority", passed: Math.random() > 0.25, detail: "Checked" }
         ],
-        riskLevel: isSafe ? "LOW" : score > 60 ? "MEDIUM" : "HIGH",
+        riskLevel: isSafe ? "LOW" : score > 65 ? "MEDIUM" : "HIGH",
         timestamp: new Date().toLocaleString()
       });
+      
+      playSound('success');
       setScanning(false);
-    }, 2500);
+    }, 2800);
   };
   
   return (
     <div className="space-y-6">
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-900/40 via-purple-800/30 to-purple-900/40 p-6 md:p-8 border border-purple-500/30 backdrop-blur-xl">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl" />
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-900/50 via-purple-800/30 to-purple-900/50 p-6 md:p-10 border-2 border-purple-500/40 backdrop-blur-2xl shadow-2xl shadow-purple-500/20">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse" />
         
         <div className="relative z-10">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="p-3 bg-purple-500/20 rounded-xl">
-              <Search className="w-6 h-6 md:w-7 md:h-7 text-purple-300" />
+          <div className="flex items-center gap-4 mb-8">
+            <div className="p-4 md:p-5 bg-gradient-to-br from-purple-500 to-cyan-500 rounded-2xl shadow-lg">
+              <Search className="w-7 h-7 md:w-9 md:h-9 text-white" />
             </div>
             <div>
-              <h2 className="text-2xl md:text-3xl font-black bg-gradient-to-r from-purple-300 to-cyan-300 bg-clip-text text-transparent">
+              <h2 className="text-3xl md:text-5xl font-black bg-gradient-to-r from-purple-200 to-cyan-200 bg-clip-text text-transparent">
                 Quantum Scanner
               </h2>
-              <p className="text-purple-300/70 text-xs md:text-sm">Deep blockchain intelligence analysis</p>
+              <p className="text-purple-300/80 text-xs md:text-sm flex items-center gap-2 mt-1">
+                <Brain className="w-4 h-4" />
+                AI-Powered Contract Analysis
+              </p>
             </div>
           </div>
           
-          <div className="space-y-4">
-            <div className="relative">
+          <div className="space-y-5">
+            <div className="relative group">
               <input
                 type="text"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                placeholder="Enter Solana contract address (e.g., 7xKXt...)"
-                className="w-full px-4 md:px-6 py-3 md:py-4 bg-black/50 border-2 border-purple-500/30 rounded-2xl text-white placeholder-purple-300/40 focus:outline-none focus:border-purple-400 transition-all text-xs md:text-sm font-mono"
+                placeholder="Paste Solana contract address..."
+                className="w-full px-5 md:px-7 py-4 md:py-6 bg-black/60 border-2 border-purple-500/40 rounded-2xl text-white placeholder-purple-300/40 focus:outline-none focus:border-purple-400 focus:shadow-2xl transition-all text-sm md:text-base font-mono"
               />
-              <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                <Sparkles className="w-5 h-5 text-purple-400 animate-pulse" />
-              </div>
+              <Sparkles className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-400 animate-pulse" />
             </div>
+            
+            {scanning && (
+              <div className="space-y-3">
+                <div className="flex justify-between text-xs md:text-sm font-mono text-purple-300">
+                  <span>Analyzing...</span>
+                  <span>{progress}%</span>
+                </div>
+                <div className="w-full h-3 bg-black/50 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-gradient-to-r from-purple-500 to-cyan-500 transition-all rounded-full"
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
+              </div>
+            )}
             
             <button
               onClick={handleScan}
               disabled={scanning || !address}
-              className="w-full px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-purple-600 via-purple-500 to-cyan-500 text-white font-bold rounded-2xl hover:shadow-2xl hover:shadow-purple-500/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-3 group text-sm md:text-base"
+              className="w-full px-8 py-5 md:py-6 bg-gradient-to-r from-purple-600 to-cyan-500 text-white font-black rounded-2xl hover:shadow-2xl disabled:opacity-50 transition-all flex items-center justify-center gap-3 text-sm md:text-lg"
             >
               {scanning ? (
                 <>
-                  <div className="w-5 h-5 border-3 border-white/20 border-t-white rounded-full animate-spin" />
-                  <span>Analyzing Contract...</span>
+                  <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin" />
+                  <span>Scanning...</span>
                 </>
               ) : (
                 <>
-                  <Rocket className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  <span>Launch Deep Scan</span>
+                  <Rocket className="w-6 h-6" />
+                  <span>Launch Scan</span>
                 </>
               )}
             </button>
@@ -309,79 +360,77 @@ const ScannerTab = () => {
       </div>
       
       {result && (
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-gray-900 via-purple-900/20 to-gray-900 border-2 border-purple-500/40 backdrop-blur-xl animate-slideUp">
-          <div className="absolute inset-0 opacity-5 bg-cover bg-center" style={{ backgroundImage: "url('/senku.GIF')" }} />
-          
-          <div className="relative z-10 p-6 md:p-8">
-            <div className="flex flex-col md:flex-row items-start justify-between mb-6 gap-4">
-              <div className="flex items-center gap-4">
-                <div className={"p-4 rounded-2xl " + (result.status === "safe" ? "bg-green-500/20" : result.status === "warning" ? "bg-yellow-500/20" : "bg-red-500/20")}>
-                  {result.status === "safe" ? (
-                    <CheckCircle className="w-8 h-8 md:w-10 md:h-10 text-green-400" />
-                  ) : result.status === "warning" ? (
-                    <AlertCircle className="w-8 h-8 md:w-10 md:h-10 text-yellow-400" />
-                  ) : (
-                    <XCircle className="w-8 h-8 md:w-10 md:h-10 text-red-400" />
-                  )}
-                </div>
-                <div>
-                  <h3 className="text-xl md:text-2xl font-black text-white mb-1">Scan Complete</h3>
-                  <p className="text-purple-300 text-xs md:text-sm font-mono">{result.timestamp}</p>
-                  <p className="text-purple-400/60 text-[10px] md:text-xs font-mono mt-1 break-all">{result.address.substring(0, 20)}...</p>
-                </div>
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-gray-900 via-purple-900/30 to-gray-900 border-2 border-purple-500/50 backdrop-blur-xl p-6 md:p-10">
+          <div className="flex flex-col lg:flex-row justify-between mb-8 gap-6">
+            <div className="flex items-start gap-5">
+              <div className={`p-6 rounded-3xl ${result.status === 'safe' ? 'bg-green-500/20' : result.status === 'warning' ? 'bg-yellow-500/20' : 'bg-red-500/20'}`}>
+                {result.status === 'safe' ? (
+                  <CheckCircle className="w-12 h-12 text-green-400" />
+                ) : result.status === 'warning' ? (
+                  <AlertCircle className="w-12 h-12 text-yellow-400" />
+                ) : (
+                  <XCircle className="w-12 h-12 text-red-400" />
+                )}
               </div>
-              
-              <div className="text-right">
-                <div className={"text-4xl md:text-5xl font-black mb-1 " + (result.status === "safe" ? "text-green-400" : result.status === "warning" ? "text-yellow-400" : "text-red-400")}>
-                  {result.score}
-                </div>
-                <div className="text-xs text-purple-300 mb-2">SECURITY SCORE</div>
-                <div className={"px-3 py-1 rounded-full text-xs font-bold " + (result.status === "safe" ? "bg-green-500/20 text-green-400" : result.status === "warning" ? "bg-yellow-500/20 text-yellow-400" : "bg-red-500/20 text-red-400")}>
-                  {result.riskLevel} RISK
-                </div>
+              <div>
+                <h3 className="text-2xl md:text-4xl font-black text-white mb-2">Analysis Complete</h3>
+                <p className="text-purple-300 text-xs md:text-sm">{result.timestamp}</p>
               </div>
             </div>
             
-            <div className="grid gap-3">
-              {result.checks.map((check, i) => (
-                <div
-                  key={i}
-                  className="group relative overflow-hidden bg-black/40 border border-purple-500/20 rounded-xl p-3 md:p-4 hover:border-purple-400/40 transition-all"
-                  style={{ animationDelay: i * 50 + "ms" }}
-                >
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-start gap-2 md:gap-3 flex-1">
-                      {check.passed ? (
-                        <CheckCircle className="w-4 h-4 md:w-5 md:h-5 text-green-400 mt-0.5 flex-shrink-0" />
-                      ) : (
-                        <XCircle className="w-4 h-4 md:w-5 md:h-5 text-red-400 mt-0.5 flex-shrink-0" />
-                      )}
-                      <div>
-                        <p className="text-white font-semibold text-xs md:text-sm mb-1">{check.name}</p>
-                        <p className="text-purple-300/60 text-[10px] md:text-xs">{check.detail}</p>
-                      </div>
-                    </div>
-                    <div className={"px-2 py-1 rounded-lg text-[10px] md:text-xs font-bold " + (check.passed ? "bg-green-500/10 text-green-400" : "bg-red-500/10 text-red-400")}>
-                      {check.passed ? "PASS" : "FAIL"}
+            <div className="text-right">
+              <div className={`text-6xl font-black mb-2 ${result.status === 'safe' ? 'text-green-400' : result.status === 'warning' ? 'text-yellow-400' : 'text-red-400'}`}>
+                {result.score}
+              </div>
+              <div className="text-xs text-purple-300 mb-3">SECURITY SCORE</div>
+              <div className={`px-5 py-2.5 rounded-xl text-sm font-black ${result.status === 'safe' ? 'bg-green-500/20 text-green-400' : result.status === 'warning' ? 'bg-yellow-500/20 text-yellow-400' : 'bg-red-500/20 text-red-400'}`}>
+                {result.riskLevel} RISK
+              </div>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            {[
+              { label: "Holders", value: result.holders.toLocaleString(), icon: Users },
+              { label: "Liquidity", value: result.liquidity, icon: Database },
+              { label: "Volume", value: result.volume24h, icon: BarChart3 },
+              { label: "Market Cap", value: result.marketCap, icon: TrendingUp }
+            ].map((stat, i) => {
+              const Icon = stat.icon;
+              return (
+                <div key={i} className="bg-black/50 border border-purple-500/30 rounded-xl p-4">
+                  <Icon className="w-5 h-5 text-purple-400 mb-2" />
+                  <div className="text-xs text-purple-300/70 mb-1">{stat.label}</div>
+                  <div className="text-xl font-black text-white">{stat.value}</div>
+                </div>
+              );
+            })}
+          </div>
+          
+          <div className="space-y-3">
+            {result.checks.map((check, i) => (
+              <div
+                key={i}
+                className="bg-black/50 border border-purple-500/20 rounded-xl p-4 hover:border-purple-400/50 transition-all"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex items-start gap-3 flex-1">
+                    {check.passed ? (
+                      <CheckCircle className="w-5 h-5 text-green-400 mt-0.5" />
+                    ) : (
+                      <XCircle className="w-5 h-5 text-red-400 mt-0.5" />
+                    )}
+                    <div>
+                      <p className="text-white font-bold text-sm mb-1">{check.name}</p>
+                      <p className="text-purple-300/80 text-xs">{check.detail}</p>
                     </div>
                   </div>
+                  <div className={`px-3 py-1.5 rounded-lg text-xs font-bold ${check.passed ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'}`}>
+                    {check.passed ? 'PASS' : 'FAIL'}
+                  </div>
                 </div>
-              ))}
-            </div>
-            
-            <div className="mt-6 p-4 bg-purple-500/10 border border-purple-500/30 rounded-xl">
-              <div className="flex items-center gap-2 mb-2">
-                <Shield className="w-4 h-4 text-purple-400" />
-                <span className="text-purple-300 font-semibold text-xs md:text-sm">AI Recommendation</span>
               </div>
-              <p className="text-purple-200 text-xs md:text-sm">
-                {result.status === "safe" 
-                  ? "This contract appears to be safe for interaction. All security checks passed successfully."
-                  : result.status === "warning"
-                  ? "Exercise caution with this contract. Some security concerns detected. Do your own research before interacting."
-                  : "High risk detected. Multiple security issues found. Avoid interacting with this contract."}
-              </p>
-            </div>
+            ))}
           </div>
         </div>
       )}
@@ -389,390 +438,85 @@ const ScannerTab = () => {
   );
 };
 
-// ============================================
-// RADAR TAB
-// ============================================
-const RadarTab = () => {
-  const [whales, setWhales] = useState([
-    { id: 1, address: "7xKXt9mPqR3", amount: "1.2M", token: "SOL", action: "buy", time: "2m ago", usd: "$222K" },
-    { id: 2, address: "5nQpL4kMxW8", amount: "890K", token: "USDC", action: "sell", time: "5m ago", usd: "$890K" },
-    { id: 3, address: "9rTsP7jWxY2", amount: "2.5M", token: "SOL", action: "buy", time: "8m ago", usd: "$462K" }
-  ]);
-  
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const tokens = ["SOL", "USDC", "JUP", "RAY"];
-      const newWhale = {
-        id: Date.now(),
-        address: Math.random().toString(36).substr(2, 6) + "..." + Math.random().toString(36).substr(2, 3),
-        amount: (Math.random() * 5).toFixed(1) + "M",
-        token: tokens[Math.floor(Math.random() * tokens.length)],
-        action: Math.random() > 0.5 ? "buy" : "sell",
-        time: "just now",
-        usd: "$" + (Math.random() * 1000).toFixed(0) + "K"
-      };
-      setWhales(prev => [newWhale, ...prev.slice(0, 11)]);
-    }, 7000);
-    return () => clearInterval(interval);
-  }, []);
-  
-  return (
-    <div className="space-y-6">
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-cyan-900/40 via-blue-800/30 to-purple-900/40 p-6 md:p-8 border border-cyan-500/30 backdrop-blur-xl">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-cyan-500/20 rounded-xl">
-              <Radar className="w-6 h-6 md:w-7 md:h-7 text-cyan-300 animate-pulse" />
-            </div>
-            <div>
-              <h2 className="text-2xl md:text-3xl font-black bg-gradient-to-r from-cyan-300 to-blue-300 bg-clip-text text-transparent">
-                Whale Radar
-              </h2>
-              <p className="text-cyan-300/70 text-xs md:text-sm">Real-time large transaction monitoring</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2 px-4 py-2 bg-green-500/20 rounded-xl">
-            <div className="w-2 h-2 bg-green-400 rounded-full animate-ping" />
-            <span className="text-green-400 text-sm font-bold">LIVE</span>
-          </div>
-        </div>
-      </div>
-      
-      <div className="space-y-3">
-        {whales.map((whale, i) => (
-          <div
-            key={whale.id}
-            className="group relative overflow-hidden bg-gradient-to-r from-gray-900 to-gray-900/50 border border-purple-500/20 rounded-2xl p-4 md:p-5 hover:border-cyan-400/40 transition-all animate-slideRight"
-            style={{ animationDelay: i * 30 + "ms" }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-cyan-500/5 to-cyan-500/0 opacity-0 group-hover:opacity-100 transition-opacity" />
-            
-            <div className="relative flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
-              <div className="flex items-center gap-3 md:gap-4 flex-1">
-                <div className={"p-2 md:p-3 rounded-xl " + (whale.action === "buy" ? "bg-green-500/20" : "bg-red-500/20")}>
-                  <Target className={"w-5 h-5 md:w-6 md:h-6 " + (whale.action === "buy" ? "text-green-400" : "text-red-400")} />
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-white font-mono font-bold text-xs md:text-sm">{whale.address}</span>
-                    <span className="px-2 py-0.5 bg-purple-500/20 rounded text-purple-300 text-[10px] md:text-xs font-semibold">{whale.token}</span>
-                  </div>
-                  <p className="text-purple-300/60 text-[10px] md:text-xs">{whale.time}</p>
-                </div>
-              </div>
-              
-              <div className="text-right ml-auto md:ml-0">
-                <p className={"text-xl md:text-2xl font-black mb-1 " + (whale.action === "buy" ? "text-green-400" : "text-red-400")}>
-                  {whale.amount}
-                </p>
-                <p className="text-purple-300 text-[10px] md:text-xs">{whale.usd}</p>
-                <span className={"text-[10px] md:text-xs font-bold uppercase " + (whale.action === "buy" ? "text-green-400" : "text-red-400")}>
-                  {whale.action}
-                </span>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-// ============================================
-// TERMINAL TAB
-// ============================================
-const TerminalTab = () => {
-  const [logs, setLogs] = useState([
-    "> [SYSTEM] Senku Protocol v5.0 initialized",
-    "> [NETWORK] Connected to Solana mainnet-beta",
-    "> [STATUS] All systems operational",
-    "> [READY] Awaiting commands..."
-  ]);
-  const [input, setInput] = useState("");
-  const terminalRef = useRef(null);
-  
-  useEffect(() => {
-    if (terminalRef.current) {
-      terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
-    }
-  }, [logs]);
-  
-  const handleCommand = (cmd) => {
-    const commands = {
-      "scan": "> [SCANNER] Initiating deep contract analysis...",
-      "whale": "> [RADAR] Activating whale detection systems...",
-      "status": "> [SYSTEM] Network: ONLINE | TPS: 3247 | Validators: 1954 | Uptime: 99.9%",
-      "help": "> [HELP] Available commands: scan, whale, status, audit, network, clear, help",
-      "audit": "> [AUDIT] Starting security audit protocol...",
-      "network": "> [NETWORK] Solana Mainnet | Epoch: 542 | Slot: 234567890",
-      "clear": "CLEAR"
-    };
-    
-    const response = commands[cmd.toLowerCase()] || "> [ERROR] Unknown command: " + cmd + ". Type 'help' for available commands.";
-    
-    if (response === "CLEAR") {
-      setLogs([]);
-    } else {
-      setLogs(prev => [...prev, "$ " + cmd, response]);
-    }
-  };
-  
-  return (
-    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-gray-900 via-black to-gray-900 border-2 border-green-500/30 backdrop-blur-xl">
-      <div className="absolute inset-0 opacity-30" />
-      
-      <div className="relative z-10">
-        <div className="flex items-center justify-between p-4 border-b border-green-500/20 bg-black/40">
-          <div className="flex items-center gap-3">
-            <Terminal className="w-5 h-5 text-green-400 animate-pulse" />
-            <span className="text-green-400 font-mono font-bold text-xs md:text-sm">SENKU_QUANTUM_TERMINAL_v5.0</span>
-          </div>
-          <div className="flex gap-2">
-            <div className="w-3 h-3 bg-red-500 rounded-full" />
-            <div className="w-3 h-3 bg-yellow-500 rounded-full" />
-            <div className="w-3 h-3 bg-green-500 rounded-full" />
-          </div>
-        </div>
-        
-        <div
-          ref={terminalRef}
-          className="p-4 md:p-6 font-mono text-xs md:text-sm max-h-60 md:max-h-96 overflow-y-auto custom-scrollbar"
-        >
-          {logs.map((log, i) => (
-            <div
-              key={i}
-              className={log.startsWith(">") ? "text-green-400 mb-1" : "text-cyan-300 mb-1"}
-            >
-              {log}
-            </div>
-          ))}
-        </div>
-        
-        <div className="flex items-center gap-2 p-4 border-t border-green-500/20 bg-black/40">
-          <span className="text-green-400 font-mono">$</span>
-          <input 
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && input.trim()) {
-                handleCommand(input);
-                setInput("");
-              }
-            }}
-            className="flex-1 bg-transparent outline-none text-green-400 font-mono text-xs md:text-sm"
-            placeholder="type 'help' for commands..."
-          />
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// ============================================
-// MAIN APP
-// ============================================
 export default function SenkuProtocol() {
   const [activeTab, setActiveTab] = useState("scan");
   const [isConnected, setIsConnected] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const { playSound, muted, setMuted } = useAudio();
   
   const tabs = [
-    { id: "scan", label: "Quantum Scanner", icon: Search, gradient: "from-purple-600 to-cyan-500" },
-    { id: "radar", label: "Whale Radar", icon: Radar, gradient: "from-cyan-600 to-blue-500" },
-    { id: "terminal", label: "Terminal", icon: Terminal, gradient: "from-green-600 to-emerald-500" }
+    { id: "scan", label: "Quantum Scanner", icon: Search, gradient: "from-purple-600 to-cyan-500" }
   ];
-  
-  const renderContent = () => {
-    if (activeTab === "scan") return <ScannerTab />;
-    if (activeTab === "radar") return <RadarTab />;
-    if (activeTab === "terminal") return <TerminalTab />;
-    return <ScannerTab />;
-  };
   
   return (
     <div className="min-h-screen bg-black text-white relative overflow-x-hidden">
-      <NeuralNetwork3D />
-      <FloatingParticles />
-      
-      <MetricsBar />
+      <ParticleField3D />
+      <LiveMetrics />
       <PriceTicker />
       
       <div className="relative z-10">
-        <div className="sticky top-0 z-50 bg-black/90 backdrop-blur-2xl border-b border-purple-500/30">
-          <div className="max-w-7xl mx-auto px-4 md:px-6 py-4">
+        <div className="sticky top-0 z-50 bg-black/95 backdrop-blur-2xl border-b-2 border-purple-500/40 shadow-xl">
+          <div className="max-w-[1800px] mx-auto px-4 md:px-8 py-4 md:py-5">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3 md:gap-4">
-                <div className="relative w-10 h-10 md:w-16 md:h-16">
-                  <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-2xl animate-pulse blur-md" />
-                  <div className="relative w-full h-full bg-gradient-to-br from-purple-600 to-cyan-500 rounded-2xl flex items-center justify-center font-black text-white text-lg md:text-3xl">
+              <div className="flex items-center gap-3 md:gap-5">
+                <div className="relative w-12 h-12 md:w-20 md:h-20">
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-3xl animate-pulse blur-lg" />
+                  <div className="relative w-full h-full bg-gradient-to-br from-purple-600 to-cyan-500 rounded-3xl flex items-center justify-center font-black text-white text-xl md:text-4xl shadow-2xl">
                     S
                   </div>
                 </div>
                 <div>
-                  <h1 className="text-xl md:text-4xl font-black">
-                    <span className="bg-gradient-to-r from-purple-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent animate-gradient">
+                  <h1 className="text-2xl md:text-5xl font-black">
+                    <span className="bg-gradient-to-r from-purple-300 to-cyan-300 bg-clip-text text-transparent">
                       SENKU
                     </span>
                   </h1>
-                  <p className="text-[10px] md:text-sm text-purple-300 font-mono">Protocol Intelligence</p>
+                  <p className="text-[10px] md:text-sm text-purple-300 font-mono mt-1">Quantum Intelligence</p>
                 </div>
               </div>
               
-              <div className="flex items-center gap-2 md:gap-3">
+              <div className="flex items-center gap-2 md:gap-4">
                 <button
-                  onClick={() => setIsConnected(!isConnected)}
-                  className={"px-3 md:px-6 py-2 md:py-3 rounded-xl font-bold flex items-center gap-2 transition-all text-xs md:text-sm " + (
-                    isConnected 
-                      ? "bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg shadow-green-500/50" 
-                      : "bg-gradient-to-r from-purple-600 to-cyan-600 text-white hover:shadow-lg hover:shadow-purple-500/50"
-                  )}
+                  onClick={() => setMuted(!muted)}
+                  className="p-2 md:p-3 bg-purple-500/20 border-2 border-purple-500/40 rounded-xl hover:bg-purple-500/30 transition-all"
                 >
-                  {isConnected ? <Unlock className="w-3.5 h-3.5 md:w-4 md:h-4" /> : <Lock className="w-3.5 h-3.5 md:w-4 md:h-4" />}
-                  <span className="hidden sm:inline">{isConnected ? "Connected" : "Connect"}</span>
+                  {muted ? <VolumeX className="w-4 h-4 text-purple-400" /> : <Volume2 className="w-4 h-4 text-purple-400" />}
                 </button>
                 
-                <button 
-                  onClick={() => setMenuOpen(!menuOpen)}
-                  className="md:hidden p-2 bg-purple-500/20 rounded-lg border border-purple-500/30"
+                <button
+                  onClick={() => {
+                    setIsConnected(!isConnected);
+                    playSound('success');
+                  }}
+                  className={`px-4 md:px-7 py-2.5 md:py-3.5 rounded-xl font-black flex items-center gap-2 transition-all text-xs md:text-sm ${
+                    isConnected 
+                      ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white' 
+                      : 'bg-gradient-to-r from-purple-600 to-cyan-600 text-white'
+                  }`}
                 >
-                  {menuOpen ? <X className="w-5 h-5 text-purple-400" /> : <Menu className="w-5 h-5 text-purple-400" />}
+                  {isConnected ? <Lock className="w-4 h-4" /> : <Unlock className="w-4 h-4" />}
+                  <span className="hidden sm:inline">{isConnected ? 'Connected' : 'Connect'}</span>
                 </button>
               </div>
             </div>
           </div>
         </div>
         
-        {menuOpen && (
-          <div className="md:hidden fixed inset-0 top-[88px] bg-black/95 backdrop-blur-2xl z-40 p-4 space-y-3 animate-fadeIn">
-            {tabs.map(tab => {
-              const Icon = tab.icon;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => {
-                    setActiveTab(tab.id);
-                    setMenuOpen(false);
-                  }}
-                  className={"w-full p-5 rounded-2xl font-bold flex items-center justify-between transition-all " + (
-                    activeTab === tab.id
-                      ? "bg-gradient-to-r " + tab.gradient + " text-white shadow-xl"
-                      : "bg-purple-500/10 border border-purple-500/30 text-purple-300 hover:border-purple-400/50"
-                  )}
-                >
-                  <div className="flex items-center gap-3">
-                    <Icon className="w-6 h-6" />
-                    <span>{tab.label}</span>
-                  </div>
-                  <ChevronRight className="w-5 h-5" />
-                </button>
-              );
-            })}
-          </div>
-        )}
-        
-        <div className="hidden md:block max-w-7xl mx-auto px-6 py-8">
-          <div className="grid grid-cols-3 gap-4">
-            {tabs.map(tab => {
-              const Icon = tab.icon;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={"p-6 rounded-3xl font-bold flex items-center justify-center gap-3 transition-all " + (
-                    activeTab === tab.id
-                      ? "bg-gradient-to-r " + tab.gradient + " text-white shadow-2xl shadow-purple-500/30 scale-105"
-                      : "bg-purple-500/10 border-2 border-purple-500/30 text-purple-300 hover:border-purple-400/50 hover:scale-105"
-                  )}
-                >
-                  <Icon className="w-6 h-6" />
-                  <span>{tab.label}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-        
-        <div className="max-w-7xl mx-auto px-4 md:px-6 pb-12">
-          <div className="animate-fadeIn">
-            {renderContent()}
-          </div>
-        </div>
-      </div>
-      
-      <div className="relative z-10 mt-12 py-6 border-t border-purple-500/20 bg-black/40 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <Activity className="w-4 h-4 text-purple-400 animate-pulse" />
-            <span className="text-purple-300 text-xs md:text-sm font-mono">SENKU Protocol v5.0 • Solana Intelligence Network</span>
-          </div>
-          <div className="flex items-center gap-2 text-xs text-purple-400/60">
-            <span>Built by</span>
-            <span className="text-purple-300 font-semibold">Bader Alkorgli</span>
-          </div>
+        <div className="max-w-[1800px] mx-auto px-4 md:px-8 py-8 md:py-12">
+          <QuantumScanner playSound={playSound} />
         </div>
       </div>
       
       <style jsx>{`
-        @keyframes ticker {
+        @keyframes ticker-slow {
           0% { transform: translateX(0); }
           100% { transform: translateX(-50%); }
         }
-        @keyframes float {
-          0%, 100% { transform: translateY(0) translateX(0); }
-          50% { transform: translateY(-20px) translateX(10px); }
+        .animate-ticker-slow {
+          animation: ticker-slow 45s linear infinite;
         }
-        @keyframes slideUp {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes slideRight {
-          from { opacity: 0; transform: translateX(-20px); }
-          to { opacity: 1; transform: translateX(0); }
-        }
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        @keyframes gradient {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-        
-        .animate-ticker {
-          animation: ticker 40s linear infinite;
-        }
-        .animate-float {
-          animation: float linear infinite;
-        }
-        .animate-slideUp {
-          animation: slideUp 0.5s ease-out;
-        }
-        .animate-slideRight {
-          animation: slideRight 0.3s ease-out;
-        }
-        .animate-fadeIn {
-          animation: fadeIn 0.3s ease-out;
-        }
-        .animate-gradient {
-          background-size: 200% auto;
-          animation: gradient 3s ease infinite;
-        }
-        
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: rgba(0, 0, 0, 0.3);
-          border-radius: 10px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: rgba(168, 85, 247, 0.5);
-          border-radius: 10px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: rgba(168, 85, 247, 0.7);
-        }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
     </div>
   );
