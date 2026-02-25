@@ -2,7 +2,7 @@
 
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
-import { Sun, Moon } from "lucide-react";
+import { Sun, Moon } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 
 export function ThemeToggle({ className }: { className?: string }) {
@@ -22,16 +22,16 @@ export function ThemeToggle({ className }: { className?: string }) {
       onClick={() => setTheme(isDark ? "light" : "dark")}
       aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
       className={cn(
-        "relative flex items-center justify-center w-9 h-9 rounded-xl border transition-all duration-200",
+        "relative flex items-center justify-center w-9 h-9 rounded-xl border transition-all duration-200 shadow-sm",
         "border-slate-200 bg-white text-slate-500 hover:text-slate-800 hover:bg-slate-50 hover:border-slate-300",
-        "dark:border-slate-700/80 dark:bg-slate-800/60 dark:text-slate-400 dark:hover:bg-slate-700/80 dark:hover:text-slate-200 dark:hover:border-slate-600",
-        "shadow-sm",
+        "dark:border-slate-700/80 dark:bg-slate-800/60 dark:text-slate-400 dark:hover:bg-slate-700/80 dark:hover:text-slate-200",
         className
       )}
     >
-      <span className="transition-all duration-300" style={{ transform: isDark ? "rotate(0deg)" : "rotate(-20deg)" }}>
-        {isDark ? <Sun size={15} strokeWidth={2} /> : <Moon size={15} strokeWidth={2} />}
-      </span>
+      {isDark
+        ? <Sun weight="duotone" size={17} />
+        : <Moon weight="duotone" size={17} />
+      }
     </button>
   );
 }

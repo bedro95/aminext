@@ -4,7 +4,7 @@ import { IndustriesOverview } from "@/components/sections/IndustriesOverview";
 import { WeeklyAlert } from "@/components/sections/WeeklyAlert";
 import { IndustryRadar } from "@/components/charts/IndustryRadar";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 
 export default function HomePage() {
   return (

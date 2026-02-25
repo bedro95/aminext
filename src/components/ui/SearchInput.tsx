@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, X } from "lucide-react";
+import { MagnifyingGlass, X } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 
 interface SearchInputProps {
@@ -10,16 +10,12 @@ interface SearchInputProps {
   className?: string;
 }
 
-export function SearchInput({
-  value,
-  onChange,
-  placeholder = "Search...",
-  className,
-}: SearchInputProps) {
+export function SearchInput({ value, onChange, placeholder = "Search...", className }: SearchInputProps) {
   return (
     <div className={cn("relative", className)}>
-      <Search
+      <MagnifyingGlass
         size={15}
+        weight="bold"
         className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--muted-foreground)] pointer-events-none"
       />
       <input
@@ -41,7 +37,7 @@ export function SearchInput({
           className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
           aria-label="Clear search"
         >
-          <X size={14} />
+          <X size={14} weight="bold" />
         </button>
       )}
     </div>
