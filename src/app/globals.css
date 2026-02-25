@@ -1,86 +1,93 @@
 @import "tailwindcss";
 
 :root {
-  --background: #020202;
-  --foreground: #ededed;
-  --senku-neon: #00ffcc;
-  --senku-glow: rgba(0, 255, 204, 0.4);
+  --background: #ffffff;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-border: #e2e8f0;
+  --muted: #f8fafc;
+  --muted-foreground: #64748b;
+  --primary: #0ea5e9;
+  --primary-foreground: #ffffff;
+  --accent: #f1f5f9;
+  --border: #e2e8f0;
+  --ring: #0ea5e9;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+.dark {
+  --background: #020617;
+  --foreground: #f1f5f9;
+  --card: #0f172a;
+  --card-border: #1e293b;
+  --muted: #0f172a;
+  --muted-foreground: #64748b;
+  --primary: #38bdf8;
+  --primary-foreground: #020617;
+  --accent: #1e293b;
+  --border: #1e293b;
+  --ring: #38bdf8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background-color: #020202 !important;
-  color: white;
-  font-family: 'Inter', sans-serif;
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
-  cursor: crosshair;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* Bioluminescent Assets */
-.glow-text-green {
-  text-shadow: 0 0 10px #00FFCC, 0 0 20px #00FFCC;
+::selection {
+  background-color: rgba(56, 189, 248, 0.2);
+  color: var(--foreground);
 }
 
-.glow-border-blue {
-  box-shadow: 0 0 15px rgba(0, 224, 255, 0.3);
-  border-color: rgba(0, 224, 255, 0.5);
-}
-
-.custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: linear-gradient(#00FFCC, #00E0FF);
-  border-radius: 20px;
-}
-
-/* Interstellar Cyber-Art Styles */
-.cyber-grid {
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-  background-size: 50px 50px;
-}
-
-.glow-mesh {
-  background: radial-gradient(circle at 50% 50%, var(--senku-glow) 0%, transparent 70%);
-}
-
-.glass-morphism {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.neon-text {
-  text-shadow: 0 0 10px var(--senku-neon), 0 0 20px var(--senku-neon);
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-20px); }
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar {
   width: 5px;
+  height: 5px;
 }
-
 ::-webkit-scrollbar-track {
-  background: #020202;
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
 }
 
-::-webkit-scrollbar-thumb {
-  background: var(--senku-neon);
-  border-radius: 10px;
+.gradient-text {
+  background: linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #c084fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fade-in 0.5s ease forwards;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+.animate-pulse-ring {
+  animation: pulse-ring 2s ease-out infinite;
 }
