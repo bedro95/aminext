@@ -1,14 +1,19 @@
-import { Clock, TrendingUp, Zap } from "lucide-react";
+import { Clock, TrendingUp } from "lucide-react";
 import { Skill } from "@/data/skills";
 import { Badge } from "@/components/ui/Badge";
 import { ProgressBar } from "@/components/ui/ProgressBar";
-import { cn } from "@/lib/utils";
 
 const categoryConfig = {
-  technical: { label: "Technical", icon: "⚡" },
-  cognitive: { label: "Cognitive", icon: "🧠" },
-  social: { label: "Social", icon: "🤝" },
-  creative: { label: "Creative", icon: "🎨" },
+  technical: { label: "Technical", emoji: "⚡", gradient: "from-sky-500 to-indigo-500" },
+  cognitive: { label: "Cognitive", emoji: "🧠", gradient: "from-violet-500 to-purple-600" },
+  social: { label: "Social", emoji: "🤝", gradient: "from-emerald-500 to-teal-500" },
+  creative: { label: "Creative", emoji: "🎨", gradient: "from-rose-500 to-orange-500" },
+};
+
+const demandConfig = {
+  surging: { variant: "surging" as const, label: "🔥 Surging" },
+  growing: { variant: "growing" as const, label: "↗ Growing" },
+  stable: { variant: "stable" as const, label: "→ Stable" },
 };
 
 interface SkillCardProps {
@@ -17,29 +22,33 @@ interface SkillCardProps {
 
 export function SkillCard({ skill }: SkillCardProps) {
   const cat = categoryConfig[skill.category];
+  const demand = demandConfig[skill.demandTrend];
 
   return (
-    <article className="rounded-xl border border-[var(--card-border)] bg-[var(--card)] p-5 h-full flex flex-col">
+    <article className="relative overflow-hidden rounded-2xl border border-[var(--card-border)] bg-[var(--card)] p-5 h-full flex flex-col">
+      {/* Top gradient stripe */}
+      <div className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r ${cat.gradient}`} />
+
       {/* Header */}
-      <div className="flex items-start justify-between gap-3 mb-3">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-base">{cat.icon}</span>
-            <h3 className="text-sm font-semibold text-[var(--foreground)] leading-tight">{skill.name}</h3>
+      <div className="flex items-start justify-between gap-3 mb-3 mt-1">
+        <div className="flex-1">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-xl">{cat.emoji}</span>
+            <h3 className="text-sm font-bold text-[var(--foreground)] leading-tight">{skill.name}</h3>
           </div>
-          <Badge variant={skill.demandTrend}>{skill.demandTrend === "surging" ? "🔥 Surging" : skill.demandTrend === "growing" ? "↗ Growing" : "→ Stable"}</Badge>
+          <Badge variant={demand.variant}>{demand.label}</Badge>
         </div>
-        <div className="text-right">
-          <div className="text-lg font-bold tabular-nums text-[var(--foreground)]">{skill.futureProofScore}</div>
-          <div className="text-[10px] text-[var(--muted-foreground)] uppercase tracking-wide">Future Score</div>
+        <div className="text-right flex-shrink-0">
+          <div className="text-xl font-black tabular-nums text-[var(--foreground)]">{skill.futureProofScore}</div>
+          <div className="text-[9px] uppercase tracking-widest text-[var(--muted-foreground)] font-semibold mt-0.5">Score</div>
         </div>
       </div>
 
-      {/* Future proof bar */}
+      {/* Future-proof bar */}
       <ProgressBar value={skill.futureProofScore} height="sm" className="mb-3" />
 
       {/* Description */}
-      <p className="text-xs text-[var(--muted-foreground)] leading-relaxed mb-4 flex-1">
+      <p className="text-xs text-[var(--muted-foreground)] leading-relaxed flex-1 mb-4">
         {skill.description}
       </p>
 
@@ -49,7 +58,7 @@ export function SkillCard({ skill }: SkillCardProps) {
           <Clock size={11} />
           <span>{skill.timeToLearn}</span>
         </div>
-        <div className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+        <div className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold">
           <TrendingUp size={11} />
           <span>{skill.avgSalaryImpact}</span>
         </div>
