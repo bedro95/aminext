@@ -8,7 +8,7 @@ import { ThemeToggle } from "./ThemeToggle";
 import { NAV_LINKS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
-function SenkuLogo() {
+function Logo() {
   return (
     <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <rect width="34" height="34" rx="9" fill="url(#logo-grad)" />
@@ -38,11 +38,11 @@ export function Header() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
         <Link href="/" className="flex items-center gap-2.5 group flex-shrink-0" onClick={() => setMobileOpen(false)}>
           <div className="transition-transform duration-200 group-hover:scale-105">
-            <SenkuLogo />
+            <Logo />
           </div>
           <div className="flex flex-col leading-none">
-            <span className="text-[15px] font-extrabold tracking-tight text-[var(--foreground)]">Senku</span>
-            <span className="text-[9px] font-semibold tracking-widest text-[var(--muted-foreground)] uppercase">Automation Index</span>
+            <span className="text-[15px] font-extrabold tracking-tight text-[var(--foreground)]">Am I Next?</span>
+            <span className="text-[9px] font-semibold tracking-widest text-[var(--muted-foreground)] uppercase">AI Risk Tracker</span>
           </div>
         </Link>
 
