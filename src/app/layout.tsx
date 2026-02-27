@@ -26,6 +26,8 @@ export const metadata: Metadata = {
     description: SITE_DESCRIPTION,
   },
   keywords: [
+    "am i next",
+    "will ai replace me",
     "automation risk",
     "AI jobs impact",
     "future of work",
@@ -33,6 +35,9 @@ export const metadata: Metadata = {
     "AGI era",
     "job automation",
     "career future-proofing",
+    "ai job replacement",
+    "which jobs will ai replace",
+    "automation risk checker",
   ],
 };
 

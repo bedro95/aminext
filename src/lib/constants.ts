@@ -1,8 +1,8 @@
-export const SITE_NAME = "Senku";
-export const SITE_TAGLINE = "The Human Automation Index";
+export const SITE_NAME = "Am I Next?";
+export const SITE_TAGLINE = "Will AI Replace You?";
 export const SITE_DESCRIPTION =
-  "Track how artificial intelligence is reshaping every profession in real time. Data-driven insights on automation risk, emerging skills, and the future of human work.";
-export const SITE_URL = "https://senku.fun";
+  "Track how artificial intelligence is reshaping every profession in real time. Discover your automation risk, your timeline to disruption, and exactly what skills to build before it's too late.";
+export const SITE_URL = "https://aminext.vercel.app";
 
 export const NAV_LINKS = [
   { href: "/professions", label: "Professions" },

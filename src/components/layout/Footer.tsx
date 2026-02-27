@@ -13,7 +13,7 @@ export function Footer() {
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-sky-500 to-indigo-500 flex items-center justify-center shadow-lg shadow-sky-500/20">
                 <ChartBar size={15} weight="duotone" color="white" />
               </div>
-              <span className="text-sm font-bold text-[var(--foreground)]">Senku</span>
+              <span className="text-sm font-bold text-[var(--foreground)]">Am I Next?</span>
             </div>
             <p className="text-sm text-[var(--muted-foreground)] leading-relaxed max-w-xs">
               Tracking how artificial intelligence is reshaping every profession on Earth. Data-driven, always updated.
@@ -45,8 +45,8 @@ export function Footer() {
         </div>
 
         <div className="mt-12 pt-6 border-t border-[var(--border)] flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-[var(--muted-foreground)]">© {currentYear} Senku — The Human Automation Index.</p>
-          <p className="text-xs text-[var(--muted-foreground)]">Built for the AGI era · senku.fun</p>
+          <p className="text-xs text-[var(--muted-foreground)]">© {currentYear} Am I Next? — Will AI Replace You?</p>
+          <p className="text-xs text-[var(--muted-foreground)]">Built for the AGI era · aminext.vercel.app</p>
         </div>
       </div>
     </footer>
