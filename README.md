@@ -115,8 +115,8 @@ src/
 
 ```bash
 # Clone the repository
-git clone https://github.com/bedro95/senku.git
-cd senku
+git clone https://github.com/bedro95/aminext.git
+cd aminext
 
 # Install dependencies
 npm install
