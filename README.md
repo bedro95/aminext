@@ -1,8 +1,8 @@
-# Senku — The Human Automation Index
+# Am I Next? — Will AI Replace You?
 
 > Real-time intelligence on AI's impact across every profession on Earth.
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-senku.fun-0ea5e9?style=flat-square)](https://senku.fun)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-aminext.vercel.app-0ea5e9?style=flat-square)](https://aminext.vercel.app)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black?style=flat-square&logo=next.js)](https://nextjs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?style=flat-square&logo=typescript)](https://www.typescriptlang.org)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-38bdf8?style=flat-square&logo=tailwind-css)](https://tailwindcss.com)
@@ -11,7 +11,7 @@
 
 ## Overview
 
-Senku tracks automation risk across 25+ professions and 10+ industries. It translates complex AI research from Oxford, McKinsey, Goldman Sachs, and the World Economic Forum into clear, actionable data — so workers can understand where they stand and what to do about it.
+**Am I Next?** tracks automation risk across 25+ professions and 10+ industries. It translates complex AI research from Oxford, McKinsey, Goldman Sachs, and the World Economic Forum into clear, actionable data — so workers can understand where they stand and what to do about it.
 
 ---
 
@@ -125,7 +125,7 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [http://localhost:5000](http://localhost:5000) in your browser.
 
 ### Build for Production
 
@@ -191,4 +191,4 @@ All risk scores and trend data are synthesized from peer-reviewed research and i
 
 ## License
 
-MIT © 2026 Senku. Built for the AGI era.
+MIT © 2026 Am I Next? — Built for the AGI era.
